@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import TransferRow from '../components/TransferRow.jsx'
-import Loader from '../components/Loader.jsx'
+import Skeleton from '../components/Skeleton.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import Button from '../components/Button.jsx'
@@ -22,7 +22,11 @@ export default function Transfers() {
         </Link>
       </div>
 
-      {loading && <Loader label="Loading transfers..." />}
+      {loading && (
+        <div className="transfers-list">
+          <Skeleton count={3} height="4.5rem" />
+        </div>
+      )}
 
       {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
 
