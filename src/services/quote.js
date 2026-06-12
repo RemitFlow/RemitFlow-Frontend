@@ -1,6 +1,7 @@
 // Quote service: combines FX rates and fees into a full transfer quote.
 import { getRate, convert } from './fx.js'
 import { FEE_PERCENT, FLAT_FEE, MIN_FEE } from '../constants/fees.js'
+import { percentOf, roundTo } from '../utils/math.js'
 
 /**
  * Calculate the total fee (in the source currency) for a given send amount.
@@ -9,8 +10,8 @@ import { FEE_PERCENT, FLAT_FEE, MIN_FEE } from '../constants/fees.js'
  */
 export function calculateFee(amount) {
   const num = Number(amount) || 0
-  const fee = num * FEE_PERCENT + FLAT_FEE
-  return Math.max(fee, MIN_FEE)
+  const fee = percentOf(num, FEE_PERCENT) + FLAT_FEE
+  return roundTo(Math.max(fee, MIN_FEE))
 }
 
 /**
