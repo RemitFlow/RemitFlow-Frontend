@@ -1,0 +1,55 @@
+/* Responsive tweaks for narrow viewports. */
+
+@media (max-width: 720px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .navbar-links {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+
+  .navbar-actions {
+    margin-left: auto;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .send-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .transfer-row {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0.75rem;
+  }
+
+  .transfer-status {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .send-currencies {
+    grid-template-columns: 1fr;
+  }
+
+  .send-swap {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
