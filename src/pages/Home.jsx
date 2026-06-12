@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Button from '../components/Button.jsx'
+import { POPULAR_CORRIDORS, getCurrency } from '../constants/currencies.js'
 import './Home.css'
 
 // Selling points shown on the landing page.
@@ -53,6 +54,23 @@ export default function Home() {
             <p className="feature-text">{f.text}</p>
           </div>
         ))}
+      </section>
+
+      <section className="corridors">
+        <h2 className="corridors-title">Popular corridors</h2>
+        <ul className="corridors-list">
+          {POPULAR_CORRIDORS.map(({ from, to }) => {
+            const src = getCurrency(from)
+            const dest = getCurrency(to)
+            return (
+              <li key={`${from}-${to}`} className="corridor-chip">
+                <span>{src?.flag} {from}</span>
+                <span className="corridor-arrow" aria-hidden="true">→</span>
+                <span>{dest?.flag} {to}</span>
+              </li>
+            )
+          })}
+        </ul>
       </section>
     </div>
   )

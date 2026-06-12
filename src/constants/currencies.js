@@ -12,6 +12,16 @@ export const CURRENCIES = [
 export const DEFAULT_SOURCE = 'USD'
 export const DEFAULT_DEST = 'NGN'
 
+// Popular remittance corridors highlighted on the landing page.
+export const POPULAR_CORRIDORS = [
+  { from: 'USD', to: 'NGN' },
+  { from: 'USD', to: 'INR' },
+  { from: 'USD', to: 'PHP' },
+  { from: 'EUR', to: 'NGN' },
+  { from: 'GBP', to: 'INR' },
+  { from: 'USD', to: 'MXN' }
+]
+
 /**
  * Look up the metadata for a currency by its code.
  * @param {string} code - ISO currency code, e.g. "USD"

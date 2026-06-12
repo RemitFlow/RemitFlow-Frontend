@@ -59,3 +59,37 @@
   color: var(--color-muted);
   line-height: 1.5;
 }
+
+.corridors {
+  text-align: center;
+}
+
+.corridors-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.25rem;
+}
+
+.corridors-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.corridor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  background: var(--color-surface);
+  border: 1px solid #1f2a3a;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.corridor-arrow {
+  color: var(--color-muted);
+}
