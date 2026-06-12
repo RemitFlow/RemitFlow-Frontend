@@ -38,6 +38,11 @@ export default function QuoteCard({ quote }) {
         <span>Recipient gets</span>
         <span>{formatAmount(receiveAmount, to)}</span>
       </div>
+
+      <p className="quote-note">
+        Fees cover the RemitFlow service and Stellar network cost. Rates are
+        indicative and update at confirmation.
+      </p>
     </div>
   )
 }
