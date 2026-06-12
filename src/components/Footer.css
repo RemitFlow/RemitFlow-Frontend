@@ -1,0 +1,14 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  margin-top: 2rem;
+  border-top: 1px solid #1f2a3a;
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.footer-note {
+  color: var(--color-primary);
+}
