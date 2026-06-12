@@ -1,0 +1,32 @@
+.transfer-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border-radius: 10px;
+  border: 1px solid #1f2a3a;
+}
+
+.transfer-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+}
+
+.transfer-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.transfer-recipient span:last-child {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+.transfer-status {
+  align-items: flex-end;
+}
