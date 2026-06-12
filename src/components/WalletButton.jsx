@@ -12,6 +12,7 @@ export default function WalletButton() {
   if (isConnected) {
     return (
       <div className="wallet-button">
+        <span className="wallet-balance">{wallet.balance} XLM</span>
         <span className="wallet-address" title={wallet.publicKey}>
           {shortenAddress(wallet.publicKey)}
         </span>
