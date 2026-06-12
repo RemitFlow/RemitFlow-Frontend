@@ -49,6 +49,31 @@ export function formatCurrencyInput(value) {
 }
 
 /**
+ * Format a fractional ratio as a percentage string (0.005 -> "0.5%").
+ * @param {number} value - the ratio to format
+ * @param {number} [decimals] - decimal places to keep
+ * @returns {string} the formatted percentage
+ */
+export function formatPercent(value, decimals = 2) {
+  const num = Number(value) || 0
+  return `${(num * 100).toFixed(decimals)}%`
+}
+
+/**
+ * Format a plain number with grouped thousands and no currency symbol.
+ * @param {number} value - the number to format
+ * @param {number} [decimals] - maximum decimal places to show
+ * @returns {string} the formatted number
+ */
+export function formatNumber(value, decimals = 2) {
+  const num = Number(value) || 0
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimals
+  }).format(num)
+}
+
+/**
  * Shorten a long string (e.g. a Stellar public key) for display.
  * @param {string} value - the value to shorten
  * @param {number} [head] - characters to keep at the start
