@@ -10,6 +10,7 @@ import { formatCurrencyInput } from '../utils/format.js'
 import { isPositiveAmount, validateRecipient, isWithinBalance } from '../utils/validate.js'
 import { useWallet } from '../hooks/useWallet.js'
 import { useTransfers } from '../hooks/useTransfers.js'
+import { useDebouncedValue } from '../hooks/useDebouncedValue.js'
 import { DEFAULT_SOURCE, DEFAULT_DEST } from '../constants/currencies.js'
 import './SendMoney.css'
 
@@ -29,11 +30,14 @@ export default function SendMoney() {
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
 
-  // Recompute the quote whenever the inputs change.
+  // Debounce the amount so the quote isn't rebuilt on every keystroke.
+  const debouncedAmount = useDebouncedValue(amount, 250)
+
+  // Recompute the quote whenever the (debounced) inputs change.
   const quote = useMemo(() => {
-    if (!isPositiveAmount(amount)) return null
-    return buildQuote(amount, from, to)
-  }, [amount, from, to])
+    if (!isPositiveAmount(debouncedAmount)) return null
+    return buildQuote(debouncedAmount, from, to)
+  }, [debouncedAmount, from, to])
 
   function swapCurrencies() {
     setFrom(to)
@@ -72,14 +76,18 @@ export default function SendMoney() {
       await connect()
     }
 
+    // Build from the live amount so a pending debounce can't submit a stale quote.
+    const finalQuote = buildQuote(amount, from, to)
+    if (!finalQuote) return
+
     setSubmitting(true)
     try {
       await addTransfer({
         recipient,
         from,
         to,
-        sendAmount: quote.sendAmount,
-        receiveAmount: quote.receiveAmount
+        sendAmount: finalQuote.sendAmount,
+        receiveAmount: finalQuote.receiveAmount
       })
       navigate('/transfers')
     } catch (err) {
