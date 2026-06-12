@@ -22,6 +22,7 @@ export default function TextField({
   error,
   onBlur
 }) {
+  const errorId = id ? `${id}-error` : undefined
   return (
     <div className="text-field">
       {label && (
@@ -35,10 +36,16 @@ export default function TextField({
         type={type}
         value={value}
         placeholder={placeholder}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? errorId : undefined}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur ? (e) => onBlur(e.target.value) : undefined}
       />
-      {error && <span className="text-field-error">{error}</span>}
+      {error && (
+        <span id={errorId} className="text-field-error" role="alert">
+          {error}
+        </span>
+      )}
     </div>
   )
 }
