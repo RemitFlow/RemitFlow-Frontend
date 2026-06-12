@@ -1,0 +1,14 @@
+.wallet-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wallet-address {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  padding: 0.375rem 0.625rem;
+  border-radius: 6px;
+}
