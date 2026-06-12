@@ -1,4 +1,4 @@
-import { formatAmount } from '../utils/format.js'
+import { formatAmount, formatRate } from '../utils/format.js'
 import './QuoteCard.css'
 
 /**
@@ -27,9 +27,7 @@ export default function QuoteCard({ quote }) {
 
       <div className="quote-line quote-muted">
         <span>Exchange rate</span>
-        <span>
-          1 {from} = {rate.toFixed(4)} {to}
-        </span>
+        <span>{formatRate(rate, from, to)}</span>
       </div>
 
       <div className="quote-divider" />
