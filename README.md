@@ -54,6 +54,12 @@ cp .env.example .env
 - `npm run dev` — start the dev server
 - `npm run build` — production build
 - `npm run preview` — preview the production build
+- `npm test` — run the automated Vitest suite
+- `npm run test:watch` — watch mode for local test development
+
+## Testing
+
+Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen.
 
 ## Disclaimer
 
