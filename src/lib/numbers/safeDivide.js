@@ -8,4 +8,4 @@ function safeDivide(a, b) {
   return b === 0 ? 0 : a / b;
 }
 
-module.exports = safeDivide;
+export default safeDivide;

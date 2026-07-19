@@ -8,4 +8,4 @@ function initials(s) {
   return s.split(/\s+/).map((w) => w.charAt(0) || '').join('').toUpperCase();
 }
 
-module.exports = initials;
+export default initials;

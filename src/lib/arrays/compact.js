@@ -8,4 +8,4 @@ function compact(arr) {
   return arr.filter(Boolean);
 }
 
-module.exports = compact;
+export default compact;

@@ -8,4 +8,4 @@ function sortBy(arr, fn) {
   return [...arr].sort((p, q) => fn(p) - fn(q));
 }
 
-module.exports = sortBy;
+export default sortBy;

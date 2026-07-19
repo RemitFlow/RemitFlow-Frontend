@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const sum = require('../../src/lib/numbers/sum.js');
+import sum from '../../src/lib/numbers/sum.js';
 
 test('sum returns the expected result', () => {
   assert.deepStrictEqual(sum([1, 2, 3]), 6);

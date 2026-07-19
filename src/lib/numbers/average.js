@@ -8,4 +8,4 @@ function average(arr) {
   return arr.length ? arr.reduce((s, x) => s + x, 0) / arr.length : 0;
 }
 
-module.exports = average;
+export default average;

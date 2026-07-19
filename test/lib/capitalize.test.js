@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const capitalize = require('../../src/lib/strings/capitalize.js');
+import capitalize from '../../src/lib/strings/capitalize.js';
 
 test('capitalize returns the expected result', () => {
   assert.deepStrictEqual(capitalize('abc'), 'Abc');

@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const initials = require('../../src/lib/strings/initials.js');
+import initials from '../../src/lib/strings/initials.js';
 
 test('initials returns the expected result', () => {
   assert.deepStrictEqual(initials('John Doe'), 'JD');

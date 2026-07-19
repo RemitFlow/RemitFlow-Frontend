@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const isEven = require('../../src/lib/numbers/isEven.js');
+import isEven from '../../src/lib/numbers/isEven.js';
 
 test('isEven returns the expected result', () => {
   assert.deepStrictEqual(isEven(4), true);

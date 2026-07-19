@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const lerp = require('../../src/lib/numbers/lerp.js');
+import lerp from '../../src/lib/numbers/lerp.js';
 
 test('lerp returns the expected result', () => {
   assert.deepStrictEqual(lerp(0, 10, 0.5), 5);

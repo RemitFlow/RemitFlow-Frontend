@@ -8,4 +8,4 @@ function gcd(a, b) {
   let x = Math.abs(a), y = Math.abs(b); while (y) { const t = x % y; x = y; y = t; } return x;
 }
 
-module.exports = gcd;
+export default gcd;

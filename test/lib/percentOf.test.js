@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const percentOf = require('../../src/lib/numbers/percentOf.js');
+import percentOf from '../../src/lib/numbers/percentOf.js';
 
 test('percentOf returns the expected result', () => {
   assert.deepStrictEqual(percentOf(50, 200), 25);

@@ -8,4 +8,4 @@ function isBlank(s) {
   return s == null || String(s).trim() === '';
 }
 
-module.exports = isBlank;
+export default isBlank;

@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const countWords = require('../../src/lib/strings/countWords.js');
+import countWords from '../../src/lib/strings/countWords.js';
 
 test('countWords returns the expected result', () => {
   assert.deepStrictEqual(countWords('a b c'), 3);

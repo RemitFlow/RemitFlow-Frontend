@@ -8,4 +8,4 @@ function roundTo(n, d) {
   return Math.round(n * 10 ** d) / 10 ** d;
 }
 
-module.exports = roundTo;
+export default roundTo;

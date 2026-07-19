@@ -1,9 +1,9 @@
 'use strict';
 
-const assert = require('node:assert');
-const { test } = require('node:test');
+import assert from 'node:assert';
+import { test } from 'node:test';
 
-const titleCase = require('../../src/lib/strings/titleCase.js');
+import titleCase from '../../src/lib/strings/titleCase.js';
 
 test('titleCase returns the expected result', () => {
   assert.deepStrictEqual(titleCase('hi there'), 'Hi There');

@@ -8,4 +8,4 @@ function percentOf(part, total) {
   return total === 0 ? 0 : (part / total) * 100;
 }
 
-module.exports = percentOf;
+export default percentOf;
