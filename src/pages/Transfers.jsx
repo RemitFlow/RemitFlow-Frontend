@@ -5,13 +5,30 @@ import ErrorMessage from '../components/ErrorMessage.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import Button from '../components/Button.jsx'
 import { useTransfers } from '../hooks/useTransfers.js'
+import { useColumnVisibility } from '../hooks/useColumnVisibility.js'
 import './Transfers.css'
+
+const TRANSFER_COLUMNS = [
+  { id: 'recipient', label: 'To' },
+  { id: 'sent', label: 'Sent' },
+  { id: 'received', label: 'Received' },
+  { id: 'date', label: 'Date' },
+  { id: 'status', label: 'Status' },
+]
 
 /**
  * Transfers page: lists all transfers with their status.
  */
 export default function Transfers() {
   const { transfers, loading, error, reload } = useTransfers()
+  const { visibility, toggleColumn } = useColumnVisibility(
+    'remitflow:transfers:columns',
+    TRANSFER_COLUMNS.map((c) => c.id)
+  )
+
+  const hiddenColumns = TRANSFER_COLUMNS
+    .map((c) => c.id)
+    .filter((id) => visibility[id] === false)
 
   return (
     <div className="transfers">
@@ -20,6 +37,20 @@ export default function Transfers() {
         <Link to="/send">
           <Button>New Transfer</Button>
         </Link>
+      </div>
+
+      <div className="transfers-columns" role="group" aria-label="Columns">
+        <span className="transfers-columns-label">Columns</span>
+        {TRANSFER_COLUMNS.map((col) => (
+          <label key={col.id} className="column-toggle">
+            <input
+              type="checkbox"
+              checked={visibility[col.id] !== false}
+              onChange={() => toggleColumn(col.id)}
+            />
+            {col.label}
+          </label>
+        ))}
       </div>
 
       {loading && (
@@ -46,7 +77,7 @@ export default function Transfers() {
       {!loading && !error && transfers.length > 0 && (
         <div className="transfers-list">
           {transfers.map((t) => (
-            <TransferRow key={t.id} transfer={t} />
+            <TransferRow key={t.id} transfer={t} hiddenColumns={hiddenColumns} />
           ))}
         </div>
       )}
