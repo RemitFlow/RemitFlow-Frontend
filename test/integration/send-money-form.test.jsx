@@ -25,7 +25,7 @@ describe('Send money form flows', () => {
 
     await user.type(screen.getByLabelText(/recipient/i), 'amina@example.com')
     await user.type(screen.getByLabelText(/amount/i), '15')
-    await user.selectOptions(screen.getByLabelText(/to/i), 'NGN')
+    await user.selectOptions(screen.getByLabelText('To'), 'NGN')
     await user.click(screen.getByRole('button', { name: /review & send/i }))
 
     await screen.findByRole('heading', { name: /your transfers/i }, { timeout: 5000 })

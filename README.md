@@ -20,6 +20,8 @@ The app runs at http://localhost:5173 by default.
 - **Transfers** — list of your transfers with status badges (pending,
   completed, failed), plus loading, error and empty states.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
+- **Scroll to top** — a floating button appears once you scroll down and
+  smoothly returns you to the top of the page (respects `prefers-reduced-motion`).
 
 ## Tech Stack
 
@@ -61,6 +63,11 @@ cp .env.example .env
 ## Testing
 
 Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen.
+
+Component tests cover the scroll-to-top button: it stays hidden and
+non-interactive at the top of the page, appears once the scroll threshold is
+passed, hides again on scroll back up, and scrolls the window to the top on
+click (using `smooth` behaviour, or `auto` when the user prefers reduced motion).
 
 ## Lighthouse CI
 
