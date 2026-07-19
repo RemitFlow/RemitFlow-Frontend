@@ -1,6 +1,6 @@
 .transfer-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  grid-template-columns: auto 2fr 1fr 1fr 1fr auto;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
@@ -29,4 +29,10 @@
 
 .transfer-status {
   align-items: flex-end;
+}
+
+.transfer-select {
+  width: auto;
+  cursor: pointer;
+  accent-color: var(--color-accent, #3b82f6);
 }
