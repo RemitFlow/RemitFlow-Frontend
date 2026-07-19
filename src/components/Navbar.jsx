@@ -1,5 +1,6 @@
 import { NavLink, Link } from 'react-router-dom'
 import WalletButton from './WalletButton.jsx'
+import DensityToggle from './DensityToggle.jsx'
 import './Navbar.css'
 
 /**
@@ -26,6 +27,7 @@ export default function Navbar() {
       </nav>
 
       <div className="navbar-actions">
+        <DensityToggle />
         <WalletButton />
       </div>
     </header>

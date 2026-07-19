@@ -7,12 +7,28 @@ const AppContext = createContext(null)
 export function AppProvider({ children }) {
   const [wallet, setWallet] = useState(null)
   const [connecting, setConnecting] = useState(false)
+  const [density, setDensityState] = useState(() =>
+    localStorage.getItem('remitflow:density') === 'compact' ? 'compact' : 'comfortable'
+  )
 
   // Restore a previously connected wallet on first render.
   useEffect(() => {
     const stored = getStoredWallet()
     if (stored) setWallet(stored)
   }, [])
+
+  // Apply the initial density attribute on mount so first paint is correct.
+  useEffect(() => {
+    document.documentElement.dataset.density = density
+  }, [density])
+
+  // Persist + apply density whenever it changes.
+  function setDensity(next) {
+    const value = next === 'compact' ? 'compact' : 'comfortable'
+    setDensityState(value)
+    localStorage.setItem('remitflow:density', value)
+    document.documentElement.dataset.density = value
+  }
 
   async function connect() {
     setConnecting(true)
@@ -35,7 +51,9 @@ export function AppProvider({ children }) {
     connecting,
     isConnected: Boolean(wallet),
     connect,
-    disconnect
+    disconnect,
+    density,
+    setDensity
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

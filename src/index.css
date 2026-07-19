@@ -29,3 +29,22 @@ a {
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Compact density: reduce spacing on existing layout surfaces. */
+[data-density="compact"] .app-main {
+  padding: 0.75rem;
+}
+
+[data-density="compact"] .navbar {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+[data-density="compact"] .quote-card,
+[data-density="compact"] .transfer-row {
+  padding: 0.5rem;
+}
+
+[data-density="compact"] .btn {
+  padding: 0.35rem 0.7rem;
+}

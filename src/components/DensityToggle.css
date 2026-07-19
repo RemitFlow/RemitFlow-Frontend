@@ -1,0 +1,32 @@
+.density-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  background: var(--color-bg);
+  border: 1px solid #1f2a3a;
+  border-radius: 8px;
+}
+
+.density-option {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.density-option:hover {
+  color: var(--color-text);
+}
+
+.density-option[aria-pressed='true'] {
+  background: var(--color-primary);
+  color: #fff;
+}
