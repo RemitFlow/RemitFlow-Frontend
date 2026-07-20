@@ -1,4 +1,4 @@
-import './EmptyState.css'
+import './EmptyState.css';
 
 /**
  * Placeholder shown when there is no data to display.
@@ -18,5 +18,5 @@ export default function EmptyState({ icon = '📭', title, message, action }) {
       {message && <p className="empty-state-message">{message}</p>}
       {action && <div className="empty-state-action">{action}</div>}
     </div>
-  )
+  );
 }

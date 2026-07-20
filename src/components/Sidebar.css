@@ -6,7 +6,9 @@
   background: var(--color-surface);
   border-right: 1px solid #1f2a3a;
   padding: 0;
-  transition: width 0.25s ease, min-width 0.25s ease;
+  transition:
+    width 0.25s ease,
+    min-width 0.25s ease;
   overflow: hidden;
   height: 100vh;
   position: sticky;
@@ -31,7 +33,9 @@
   border-bottom: 1px solid #1f2a3a;
   color: var(--color-muted);
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
 }
 
 .sidebar-toggle:hover {
@@ -66,7 +70,9 @@
   color: var(--color-muted);
   font-weight: 500;
   font-size: 0.925rem;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
   white-space: nowrap;
   text-decoration: none;
 }

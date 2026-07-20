@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import { listTransfers, createTransfer } from '../services/api.js'
+import { useCallback, useEffect, useState } from 'react';
+import { listTransfers, createTransfer } from '../services/api.js';
 
 /**
  * Hook for loading and creating transfers.
@@ -7,32 +7,32 @@ import { listTransfers, createTransfer } from '../services/api.js'
  *   reload: Function, addTransfer: Function}}
  */
 export function useTransfers() {
-  const [transfers, setTransfers] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [transfers, setTransfers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const reload = useCallback(async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
-      const data = await listTransfers()
-      setTransfers(data)
+      const data = await listTransfers();
+      setTransfers(data);
     } catch (err) {
-      setError('Could not load transfers. Please try again.')
+      setError('Could not load transfers. Please try again.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    reload()
-  }, [reload])
+    reload();
+  }, [reload]);
 
   const addTransfer = useCallback(async (payload) => {
-    const created = await createTransfer(payload)
-    setTransfers((prev) => [created, ...prev])
-    return created
-  }, [])
+    const created = await createTransfer(payload);
+    setTransfers((prev) => [created, ...prev]);
+    return created;
+  }, []);
 
-  return { transfers, loading, error, reload, addTransfer }
+  return { transfers, loading, error, reload, addTransfer };
 }

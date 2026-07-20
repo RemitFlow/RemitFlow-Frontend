@@ -24,7 +24,7 @@
 }
 
 .transfer-recipient span:last-child {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 .transfer-status {

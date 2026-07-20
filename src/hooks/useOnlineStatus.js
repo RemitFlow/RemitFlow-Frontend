@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 function readOnlineStatus() {
-  if (typeof navigator === 'undefined') return true
-  return navigator.onLine
+  if (typeof navigator === 'undefined') return true;
+  return navigator.onLine;
 }
 
 /**
@@ -10,22 +10,22 @@ function readOnlineStatus() {
  * @returns {boolean} true when online, false once connectivity is lost
  */
 export function useOnlineStatus() {
-  const [isOnline, setIsOnline] = useState(readOnlineStatus)
+  const [isOnline, setIsOnline] = useState(readOnlineStatus);
 
   useEffect(() => {
     function handleOnline() {
-      setIsOnline(true)
+      setIsOnline(true);
     }
     function handleOffline() {
-      setIsOnline(false)
+      setIsOnline(false);
     }
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
     return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
-  }, [])
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
-  return isOnline
+  return isOnline;
 }

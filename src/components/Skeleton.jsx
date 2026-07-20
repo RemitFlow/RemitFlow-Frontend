@@ -1,4 +1,4 @@
-import './Skeleton.css'
+import './Skeleton.css';
 
 /**
  * Animated placeholder block shown while content is loading.
@@ -13,5 +13,5 @@ export default function Skeleton({ count = 1, height = '1rem' }) {
         <span key={i} className="skeleton-row" style={{ height }} />
       ))}
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { MemoryRouter } from 'react-router-dom'
-import ScrollRestoration from './ScrollRestoration.jsx'
+import { MemoryRouter } from 'react-router-dom';
+import ScrollRestoration from './ScrollRestoration.jsx';
 const meta = {
   title: 'Components/ScrollRestoration',
   component: ScrollRestoration,
@@ -8,20 +8,20 @@ const meta = {
       <MemoryRouter initialEntries={['/test']}>
         <Story />
       </MemoryRouter>
-    )
+    ),
   ],
   parameters: {
     docs: {
       description: {
         component:
-          'Invisible component that persists and restores window scroll position across back/forward navigations.'
-      }
-    }
+          'Invisible component that persists and restores window scroll position across back/forward navigations.',
+      },
+    },
   },
-  tags: ['autodocs']
-}
+  tags: ['autodocs'],
+};
 
-export default meta
+export default meta;
 
 export const Default = {
   render: () => (
@@ -29,9 +29,9 @@ export const Default = {
       <ScrollRestoration />
       <p>
         This component has no visual output—it runs in the background. Scroll
-        the page and navigate away, then use the browser back button to see
-        your scroll position restored.
+        the page and navigate away, then use the browser back button to see your
+        scroll position restored.
       </p>
     </div>
-  )
-}
+  ),
+};

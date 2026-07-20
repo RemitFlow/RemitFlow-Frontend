@@ -1,4 +1,4 @@
 /**
  * Capitalize the first character.
  */
-export const capitalize = (s) => s ? s[0].toUpperCase() + s.slice(1) : s;
+export const capitalize = (s) => (s ? s[0].toUpperCase() + s.slice(1) : s);

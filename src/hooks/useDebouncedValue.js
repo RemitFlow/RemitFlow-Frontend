@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 /**
  * Debounce a frequently-changing value.
@@ -9,12 +9,12 @@ import { useEffect, useState } from 'react'
  * @returns {*} the debounced value
  */
 export function useDebouncedValue(value, delay = 300) {
-  const [debounced, setDebounced] = useState(value)
+  const [debounced, setDebounced] = useState(value);
 
   useEffect(() => {
-    const id = setTimeout(() => setDebounced(value), delay)
-    return () => clearTimeout(id)
-  }, [value, delay])
+    const id = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(id);
+  }, [value, delay]);
 
-  return debounced
+  return debounced;
 }

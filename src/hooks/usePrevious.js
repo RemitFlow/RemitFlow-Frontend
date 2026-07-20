@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 /**
  * Remember the value a piece of state held on the previous render.
@@ -7,11 +7,11 @@ import { useEffect, useRef } from 'react'
  * @returns {*} the value from the previous render
  */
 export function usePrevious(value) {
-  const ref = useRef(undefined)
+  const ref = useRef(undefined);
 
   useEffect(() => {
-    ref.current = value
-  }, [value])
+    ref.current = value;
+  }, [value]);
 
-  return ref.current
+  return ref.current;
 }

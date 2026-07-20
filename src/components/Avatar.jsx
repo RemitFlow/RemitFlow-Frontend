@@ -1,4 +1,4 @@
-import './Avatar.css'
+import './Avatar.css';
 
 /**
  * Derive up to two uppercase initials from a name or email.
@@ -6,11 +6,11 @@ import './Avatar.css'
  * @returns {string}
  */
 function initialsFrom(value) {
-  if (!value) return '?'
-  const name = value.includes('@') ? value.split('@')[0] : value
-  const parts = name.split(/[\s._-]+/).filter(Boolean)
-  const letters = parts.slice(0, 2).map((p) => p[0])
-  return (letters.join('') || name[0] || '?').toUpperCase()
+  if (!value) return '?';
+  const name = value.includes('@') ? value.split('@')[0] : value;
+  const parts = name.split(/[\s._-]+/).filter(Boolean);
+  const letters = parts.slice(0, 2).map((p) => p[0]);
+  return (letters.join('') || name[0] || '?').toUpperCase();
 }
 
 /**
@@ -24,5 +24,5 @@ export default function Avatar({ name, size = 'md' }) {
     <span className={`avatar avatar-${size}`} aria-hidden="true">
       {initialsFrom(name)}
     </span>
-  )
+  );
 }

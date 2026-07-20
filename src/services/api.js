@@ -1,7 +1,7 @@
 // Mock API service for RemitFlow.
 // Simulates a backend that stores and lists transfers. No real network calls.
 
-const STORAGE_KEY = 'remitflow.transfers'
+const STORAGE_KEY = 'remitflow.transfers';
 
 // Seed data shown the first time the app loads.
 const SEED_TRANSFERS = [
@@ -13,7 +13,7 @@ const SEED_TRANSFERS = [
     sendAmount: 200,
     receiveAmount: 294620,
     status: 'completed',
-    createdAt: '2026-05-28T10:15:00Z'
+    createdAt: '2026-05-28T10:15:00Z',
   },
   {
     id: 'tx_1002',
@@ -23,23 +23,23 @@ const SEED_TRANSFERS = [
     sendAmount: 120,
     receiveAmount: 9920,
     status: 'pending',
-    createdAt: '2026-06-02T08:42:00Z'
-  }
-]
+    createdAt: '2026-06-02T08:42:00Z',
+  },
+];
 
 function read() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
   } catch (err) {
     // ignore parse/storage errors
   }
-  return SEED_TRANSFERS
+  return SEED_TRANSFERS;
 }
 
 function write(transfers) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transfers))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(transfers));
   } catch (err) {
     // ignore
   }
@@ -52,12 +52,14 @@ function write(transfers) {
 export function listTransfers() {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const transfers = read().slice().sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt)
-      })
-      resolve(transfers)
-    }, 400)
-  })
+      const transfers = read()
+        .slice()
+        .sort((a, b) => {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+      resolve(transfers);
+    }, 400);
+  });
 }
 
 /**
@@ -72,12 +74,12 @@ export function createTransfer(payload) {
         id: 'tx_' + Date.now(),
         status: 'pending',
         createdAt: new Date().toISOString(),
-        ...payload
-      }
-      const transfers = read()
-      transfers.push(transfer)
-      write(transfers)
-      resolve(transfer)
-    }, 700)
-  })
+        ...payload,
+      };
+      const transfers = read();
+      transfers.push(transfer);
+      write(transfers);
+      resolve(transfer);
+    }, 700);
+  });
 }

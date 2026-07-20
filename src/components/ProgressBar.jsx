@@ -1,4 +1,4 @@
-import './ProgressBar.css'
+import './ProgressBar.css';
 
 /**
  * Horizontal progress indicator with an accessible value.
@@ -8,8 +8,8 @@ import './ProgressBar.css'
  * @param {string} [props.label] - accessible label for screen readers
  */
 export default function ProgressBar({ value, max = 100, label = 'Progress' }) {
-  const safeMax = max > 0 ? max : 100
-  const pct = Math.min(100, Math.max(0, (Number(value) / safeMax) * 100))
+  const safeMax = max > 0 ? max : 100;
+  const pct = Math.min(100, Math.max(0, (Number(value) / safeMax) * 100));
 
   return (
     <div
@@ -22,5 +22,5 @@ export default function ProgressBar({ value, max = 100, label = 'Progress' }) {
     >
       <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { LOCALES } from '../constants/locales.js'
-import './LocaleSelect.css'
+import { LOCALES } from '../constants/locales.js';
+import './LocaleSelect.css';
 
 /**
  * Dropdown for picking the locale used to format currency, numbers and
@@ -12,7 +12,13 @@ import './LocaleSelect.css'
  * @param {string} [props.ariaLabel] - accessible name to use when no visible
  *   label is rendered (e.g. compact toolbar placements)
  */
-export default function LocaleSelect({ value, onChange, label, id, ariaLabel }) {
+export default function LocaleSelect({
+  value,
+  onChange,
+  label,
+  id,
+  ariaLabel,
+}) {
   return (
     <div className="locale-select">
       {label && (
@@ -34,5 +40,5 @@ export default function LocaleSelect({ value, onChange, label, id, ariaLabel }) 
         ))}
       </select>
     </div>
-  )
+  );
 }

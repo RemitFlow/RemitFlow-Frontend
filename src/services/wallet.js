@@ -2,10 +2,11 @@
 // In production this would wrap Freighter / Albedo or the Stellar SDK keypair
 // signing flow. Here it simply fakes connecting to a wallet with no network.
 
-const STORAGE_KEY = 'remitflow.wallet'
+const STORAGE_KEY = 'remitflow.wallet';
 
 // A deterministic fake Stellar public key for demo purposes.
-const DEMO_PUBLIC_KEY = 'GBQAZ7Z3X7DEMOPUBLICKEY4REMITFLOWWALLET123456789ABCDEF'
+const DEMO_PUBLIC_KEY =
+  'GBQAZ7Z3X7DEMOPUBLICKEY4REMITFLOWWALLET123456789ABCDEF';
 
 /**
  * Simulate connecting a Stellar wallet.
@@ -16,16 +17,16 @@ export function connectWallet() {
     setTimeout(() => {
       const account = {
         publicKey: DEMO_PUBLIC_KEY,
-        balance: 1000
-      }
+        balance: 1000,
+      };
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(account))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(account));
       } catch (err) {
         // localStorage may be unavailable; ignore for the demo.
       }
-      resolve(account)
-    }, 600)
-  })
+      resolve(account);
+    }, 600);
+  });
 }
 
 /**
@@ -37,10 +38,13 @@ export function signTransaction(payload) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
-        signature: 'SIGNED_' + Date.now().toString(36) + Math.random().toString(36).slice(2)
-      })
-    }, 500)
-  })
+        signature:
+          'SIGNED_' +
+          Date.now().toString(36) +
+          Math.random().toString(36).slice(2),
+      });
+    }, 500);
+  });
 }
 
 /**
@@ -49,10 +53,10 @@ export function signTransaction(payload) {
  */
 export function getStoredWallet() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : null
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch (err) {
-    return null
+    return null;
   }
 }
 
@@ -61,7 +65,7 @@ export function getStoredWallet() {
  */
 export function disconnectWallet() {
   try {
-    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(STORAGE_KEY);
   } catch (err) {
     // ignore
   }

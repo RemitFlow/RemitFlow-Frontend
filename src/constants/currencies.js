@@ -6,11 +6,11 @@ export const CURRENCIES = [
   { code: 'NGN', name: 'Nigerian Naira', symbol: '₦', flag: '🇳🇬' },
   { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
   { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
-  { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: '🇲🇽' }
-]
+  { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: '🇲🇽' },
+];
 
-export const DEFAULT_SOURCE = 'USD'
-export const DEFAULT_DEST = 'NGN'
+export const DEFAULT_SOURCE = 'USD';
+export const DEFAULT_DEST = 'NGN';
 
 // Popular remittance corridors highlighted on the landing page.
 export const POPULAR_CORRIDORS = [
@@ -19,8 +19,8 @@ export const POPULAR_CORRIDORS = [
   { from: 'USD', to: 'PHP' },
   { from: 'EUR', to: 'NGN' },
   { from: 'GBP', to: 'INR' },
-  { from: 'USD', to: 'MXN' }
-]
+  { from: 'USD', to: 'MXN' },
+];
 
 /**
  * Look up the metadata for a currency by its code.
@@ -28,5 +28,5 @@ export const POPULAR_CORRIDORS = [
  * @returns {{code: string, name: string, symbol: string, flag: string}|undefined}
  */
 export function getCurrency(code) {
-  return CURRENCIES.find((c) => c.code === code)
+  return CURRENCIES.find((c) => c.code === code);
 }

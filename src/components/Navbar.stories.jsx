@@ -1,5 +1,5 @@
-import Navbar from './Navbar.jsx'
-import { AppProvider } from '../context/AppContext.jsx'
+import Navbar from './Navbar.jsx';
+import { AppProvider } from '../context/AppContext.jsx';
 
 export default {
   title: 'Components/Navbar',
@@ -10,10 +10,10 @@ export default {
       <AppProvider>
         <Story />
       </AppProvider>
-    )
-  ]
-}
+    ),
+  ],
+};
 
 export const Default = {
-  render: () => <Navbar />
-}
+  render: () => <Navbar />,
+};

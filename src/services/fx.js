@@ -9,20 +9,20 @@ const USD_RATES = {
   NGN: 1480.5,
   INR: 83.2,
   PHP: 58.4,
-  MXN: 17.1
-}
+  MXN: 17.1,
+};
 
 export function getRate(from, to) {
-  const fromRate = USD_RATES[from]
-  const toRate = USD_RATES[to]
-  if (!fromRate || !toRate) return null
-  return toRate / fromRate
+  const fromRate = USD_RATES[from];
+  const toRate = USD_RATES[to];
+  if (!fromRate || !toRate) return null;
+  return toRate / fromRate;
 }
 
 export function convert(amount, from, to) {
-  const rate = getRate(from, to)
-  if (rate == null) return null
-  return Number(amount) * rate
+  const rate = getRate(from, to);
+  if (rate == null) return null;
+  return Number(amount) * rate;
 }
 
 /**
@@ -32,7 +32,7 @@ export function convert(amount, from, to) {
  * @returns {number|null}
  */
 export function getInverseRate(from, to) {
-  return getRate(to, from)
+  return getRate(to, from);
 }
 
 /**
@@ -40,5 +40,5 @@ export function getInverseRate(from, to) {
  * @returns {string[]}
  */
 export function listRatedCurrencies() {
-  return Object.keys(USD_RATES)
+  return Object.keys(USD_RATES);
 }

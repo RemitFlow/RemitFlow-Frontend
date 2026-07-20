@@ -1,20 +1,20 @@
-import { Link } from 'react-router-dom'
-import Chart from '../components/Chart.jsx'
-import TransferRow from '../components/TransferRow.jsx'
-import Skeleton from '../components/Skeleton.jsx'
-import ErrorMessage from '../components/ErrorMessage.jsx'
-import EmptyState from '../components/EmptyState.jsx'
-import Button from '../components/Button.jsx'
-import { useTransfers } from '../hooks/useTransfers.js'
-import { useApp } from '../context/AppContext.jsx'
-import './Transfers.css'
+import { Link } from 'react-router-dom';
+import Chart from '../components/Chart.jsx';
+import TransferRow from '../components/TransferRow.jsx';
+import Skeleton from '../components/Skeleton.jsx';
+import ErrorMessage from '../components/ErrorMessage.jsx';
+import EmptyState from '../components/EmptyState.jsx';
+import Button from '../components/Button.jsx';
+import { useTransfers } from '../hooks/useTransfers.js';
+import { useApp } from '../context/AppContext.jsx';
+import './Transfers.css';
 
 /**
  * Transfers page: lists all transfers with their status.
  */
 export default function Transfers() {
-  const { transfers, loading, error, reload } = useTransfers()
-  const { locale } = useApp()
+  const { transfers, loading, error, reload } = useTransfers();
+  const { locale } = useApp();
 
   return (
     <div className="transfers">
@@ -50,7 +50,9 @@ export default function Transfers() {
         <div className="transfers-list">
           <Chart
             title="Recent Transfer Amounts"
-            data={transfers.slice(0, 5).map(t => ({ value: parseFloat(t.sendAmount) }))}
+            data={transfers
+              .slice(0, 5)
+              .map((t) => ({ value: parseFloat(t.sendAmount) }))}
           />
           {transfers.map((t) => (
             <TransferRow key={t.id} transfer={t} locale={locale} />
@@ -58,5 +60,5 @@ export default function Transfers() {
         </div>
       )}
     </div>
-  )
+  );
 }

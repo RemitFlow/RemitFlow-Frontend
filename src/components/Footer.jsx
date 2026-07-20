@@ -1,10 +1,10 @@
-import './Footer.css'
+import './Footer.css';
 
 /**
  * App footer with attribution.
  */
 export default function Footer() {
-  const year = new Date().getFullYear()
+  const year = new Date().getFullYear();
   return (
     <footer className="footer">
       <span>© {year} RemitFlow</span>
@@ -20,5 +20,5 @@ export default function Footer() {
         <span className="footer-note">Powered by the Stellar network</span>
       </div>
     </footer>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import StatusBadge from './StatusBadge.jsx'
-import { formatAmount, formatDate, shortenAddress } from '../utils/format.js'
-import { DEFAULT_LOCALE } from '../constants/locales.js'
-import './TransferRow.css'
+import StatusBadge from './StatusBadge.jsx';
+import { formatAmount, formatDate, shortenAddress } from '../utils/format.js';
+import { DEFAULT_LOCALE } from '../constants/locales.js';
+import './TransferRow.css';
 
 /**
  * A single row in the transfers list.
@@ -10,7 +10,8 @@ import './TransferRow.css'
  * @param {string} [props.locale] - locale used for currency/date formatting
  */
 export default function TransferRow({ transfer, locale = DEFAULT_LOCALE }) {
-  const { recipient, from, to, sendAmount, receiveAmount, status, createdAt } = transfer
+  const { recipient, from, to, sendAmount, receiveAmount, status, createdAt } =
+    transfer;
 
   return (
     <div className="transfer-row">
@@ -38,5 +39,5 @@ export default function TransferRow({ transfer, locale = DEFAULT_LOCALE }) {
         <StatusBadge status={status} />
       </div>
     </div>
-  )
+  );
 }

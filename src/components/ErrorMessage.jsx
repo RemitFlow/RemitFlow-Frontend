@@ -1,4 +1,4 @@
-import './ErrorMessage.css'
+import './ErrorMessage.css';
 
 /**
  * Inline error banner with an optional retry action.
@@ -7,7 +7,7 @@ import './ErrorMessage.css'
  * @param {Function} [props.onRetry]
  */
 export default function ErrorMessage({ message, onRetry }) {
-  if (!message) return null
+  if (!message) return null;
   return (
     <div className="error-message" role="alert">
       <span>⚠️ {message}</span>
@@ -17,5 +17,5 @@ export default function ErrorMessage({ message, onRetry }) {
         </button>
       )}
     </div>
-  )
+  );
 }

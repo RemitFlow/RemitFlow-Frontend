@@ -20,7 +20,7 @@ export default function Chart({ data, title }) {
     URL.revokeObjectURL(url);
   };
 
-  const maxValue = Math.max(...data.map(d => d.value), 1);
+  const maxValue = Math.max(...data.map((d) => d.value), 1);
 
   return (
     <div className="chart-container">

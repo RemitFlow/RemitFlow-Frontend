@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react'
-import './SelectionToolbar.css'
+import { useEffect, useRef } from 'react';
+import './SelectionToolbar.css';
 
 /**
  * Toolbar shown above a paginated list. Holds the "select all on this page"
@@ -32,19 +32,19 @@ export default function SelectionToolbar({
   onTogglePage,
   onSelectAllAcross,
   onClear,
-  itemLabel = 'transfer'
+  itemLabel = 'transfer',
 }) {
-  const checkboxRef = useRef(null)
+  const checkboxRef = useRef(null);
 
   // The header checkbox shows an indeterminate state when only some of the
   // current page is selected. That can only be set imperatively on the DOM node.
   useEffect(() => {
     if (checkboxRef.current) {
-      checkboxRef.current.indeterminate = somePageSelected && !allPageSelected
+      checkboxRef.current.indeterminate = somePageSelected && !allPageSelected;
     }
-  }, [somePageSelected, allPageSelected])
+  }, [somePageSelected, allPageSelected]);
 
-  const plural = (n) => `${n} ${itemLabel}${n === 1 ? '' : 's'}`
+  const plural = (n) => `${n} ${itemLabel}${n === 1 ? '' : 's'}`;
 
   return (
     <div className="selection-toolbar">
@@ -57,14 +57,20 @@ export default function SelectionToolbar({
           aria-label={`Select all ${itemLabel}s on this page`}
         />
         <span className="selection-count">
-          {selectedCount > 0 ? `${plural(selectedCount)} selected` : 'Select all'}
+          {selectedCount > 0
+            ? `${plural(selectedCount)} selected`
+            : 'Select all'}
         </span>
       </label>
 
       {allPageSelected && !allAcrossSelected && hasMorePages && (
         <div className="selection-affordance" role="status">
           <span>All {plural(pageCount)} on this page are selected.</span>
-          <button type="button" className="selection-link" onClick={onSelectAllAcross}>
+          <button
+            type="button"
+            className="selection-link"
+            onClick={onSelectAllAcross}
+          >
             Select all {plural(totalCount)}
           </button>
         </div>
@@ -79,5 +85,5 @@ export default function SelectionToolbar({
         </div>
       )}
     </div>
-  )
+  );
 }

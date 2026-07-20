@@ -1,5 +1,5 @@
-import { Component } from 'react'
-import './ErrorBoundary.css'
+import { Component } from 'react';
+import './ErrorBoundary.css';
 
 /**
  * Catches render-time errors in its subtree and shows a friendly fallback
@@ -7,22 +7,22 @@ import './ErrorBoundary.css'
  */
 export default class ErrorBoundary extends Component {
   constructor(props) {
-    super(props)
-    this.state = { hasError: false }
-    this.handleReload = this.handleReload.bind(this)
+    super(props);
+    this.state = { hasError: false };
+    this.handleReload = this.handleReload.bind(this);
   }
 
   static getDerivedStateFromError() {
-    return { hasError: true }
+    return { hasError: true };
   }
 
   componentDidCatch(error, info) {
     // In production this would report to an error-tracking service.
-    console.error('Unhandled UI error:', error, info)
+    console.error('Unhandled UI error:', error, info);
   }
 
   handleReload() {
-    window.location.reload()
+    window.location.reload();
   }
 
   render() {
@@ -41,9 +41,9 @@ export default class ErrorBoundary extends Component {
             Reload
           </button>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }

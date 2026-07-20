@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
-const BASE_TITLE = 'RemitFlow'
+const BASE_TITLE = 'RemitFlow';
 
 /**
  * Sets the document title for the current page.
@@ -11,11 +11,11 @@ const BASE_TITLE = 'RemitFlow'
  */
 export function useDocumentTitle(title) {
   useEffect(() => {
-    const fullTitle = title ? `${BASE_TITLE} — ${title}` : BASE_TITLE
-    document.title = fullTitle
+    const fullTitle = title ? `${BASE_TITLE} — ${title}` : BASE_TITLE;
+    document.title = fullTitle;
 
     return () => {
-      document.title = BASE_TITLE
-    }
-  }, [title])
+      document.title = BASE_TITLE;
+    };
+  }, [title]);
 }

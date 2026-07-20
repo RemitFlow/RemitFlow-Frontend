@@ -56,6 +56,8 @@ cp .env.example .env
 - `npm run preview` — preview the production build
 - `npm test` — run the automated Vitest suite
 - `npm run test:watch` — watch mode for local test development
+- `npm run format` — format the codebase with Prettier
+- `npm run format:check` — check formatting without making changes
 - `npm run lighthouse` — run Lighthouse CI against the local preview server
 
 ## Testing

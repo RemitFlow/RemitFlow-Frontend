@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 /**
  * Run a callback on a fixed interval without re-subscribing on every render.
@@ -7,16 +7,16 @@ import { useEffect, useRef } from 'react'
  * @param {number|null} delay - interval in milliseconds, or null to pause
  */
 export function useInterval(callback, delay) {
-  const savedCallback = useRef(callback)
+  const savedCallback = useRef(callback);
 
   // Keep the latest callback without restarting the timer.
   useEffect(() => {
-    savedCallback.current = callback
-  }, [callback])
+    savedCallback.current = callback;
+  }, [callback]);
 
   useEffect(() => {
-    if (delay == null) return undefined
-    const id = setInterval(() => savedCallback.current(), delay)
-    return () => clearInterval(id)
-  }, [delay])
+    if (delay == null) return undefined;
+    const id = setInterval(() => savedCallback.current(), delay);
+    return () => clearInterval(id);
+  }, [delay]);
 }
