@@ -3,6 +3,17 @@
   margin: 0 auto;
 }
 
+.send-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.send-header .page-title {
+  margin: 0;
+}
+
 .page-title {
   font-size: 1.75rem;
   margin: 0 0 1.5rem;
@@ -56,3 +67,5 @@
   padding: 2rem;
   text-align: center;
 }
+
+

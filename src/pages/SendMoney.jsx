@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import TextField from '../components/TextField.jsx'
 import CurrencySelect from '../components/CurrencySelect.jsx'
 import QuoteCard from '../components/QuoteCard.jsx'
 import Button from '../components/Button.jsx'
+import CopyButton from '../components/CopyButton.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import { buildQuote } from '../services/quote.js'
 import { formatCurrencyInput } from '../utils/format.js'
@@ -13,25 +14,56 @@ import { useTransfers } from '../hooks/useTransfers.js'
 import { useDebouncedValue } from '../hooks/useDebouncedValue.js'
 import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import { DEFAULT_SOURCE, DEFAULT_DEST } from '../constants/currencies.js'
+import { listRatedCurrencies } from '../services/fx.js'
 import './SendMoney.css'
+
+function readParam(searchParams, key, fallback, validate) {
+  const raw = searchParams.get(key)
+  if (!raw) return fallback
+  return validate ? (validate(raw) ? raw : fallback) : raw
+}
+
+const VALID_CURRENCIES = new Set(listRatedCurrencies())
 
 /**
  * Send Money page: recipient + amount form with a live FX quote.
+ * View state (amount, from, to) is encoded in URL query params so users
+ * can share a prefilled form link.
  */
 export default function SendMoney() {
   useDocumentTitle('Send Money')
 
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { wallet, isConnected, connect } = useWallet()
   const { addTransfer } = useTransfers()
 
+  // Initialize form state from URL query params when present.
   const [recipient, setRecipient] = useState('')
-  const [amount, setAmount] = useState('')
-  const [from, setFrom] = useState(DEFAULT_SOURCE)
-  const [to, setTo] = useState(DEFAULT_DEST)
+  const [amount, setAmount] = useState(() =>
+    readParam(searchParams, 'amount', '', () => true)
+  )
+  const [from, setFrom] = useState(() =>
+    readParam(searchParams, 'from', DEFAULT_SOURCE, (v) => VALID_CURRENCIES.has(v))
+  )
+  const [to, setTo] = useState(() =>
+    readParam(searchParams, 'to', DEFAULT_DEST, (v) => VALID_CURRENCIES.has(v))
+  )
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState(null)
+
+  // Keep the URL query params in sync with the form state.
+  useEffect(() => {
+    const next = new URLSearchParams()
+    if (amount) next.set('amount', amount)
+    if (from && from !== DEFAULT_SOURCE) next.set('from', from)
+    if (to && to !== DEFAULT_DEST) next.set('to', to)
+    const updated = `?${next.toString()}`
+    if (window.location.search !== updated) {
+      setSearchParams(next, { replace: true })
+    }
+  }, [amount, from, to, setSearchParams])
 
   // Debounce the amount so the quote isn't rebuilt on every keystroke.
   const debouncedAmount = useDebouncedValue(amount, 250)
@@ -100,9 +132,20 @@ export default function SendMoney() {
     }
   }
 
+  const buildShareUrl = useCallback(() => {
+    const url = new URL(window.location.origin + window.location.pathname)
+    if (amount) url.searchParams.set('amount', amount)
+    if (from && from !== DEFAULT_SOURCE) url.searchParams.set('from', from)
+    if (to && to !== DEFAULT_DEST) url.searchParams.set('to', to)
+    return url.toString()
+  }, [amount, from, to])
+
   return (
     <div className="send-money">
-      <h1 className="page-title">Send Money</h1>
+      <div className="send-header">
+        <h1 className="page-title">Send Money</h1>
+        <CopyButton value={buildShareUrl()} label="Copy share link" />
+      </div>
 
       <div className="send-grid">
         <form className="send-form" onSubmit={handleSubmit}>
