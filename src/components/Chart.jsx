@@ -25,13 +25,13 @@ export default function Chart({ data, title }) {
   return (
     <div className="chart-container">
       <h3 className="chart-title">{title}</h3>
-      <svg ref={chartRef} className="chart-svg" viewBox="0 0 200 100">
+      <svg ref={chartRef} className="chart-svg" viewBox="0 0 100 100">
         {data.map((d, i) => (
           <rect
             key={i}
-            x={i * 35}
+            x={i * (100 / data.length)}
             y={100 - (d.value / maxValue) * 100}
-            width={30}
+            width={100 / data.length - 2}
             height={(d.value / maxValue) * 100}
             fill="#6366f1"
           />
