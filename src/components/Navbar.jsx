@@ -1,29 +1,18 @@
-import { NavLink, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import WalletButton from './WalletButton.jsx'
 import './Navbar.css'
 
 /**
- * Top navigation bar with links and the wallet connect button.
+ * Top navigation bar with branding and the wallet connect button.
+ * Main navigation links live in the Sidebar component.
  */
 export default function Navbar() {
   return (
     <header className="navbar">
       <Link to="/" className="navbar-brand">
         <span className="navbar-logo">✦</span>
-        RemitFlow
+        <span className="navbar-title">RemitFlow</span>
       </Link>
-
-      <nav className="navbar-links">
-        <NavLink to="/" end className="navbar-link">
-          Home
-        </NavLink>
-        <NavLink to="/send" className="navbar-link">
-          Send Money
-        </NavLink>
-        <NavLink to="/transfers" className="navbar-link">
-          Transfers
-        </NavLink>
-      </nav>
 
       <div className="navbar-actions">
         <WalletButton />

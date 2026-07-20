@@ -17,15 +17,3 @@ export default {
 export const Default = {
   render: () => <Navbar />
 }
-
-export const WithActiveHome = {
-  render: () => <Navbar />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'The Navbar uses NavLink from react-router-dom. Active link styling is applied when the route matches. The MemoryRouter decorator in preview.js provides routing context with initial route "/".'
-      }
-    }
-  }
-}
