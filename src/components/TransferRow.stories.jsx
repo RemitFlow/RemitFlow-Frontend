@@ -57,6 +57,14 @@ export const Failed = {
   }
 }
 
+export const Selectable = {
+  args: {
+    transfer: sampleTransfer,
+    selectable: true,
+    selected: true
+  }
+}
+
 export const AllExamples = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: 780 }}>

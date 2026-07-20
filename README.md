@@ -17,11 +17,12 @@ The app runs at http://localhost:5173 by default.
 - **Home** — landing page describing the product.
 - **Send Money** — enter a recipient and amount, pick currencies, and see a
   live FX quote with the RemitFlow fee broken out before sending.
-- **Transfers** — list of your transfers with status badges (pending,
-  completed, failed), plus loading, error and empty states.
+- **Transfers** — paginated list of your transfers with status badges
+  (pending, completed, failed), plus loading, error and empty states. Rows can
+  be selected across pages: a "select all" checkbox picks the current page, and
+  when the whole page is selected an affordance offers to **select all
+  transfers across every page** (or clear the selection).
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
-- **Scroll to top** — a floating button appears once you scroll down and
-  smoothly returns you to the top of the page (respects `prefers-reduced-motion`).
 
 ## Tech Stack
 
@@ -34,25 +35,14 @@ The app runs at http://localhost:5173 by default.
 
 ```
 src/
-  components/   reusable UI (Navbar, Footer, QuoteCard, DataTable, TransferRow, ...)
+  components/   reusable UI (Navbar, Footer, QuoteCard, TransferRow, ...)
   pages/        route screens (Home, SendMoney, Transfers, NotFound)
   services/     mock api, wallet, fx and quote logic
-  hooks/        useWallet, useTransfers, useColumnResize
+  hooks/        useWallet, useTransfers, useSelection
   context/      AppContext (wallet state)
   utils/        format and validation helpers
   constants/    currencies and fee config
 ```
-
-### DataTable
-
-The `DataTable` component provides a resizable-column data grid used by the
-Transfers page. Each column header includes a drag handle that resizes adjacent
-columns. The `useColumnResize` hook manages the resize state and mouse
-interactions. Column widths respect configurable minimum widths and can be
-reset to their initial sizes.
-
-See [DataTable.stories.jsx](src/components/DataTable.stories.jsx) for usage
-examples covering data, loading, error, and empty states.
 
 ## Environment
 
@@ -73,12 +63,10 @@ cp .env.example .env
 
 ## Testing
 
-Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen.
-
-Component tests cover the scroll-to-top button: it stays hidden and
-non-interactive at the top of the page, appears once the scroll threshold is
-passed, hides again on scroll back up, and scrolls the window to the top on
-click (using `smooth` behaviour, or `auto` when the user prefers reduced motion).
+Integration tests cover the send-money form flow (validation errors and a
+successful submission that lands on the transfers screen) and the transfers
+selection flow, including selecting all rows across pages, keeping that
+selection while paging, and clearing it.
 
 ## Lighthouse CI
 
