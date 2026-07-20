@@ -1,7 +1,14 @@
 .app {
   display: flex;
-  flex-direction: column;
   min-height: 100vh;
+}
+
+.app-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
 }
 
 .skip-link {
