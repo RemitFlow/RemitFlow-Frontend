@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Chart from '../components/Chart.jsx'
 import TransferRow from '../components/TransferRow.jsx'
 import Skeleton from '../components/Skeleton.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
@@ -45,6 +46,10 @@ export default function Transfers() {
 
       {!loading && !error && transfers.length > 0 && (
         <div className="transfers-list">
+          <Chart
+            title="Recent Transfer Amounts"
+            data={transfers.slice(0, 5).map(t => ({ value: parseFloat(t.sendAmount) }))}
+          />
           {transfers.map((t) => (
             <TransferRow key={t.id} transfer={t} />
           ))}

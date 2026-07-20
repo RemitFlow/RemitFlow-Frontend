@@ -1,0 +1,20 @@
+.chart-container {
+  margin: 2rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.chart-title {
+  margin-top: 0;
+}
+
+.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.download-button {
+  margin-top: 1rem;
+}
