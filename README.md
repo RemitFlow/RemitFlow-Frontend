@@ -34,14 +34,25 @@ The app runs at http://localhost:5173 by default.
 
 ```
 src/
-  components/   reusable UI (Navbar, Footer, QuoteCard, TransferRow, ...)
+  components/   reusable UI (Navbar, Footer, QuoteCard, DataTable, TransferRow, ...)
   pages/        route screens (Home, SendMoney, Transfers, NotFound)
   services/     mock api, wallet, fx and quote logic
-  hooks/        useWallet, useTransfers
+  hooks/        useWallet, useTransfers, useColumnResize
   context/      AppContext (wallet state)
   utils/        format and validation helpers
   constants/    currencies and fee config
 ```
+
+### DataTable
+
+The `DataTable` component provides a resizable-column data grid used by the
+Transfers page. Each column header includes a drag handle that resizes adjacent
+columns. The `useColumnResize` hook manages the resize state and mouse
+interactions. Column widths respect configurable minimum widths and can be
+reset to their initial sizes.
+
+See [DataTable.stories.jsx](src/components/DataTable.stories.jsx) for usage
+examples covering data, loading, error, and empty states.
 
 ## Environment
 

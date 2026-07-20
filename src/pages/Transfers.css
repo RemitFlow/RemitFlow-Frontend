@@ -14,31 +14,7 @@
   margin: 0;
 }
 
-.transfers-filters {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-}
-
-.transfers-filters-search {
-  flex: 1;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.9rem;
-}
-
-.transfers-filters-status {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  background: #fff;
-  min-width: 140px;
-}
-
-.transfers-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* Empty state inside the data table gets extra vertical breathing room */
+.data-table-message .empty-state {
+  padding: 1.5rem 0;
 }

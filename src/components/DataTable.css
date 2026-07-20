@@ -1,0 +1,211 @@
+.data-table {
+  /* Layout (max-width, margin) is left to the parent page component. */
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+
+.data-table-header {
+  display: grid;
+  align-items: center;
+  padding: 0.65rem 1.25rem;
+  background: #1a2332;
+  border: 1px solid #1f2a3a;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+}
+
+.data-table-header-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  user-select: none;
+  min-width: 0;
+  overflow: visible;
+}
+
+.data-table-header-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Resize Handle ──────────────────────────────────────────────────── */
+
+.col-resize-handle {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 24px;
+  cursor: col-resize;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.col-resize-handle::after {
+  content: '';
+  width: 2px;
+  height: 100%;
+  background: #334155;
+  border-radius: 1px;
+  transition: background-color 0.15s ease, height 0.15s ease;
+}
+
+.col-resize-handle:hover::after,
+.col-resize-handle:focus-visible::after,
+.col-resize-handle--active::after {
+  background: var(--color-primary);
+  height: calc(100% + 8px);
+}
+
+.col-resize-handle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+/* ── Body ───────────────────────────────────────────────────────────── */
+
+.data-table-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.data-table-row {
+  display: grid;
+  align-items: center;
+  gap: 0;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid #1f2a3a;
+  border-top: none;
+}
+
+.data-table-row:last-child {
+  border-radius: 0 0 10px 10px;
+}
+
+.data-table-row--skeleton {
+  pointer-events: none;
+}
+
+/* ── Cells ──────────────────────────────────────────────────────────── */
+
+.data-table-cell {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.data-table-cell-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  min-width: 0;
+}
+
+.data-table-cell-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.data-table-cell-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.data-table-cell-mono .data-table-cell-value {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* ── Alignment ──────────────────────────────────────────────────────── */
+
+.data-table-align-left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.data-table-align-right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.data-table-align-right .data-table-cell-content {
+  align-items: flex-end;
+}
+
+.data-table-align-center {
+  justify-content: center;
+  text-align: center;
+}
+
+.data-table-align-center .data-table-cell-content {
+  align-items: center;
+}
+
+/* ── Skeleton ───────────────────────────────────────────────────────── */
+
+.skeleton-block {
+  width: 80%;
+  height: 1rem;
+  background: #334155;
+  border-radius: 4px;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Message states ─────────────────────────────────────────────────── */
+
+.data-table-message {
+  padding: 2rem;
+  background: var(--color-surface);
+  border: 1px solid #1f2a3a;
+  border-radius: 0 0 10px 10px;
+  text-align: center;
+}
+
+.data-table-message-text {
+  color: var(--color-muted);
+  margin: 0 0 1rem;
+}
+
+.data-table-retry-btn {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.data-table-retry-btn:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+/* ── Resize overlay (captures mouse events during drag) ─────────────── */
+
+.data-table-resize-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  cursor: col-resize;
+}
