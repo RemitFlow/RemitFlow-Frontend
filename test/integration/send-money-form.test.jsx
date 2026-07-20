@@ -34,4 +34,21 @@ describe('Send money form flows', () => {
     })
     expect(screen.getAllByText(/pending/i).length).toBeGreaterThan(0)
   })
+
+  it('shows copy-transaction-hash buttons on transfer rows', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.type(screen.getByLabelText(/recipient/i), 'amina@example.com')
+    await user.type(screen.getByLabelText(/amount/i), '15')
+    await user.selectOptions(screen.getByLabelText(/to/i), 'NGN')
+    await user.click(screen.getByRole('button', { name: /review & send/i }))
+
+    await screen.findByRole('heading', { name: /your transfers/i }, { timeout: 5000 })
+
+    await waitFor(() => {
+      const copyButtons = screen.getAllByRole('button', { name: /copy transaction hash/i })
+      expect(copyButtons.length).toBeGreaterThan(0)
+    })
+  })
 })

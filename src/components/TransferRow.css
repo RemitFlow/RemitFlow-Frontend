@@ -1,6 +1,6 @@
 .transfer-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto auto;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
@@ -29,4 +29,9 @@
 
 .transfer-status {
   align-items: flex-end;
+}
+
+.transfer-actions {
+  align-items: flex-end;
+  min-width: 5.5rem;
 }
