@@ -11,7 +11,7 @@
     "lighthouse": "lhci autorun",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "test": "vitest run test/integration test/lighthouse-config.test.js",
+    "test": "vitest run test/integration test/components test/lighthouse-config.test.js",
     "test:lighthouse": "vitest run test/lighthouse-config.test.js",
     "test:watch": "vitest"
   },

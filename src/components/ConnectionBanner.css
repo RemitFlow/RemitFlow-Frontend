@@ -1,0 +1,16 @@
+.connection-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(234, 179, 8, 0.15);
+  border-bottom: 1px solid rgba(234, 179, 8, 0.35);
+  color: #fde68a;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.connection-banner-icon {
+  flex-shrink: 0;
+}

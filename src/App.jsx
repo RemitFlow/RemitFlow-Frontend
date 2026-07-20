@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AppProvider } from './context/AppContext.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import ConnectionBanner from './components/ConnectionBanner.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
@@ -20,6 +21,7 @@ export default function App() {
           <a href="#main-content" className="skip-link">
             Skip to content
           </a>
+          <ConnectionBanner />
           <Navbar />
           <main id="main-content" className="app-main">
             <ErrorBoundary>
