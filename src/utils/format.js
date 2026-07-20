@@ -1,8 +1,8 @@
 // Formatting helpers for currency, dates and addresses.
 
-export function formatAmount(amount, currency = 'USD') {
+export function formatAmount(amount, currency = 'USD', locale = 'en-US') {
   const num = Number(amount) || 0
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     minimumFractionDigits: 2,
@@ -10,10 +10,10 @@ export function formatAmount(amount, currency = 'USD') {
   }).format(num)
 }
 
-export function formatDate(value) {
+export function formatDate(value, locale = 'en-US') {
   if (!value) return '-'
   const d = new Date(value)
-  return d.toLocaleString('en-US', {
+  return d.toLocaleString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -65,9 +65,9 @@ export function formatPercent(value, decimals = 2) {
  * @param {number} [decimals] - maximum decimal places to show
  * @returns {string} the formatted number
  */
-export function formatNumber(value, decimals = 2) {
+export function formatNumber(value, decimals = 2, locale = 'en-US') {
   const num = Number(value) || 0
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat(locale, {
     minimumFractionDigits: 0,
     maximumFractionDigits: decimals
   }).format(num)
