@@ -1,4 +1,5 @@
 import StatusBadge from './StatusBadge.jsx'
+import CopyButton from './CopyButton.jsx'
 import { formatAmount, formatDate, shortenAddress } from '../utils/format.js'
 import './TransferRow.css'
 
@@ -34,6 +35,10 @@ export default function TransferRow({ transfer }) {
 
       <div className="transfer-cell transfer-status">
         <StatusBadge status={status} />
+      </div>
+
+      <div className="transfer-cell transfer-actions">
+        <CopyButton value={transfer.id} label={`Copy transaction hash ${transfer.id}`} />
       </div>
     </div>
   )
