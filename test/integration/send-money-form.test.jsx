@@ -34,4 +34,20 @@ describe('Send money form flows', () => {
     })
     expect(screen.getAllByText(/pending/i).length).toBeGreaterThan(0)
   })
+
+  it('shows a signing-in-progress state while the wallet signs the transaction', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.type(screen.getByLabelText(/recipient/i), 'amina@example.com')
+    await user.type(screen.getByLabelText(/amount/i), '15')
+    await user.selectOptions(screen.getByLabelText(/to/i), 'NGN')
+    await user.click(screen.getByRole('button', { name: /review & send/i }))
+
+    expect(
+      await screen.findByRole('button', { name: /sign in your wallet/i }, { timeout: 3000 })
+    ).toBeDisabled()
+
+    await screen.findByRole('heading', { name: /your transfers/i }, { timeout: 5000 })
+  })
 })

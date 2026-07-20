@@ -19,7 +19,7 @@ import './SendMoney.css'
  */
 export default function SendMoney() {
   const navigate = useNavigate()
-  const { wallet, isConnected, connect } = useWallet()
+  const { wallet, isConnected, connect, sign, signing } = useWallet()
   const { addTransfer } = useTransfers()
 
   const [recipient, setRecipient] = useState('')
@@ -82,6 +82,13 @@ export default function SendMoney() {
 
     setSubmitting(true)
     try {
+      await sign({
+        recipient,
+        from,
+        to,
+        sendAmount: finalQuote.sendAmount,
+        receiveAmount: finalQuote.receiveAmount
+      })
       await addTransfer({
         recipient,
         from,
@@ -151,7 +158,7 @@ export default function SendMoney() {
           {submitError && <ErrorMessage message={submitError} />}
 
           <Button type="submit" disabled={submitting}>
-            {submitting ? 'Sending...' : 'Review & Send'}
+            {signing ? 'Sign in your wallet...' : submitting ? 'Sending...' : 'Review & Send'}
           </Button>
         </form>
 

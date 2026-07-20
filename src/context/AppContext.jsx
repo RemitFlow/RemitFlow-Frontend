@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { connectWallet, getStoredWallet, disconnectWallet } from '../services/wallet.js'
+import { connectWallet, getStoredWallet, disconnectWallet, signTransaction } from '../services/wallet.js'
 
 // Global app context: holds the connected wallet and exposes wallet actions.
 const AppContext = createContext(null)
@@ -7,6 +7,7 @@ const AppContext = createContext(null)
 export function AppProvider({ children }) {
   const [wallet, setWallet] = useState(null)
   const [connecting, setConnecting] = useState(false)
+  const [signing, setSigning] = useState(false)
 
   // Restore a previously connected wallet on first render.
   useEffect(() => {
@@ -30,12 +31,23 @@ export function AppProvider({ children }) {
     setWallet(null)
   }
 
+  async function sign(payload) {
+    setSigning(true)
+    try {
+      return await signTransaction(payload)
+    } finally {
+      setSigning(false)
+    }
+  }
+
   const value = {
     wallet,
     connecting,
+    signing,
     isConnected: Boolean(wallet),
     connect,
-    disconnect
+    disconnect,
+    sign
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

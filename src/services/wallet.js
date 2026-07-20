@@ -29,6 +29,21 @@ export function connectWallet() {
 }
 
 /**
+ * Simulate asking the wallet (Freighter / Albedo) to sign a transaction.
+ * @param {object} payload - the transaction details to "sign"
+ * @returns {Promise<{signature: string}>}
+ */
+export function signTransaction(payload) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        signature: 'SIGNED_' + Date.now().toString(36) + Math.random().toString(36).slice(2)
+      })
+    }, 500)
+  })
+}
+
+/**
  * Read a previously connected wallet from storage, if any.
  * @returns {{publicKey: string, balance: number}|null}
  */
