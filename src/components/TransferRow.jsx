@@ -6,12 +6,27 @@ import './TransferRow.css'
  * A single row in the transfers list.
  * @param {object} props
  * @param {object} props.transfer - the transfer record
+ * @param {boolean} [props.selectable] - render a selection checkbox
+ * @param {boolean} [props.selected] - whether the row is selected
+ * @param {Function} [props.onToggleSelect] - called with the transfer id when toggled
  */
-export default function TransferRow({ transfer }) {
-  const { recipient, from, to, sendAmount, receiveAmount, status, createdAt } = transfer
+export default function TransferRow({ transfer, selectable = false, selected = false, onToggleSelect }) {
+  const { id, recipient, from, to, sendAmount, receiveAmount, status, createdAt } = transfer
 
   return (
-    <div className="transfer-row">
+    <div className={`transfer-row${selected ? ' is-selected' : ''}`}>
+      {selectable && (
+        <div className="transfer-cell transfer-select">
+          <input
+            type="checkbox"
+            className="transfer-checkbox"
+            checked={selected}
+            onChange={() => onToggleSelect?.(id)}
+            aria-label={`Select transfer to ${recipient}`}
+          />
+        </div>
+      )}
+
       <div className="transfer-cell transfer-recipient">
         <span className="transfer-label">To</span>
         <span title={recipient}>{shortenAddress(recipient, 10, 6)}</span>

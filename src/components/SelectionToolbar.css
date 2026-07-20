@@ -1,0 +1,60 @@
+.selection-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid #1f2a3a;
+  border-radius: 10px;
+}
+
+.selection-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.selection-checkbox input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.selection-count {
+  font-weight: 600;
+}
+
+.selection-affordance {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.selection-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.selection-link:hover {
+  opacity: 0.85;
+}
+
+.selection-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
