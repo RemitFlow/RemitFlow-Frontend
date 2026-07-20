@@ -11,6 +11,7 @@ import { isPositiveAmount, validateRecipient, isWithinBalance } from '../utils/v
 import { useWallet } from '../hooks/useWallet.js'
 import { useTransfers } from '../hooks/useTransfers.js'
 import { useDebouncedValue } from '../hooks/useDebouncedValue.js'
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import { DEFAULT_SOURCE, DEFAULT_DEST } from '../constants/currencies.js'
 import './SendMoney.css'
 
@@ -18,6 +19,8 @@ import './SendMoney.css'
  * Send Money page: recipient + amount form with a live FX quote.
  */
 export default function SendMoney() {
+  useDocumentTitle('Send Money')
+
   const navigate = useNavigate()
   const { wallet, isConnected, connect } = useWallet()
   const { addTransfer } = useTransfers()

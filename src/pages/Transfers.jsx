@@ -6,6 +6,7 @@ import ErrorMessage from '../components/ErrorMessage.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import Button from '../components/Button.jsx'
 import { useTransfers } from '../hooks/useTransfers.js'
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import './Transfers.css'
 
 const STATUS_OPTIONS = [
@@ -20,6 +21,8 @@ const STATUS_OPTIONS = [
  * Filter state is synced to the URL query string.
  */
 export default function Transfers() {
+  useDocumentTitle('Your Transfers')
+
   const { transfers, loading, error, reload } = useTransfers()
   const [searchParams, setSearchParams] = useSearchParams()
 

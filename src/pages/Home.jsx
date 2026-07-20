@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import Button from '../components/Button.jsx'
 import { POPULAR_CORRIDORS, getCurrency } from '../constants/currencies.js'
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
 import './Home.css'
 
 // Selling points shown on the landing page.
@@ -26,6 +27,8 @@ const FEATURES = [
  * Marketing landing page.
  */
 export default function Home() {
+  useDocumentTitle('Home')
+
   return (
     <div className="home">
       <section className="hero">
