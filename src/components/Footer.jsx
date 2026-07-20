@@ -8,7 +8,17 @@ export default function Footer() {
   return (
     <footer className="footer">
       <span>© {year} RemitFlow</span>
-      <span className="footer-note">Powered by the Stellar network</span>
+      <div className="footer-right">
+        <a
+          href="https://status.remitflow.app"
+          className="footer-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Status
+        </a>
+        <span className="footer-note">Powered by the Stellar network</span>
+      </div>
     </footer>
   )
 }

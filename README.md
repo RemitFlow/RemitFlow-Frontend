@@ -19,9 +19,8 @@ The app runs at http://localhost:5173 by default.
   live FX quote with the RemitFlow fee broken out before sending.
 - **Transfers** — list of your transfers with status badges (pending,
   completed, failed), plus loading, error and empty states.
-- **Mock wallet** — connect a demo Stellar wallet (no network calls). Sending a
-  transfer simulates asking the wallet to sign the transaction, with a
-  signing-in-progress state shown on the Send Money button while it "signs".
+- **Mock wallet** — connect a demo Stellar wallet (no network calls).
+- **Footer** — copyright, a link to the RemitFlow status page, and Stellar attribution.
 
 ## Tech Stack
 
@@ -36,9 +35,9 @@ The app runs at http://localhost:5173 by default.
 src/
   components/   reusable UI (Navbar, Footer, QuoteCard, TransferRow, ...)
   pages/        route screens (Home, SendMoney, Transfers, NotFound)
-  services/     mock api, wallet (connect + sign), fx and quote logic
+  services/     mock api, wallet, fx and quote logic
   hooks/        useWallet, useTransfers
-  context/      AppContext (wallet state: connecting, signing)
+  context/      AppContext (wallet state)
   utils/        format and validation helpers
   constants/    currencies and fee config
 ```
@@ -62,7 +61,7 @@ cp .env.example .env
 
 ## Testing
 
-Integration tests cover the send-money form flow, including validation errors, the signing-in-progress state shown while the mock wallet "signs" the transaction, and successful transfer submission that lands on the transfers screen. Service-level tests cover the mock wallet's `signTransaction` helper.
+Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen. Component tests cover the footer's status page link.
 
 ## Lighthouse CI
 

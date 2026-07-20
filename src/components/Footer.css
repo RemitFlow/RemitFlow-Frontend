@@ -9,6 +9,22 @@
   font-size: 0.85rem;
 }
 
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-link {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
 .footer-note {
   color: var(--color-primary);
 }
