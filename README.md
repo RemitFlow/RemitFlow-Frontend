@@ -65,9 +65,20 @@ cp .env.example .env
 
 Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen. Component tests cover the connection-lost banner appearing and clearing as the browser's online status changes.
 
-## Lighthouse CI
+Component tests cover accessibility features such as route change announcements for screen readers.
 
-Lighthouse checks are configured in [lighthouserc.json](lighthouserc.json) and run in GitHub Actions on pull requests to the main branch. To validate locally, build the app and run:
+## Accessibility
+
+RemitFlow aims to be usable by everyone. The following accessibility features are implemented:
+
+- **Skip-to-content link** — keyboard users can bypass the navigation.
+- **Visible focus ring** — `:focus-visible` outlines are styled with the primary colour.
+- **ARIA live region for route announcements** — when the user navigates between pages, screen readers announce the new page title via a visually hidden `aria-live="polite"` region.
+- **Focus management on navigation** — keyboard focus moves to the main content area after each route change.
+- **Semantic roles** — components use `role="alert"`, `role="dialog"`, `role="progressbar"`, `role="status"`, and `role="tooltip"` as appropriate.
+- **Form field associations** — all inputs are paired with `<label htmlFor={id}>` and use `aria-invalid` / `aria-describedby` for error feedback.
+
+## Lighthouse CI
 
 ```bash
 npm run build
