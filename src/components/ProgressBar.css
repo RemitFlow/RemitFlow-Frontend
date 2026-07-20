@@ -12,3 +12,20 @@
   background: var(--color-primary);
   transition: width 0.25s ease;
 }
+
+@media (prefers-contrast: more) {
+  .progress-bar {
+    background: rgba(148, 163, 184, 0.35);
+    outline: 1px solid #475569;
+  }
+
+  .progress-bar-fill {
+    outline: 1px solid #a5b4fc;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-bar-fill {
+    transition: none;
+  }
+}

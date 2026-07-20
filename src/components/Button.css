@@ -40,3 +40,32 @@
 .btn-ghost:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.06);
 }
+
+@media (prefers-contrast: more) {
+  .btn-primary {
+    border: 1px solid #a5b4fc;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: #4f46e5;
+    border-color: #c7d2fe;
+  }
+
+  .btn-secondary {
+    border-color: #64748b;
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+@media (prefers-contrast: less) {
+  .btn-primary {
+    border: 1px solid transparent;
+  }
+
+  .btn-secondary {
+    border-color: #1e293b;
+  }
+}

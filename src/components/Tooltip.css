@@ -18,3 +18,10 @@
   white-space: nowrap;
   pointer-events: none;
 }
+
+@media (prefers-contrast: more) {
+  .tooltip-bubble {
+    border-width: 2px;
+    background: #000;
+  }
+}

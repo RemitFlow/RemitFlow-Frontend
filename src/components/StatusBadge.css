@@ -22,3 +22,20 @@
   background: rgba(239, 68, 68, 0.15);
   color: #f87171;
 }
+
+@media (prefers-contrast: more) {
+  .status-pending {
+    background: rgba(234, 179, 8, 0.35);
+    border: 1px solid #fde047;
+  }
+
+  .status-completed {
+    background: rgba(34, 197, 94, 0.35);
+    border: 1px solid #4ade80;
+  }
+
+  .status-failed {
+    background: rgba(239, 68, 68, 0.35);
+    border: 1px solid #f87171;
+  }
+}

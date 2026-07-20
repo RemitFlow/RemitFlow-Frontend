@@ -93,3 +93,13 @@
 .corridor-arrow {
   color: var(--color-muted);
 }
+
+@media (prefers-contrast: more) {
+  .feature-card {
+    border-width: 2px;
+  }
+
+  .corridor-chip {
+    border-width: 2px;
+  }
+}

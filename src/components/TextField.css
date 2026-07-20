@@ -32,3 +32,28 @@
   font-size: 0.8rem;
   color: #f87171;
 }
+
+@media (prefers-contrast: more) {
+  .text-field-input {
+    border-width: 2px;
+  }
+
+  .text-field-input.has-error {
+    border-color: #ef4444;
+    border-width: 2px;
+  }
+
+  .text-field-error {
+    color: #ef4444;
+  }
+}
+
+@media (prefers-contrast: less) {
+  .text-field-input.has-error {
+    border-color: #fca5a5;
+  }
+
+  .text-field-error {
+    color: #fca5a5;
+  }
+}

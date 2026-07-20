@@ -21,3 +21,19 @@
     transform: rotate(360deg);
   }
 }
+
+@media (prefers-contrast: more) {
+  .loader-spinner {
+    border-width: 4px;
+    border-color: #475569;
+    border-top-color: var(--color-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-spinner {
+    animation: none;
+    border-top-color: #475569;
+    border-right-color: var(--color-primary);
+  }
+}

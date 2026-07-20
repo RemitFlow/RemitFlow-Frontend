@@ -38,3 +38,13 @@
   line-height: 1.4;
   color: var(--color-muted);
 }
+
+@media (prefers-contrast: more) {
+  .quote-card {
+    border-width: 2px;
+  }
+
+  .quote-divider {
+    height: 2px;
+  }
+}

@@ -26,3 +26,11 @@
   height: 3rem;
   font-size: 1.05rem;
 }
+
+@media (prefers-contrast: more) {
+  .avatar {
+    background: rgba(99, 102, 241, 0.35);
+    color: #e0e7ff;
+    outline: 1px solid #818cf8;
+  }
+}

@@ -23,3 +23,9 @@
   outline-offset: 2px;
   border-color: var(--color-primary);
 }
+
+@media (prefers-contrast: more) {
+  .currency-select-input {
+    border-width: 2px;
+  }
+}

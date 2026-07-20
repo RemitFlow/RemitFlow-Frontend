@@ -64,6 +64,17 @@
   color: #f87171;
 }
 
+@media (prefers-contrast: more) {
+  .send-swap {
+    border-width: 2px;
+  }
+
+  .send-quote-hint {
+    border-style: solid;
+    border-width: 2px;
+  }
+}
+
 .send-quote-hint {
   color: var(--color-muted);
   background: var(--color-surface);

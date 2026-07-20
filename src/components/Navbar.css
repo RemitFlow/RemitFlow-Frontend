@@ -1,7 +1,6 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1.5rem;
   padding: 0.875rem 1.5rem;
   background: var(--color-surface);
@@ -21,6 +20,34 @@
   color: var(--color-primary);
 }
 
-.navbar-title {
+.navbar-links {
+  display: flex;
+  gap: 1.25rem;
+  margin-left: 1rem;
+}
+
+.navbar-link {
+  color: var(--color-muted);
+  font-weight: 500;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+.navbar-link:hover {
   color: var(--color-text);
+}
+
+.navbar-link.active {
+  color: var(--color-text);
+  border-bottom-color: var(--color-primary);
+}
+
+.navbar-actions {
+  margin-left: auto;
+}
+
+@media (prefers-contrast: more) {
+  .navbar {
+    border-bottom-width: 2px;
+  }
 }

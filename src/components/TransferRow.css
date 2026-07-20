@@ -1,31 +1,12 @@
 .transfer-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto auto;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
   background: var(--color-surface);
   border-radius: 10px;
   border: 1px solid #1f2a3a;
-}
-
-.transfer-row:has(.transfer-select) {
-  grid-template-columns: auto 2fr 1fr 1fr 1fr auto;
-}
-
-.transfer-row.is-selected {
-  border-color: var(--color-primary);
-}
-
-.transfer-select {
-  align-items: center;
-}
-
-.transfer-checkbox {
-  width: 1.05rem;
-  height: 1.05rem;
-  accent-color: var(--color-primary);
-  cursor: pointer;
 }
 
 .transfer-cell {
@@ -50,7 +31,8 @@
   align-items: flex-end;
 }
 
-.transfer-actions {
-  align-items: flex-end;
-  min-width: 5.5rem;
+@media (prefers-contrast: more) {
+  .transfer-row {
+    border-width: 2px;
+  }
 }

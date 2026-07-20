@@ -53,3 +53,17 @@
 .modal-body {
   padding: 1.25rem;
 }
+
+@media (prefers-contrast: more) {
+  .modal-overlay {
+    background: rgba(2, 6, 23, 0.85);
+  }
+
+  .modal-panel {
+    border-width: 2px;
+  }
+
+  .modal-header {
+    border-bottom-width: 2px;
+  }
+}

@@ -32,3 +32,11 @@
     animation: none;
   }
 }
+
+@media (prefers-contrast: more) {
+  .skeleton-row {
+    animation: none;
+    background: var(--color-surface);
+    border: 1px solid #475569;
+  }
+}

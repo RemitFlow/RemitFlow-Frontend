@@ -30,15 +30,66 @@ a {
   border-radius: 4px;
 }
 
-/* Screen-reader-only utility: visually hidden, available to AT. */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+/* ── Contrast preferences ───────────────────────────────────── */
+
+/* Higher contrast: deepen backgrounds, lighten text, strengthen borders. */
+@media (prefers-contrast: more) {
+  :root {
+    --color-bg: #03050f;
+    --color-surface: #0b1325;
+    --color-primary: #818cf8;
+    --color-text: #f8fafc;
+    --color-muted: #cbd5e1;
+  }
+
+  .modal-panel,
+  .modal-header,
+  .transfer-row,
+  .quote-card,
+  .quote-divider,
+  .feature-card,
+  .corridor-chip,
+  .navbar,
+  .footer,
+  .btn-secondary,
+  .text-field-input,
+  .currency-select-input,
+  .copy-button,
+  .tooltip-bubble,
+  .send-swap,
+  .send-quote-hint,
+  .error-boundary {
+    border-color: #475569;
+  }
+}
+
+/* Lower contrast: soften backgrounds, dim text, reduce border visibility. */
+@media (prefers-contrast: less) {
+  :root {
+    --color-bg: #1a1f2e;
+    --color-surface: #242b3d;
+    --color-primary: #6d71d4;
+    --color-text: #94a3b8;
+    --color-muted: #556070;
+  }
+
+  .modal-panel,
+  .modal-header,
+  .transfer-row,
+  .quote-card,
+  .quote-divider,
+  .feature-card,
+  .corridor-chip,
+  .navbar,
+  .footer,
+  .btn-secondary,
+  .text-field-input,
+  .currency-select-input,
+  .copy-button,
+  .tooltip-bubble,
+  .send-swap,
+  .send-quote-hint,
+  .error-boundary {
+    border-color: #1e293b;
+  }
 }

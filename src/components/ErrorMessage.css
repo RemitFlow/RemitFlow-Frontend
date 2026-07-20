@@ -25,7 +25,19 @@
   background: rgba(239, 68, 68, 0.2);
 }
 
-.error-retry:focus-visible {
-  outline: 2px solid #fca5a5;
-  outline-offset: 2px;
+@media (prefers-contrast: more) {
+  .error-message {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: #f87171;
+    color: #fee2e2;
+  }
+
+  .error-retry {
+    border-color: #fee2e2;
+    color: #fee2e2;
+  }
+
+  .error-retry:hover {
+    background: rgba(239, 68, 68, 0.35);
+  }
 }

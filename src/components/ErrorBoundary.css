@@ -33,3 +33,13 @@
 .error-boundary-button:hover {
   background: #4f46e5;
 }
+
+@media (prefers-contrast: more) {
+  .error-boundary {
+    border-width: 2px;
+  }
+
+  .error-boundary-button {
+    border: 1px solid #a5b4fc;
+  }
+}

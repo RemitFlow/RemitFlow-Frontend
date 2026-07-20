@@ -26,3 +26,15 @@
 .empty-state-action {
   margin-top: 0.75rem;
 }
+
+@media (prefers-contrast: more) {
+  .empty-state-icon {
+    opacity: 1;
+  }
+}
+
+@media (prefers-contrast: less) {
+  .empty-state-icon {
+    opacity: 0.6;
+  }
+}

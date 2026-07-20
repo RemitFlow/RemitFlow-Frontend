@@ -61,6 +61,14 @@ cp .env.example .env
 - `npm run test:watch` — watch mode for local test development
 - `npm run lighthouse` — run Lighthouse CI against the local preview server
 
+## Accessibility
+
+The app respects the following user-preference media queries:
+
+- **`prefers-reduced-motion`** — disables skeleton shimmer and loader spinner animations.
+- **`prefers-contrast: more`** — deepens backgrounds, lightens text, strengthens borders, and makes translucent backgrounds more opaque to meet higher contrast needs.
+- **`prefers-contrast: less`** — softens backgrounds, dims text, and reduces border visibility for users who prefer lower contrast.
+
 ## Testing
 
 Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen. Component tests cover the connection-lost banner appearing and clearing as the browser's online status changes.
