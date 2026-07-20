@@ -23,6 +23,8 @@ The app runs at http://localhost:5173 by default.
   when the whole page is selected an affordance offers to **select all
   transfers across every page** (or clear the selection).
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
+- **Scroll restoration** — the app remembers your scroll position on each page
+  and restores it automatically when you navigate back or forward.
 
 ## Tech Stack
 
