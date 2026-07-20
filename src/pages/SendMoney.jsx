@@ -11,6 +11,7 @@ import { isPositiveAmount, validateRecipient, isWithinBalance } from '../utils/v
 import { useWallet } from '../hooks/useWallet.js'
 import { useTransfers } from '../hooks/useTransfers.js'
 import { useDebouncedValue } from '../hooks/useDebouncedValue.js'
+import { useApp } from '../context/AppContext.jsx'
 import { DEFAULT_SOURCE, DEFAULT_DEST } from '../constants/currencies.js'
 import './SendMoney.css'
 
@@ -21,6 +22,7 @@ export default function SendMoney() {
   const navigate = useNavigate()
   const { wallet, isConnected, connect, sign, signing } = useWallet()
   const { addTransfer } = useTransfers()
+  const { locale } = useApp()
 
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
@@ -164,7 +166,7 @@ export default function SendMoney() {
 
         <div className="send-quote">
           {quote ? (
-            <QuoteCard quote={quote} />
+            <QuoteCard quote={quote} locale={locale} />
           ) : (
             <p className="send-quote-hint">
               Enter an amount to see your quote.

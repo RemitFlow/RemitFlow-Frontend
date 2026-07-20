@@ -1,0 +1,24 @@
+.locale-select {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.locale-select-label {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+.locale-select-input {
+  padding: 0.6rem 0.75rem;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.locale-select-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}

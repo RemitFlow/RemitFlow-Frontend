@@ -1,33 +1,19 @@
 import StatusBadge from './StatusBadge.jsx'
-import CopyButton from './CopyButton.jsx'
 import { formatAmount, formatDate, shortenAddress } from '../utils/format.js'
+import { DEFAULT_LOCALE } from '../constants/locales.js'
 import './TransferRow.css'
 
 /**
  * A single row in the transfers list.
  * @param {object} props
  * @param {object} props.transfer - the transfer record
- * @param {boolean} [props.selectable] - render a selection checkbox
- * @param {boolean} [props.selected] - whether the row is selected
- * @param {Function} [props.onToggleSelect] - called with the transfer id when toggled
+ * @param {string} [props.locale] - locale used for currency/date formatting
  */
-export default function TransferRow({ transfer, selectable = false, selected = false, onToggleSelect }) {
-  const { id, recipient, from, to, sendAmount, receiveAmount, status, createdAt } = transfer
+export default function TransferRow({ transfer, locale = DEFAULT_LOCALE }) {
+  const { recipient, from, to, sendAmount, receiveAmount, status, createdAt } = transfer
 
   return (
-    <div className={`transfer-row${selected ? ' is-selected' : ''}`}>
-      {selectable && (
-        <div className="transfer-cell transfer-select">
-          <input
-            type="checkbox"
-            className="transfer-checkbox"
-            checked={selected}
-            onChange={() => onToggleSelect?.(id)}
-            aria-label={`Select transfer to ${recipient}`}
-          />
-        </div>
-      )}
-
+    <div className="transfer-row">
       <div className="transfer-cell transfer-recipient">
         <span className="transfer-label">To</span>
         <span title={recipient}>{shortenAddress(recipient, 10, 6)}</span>
@@ -35,25 +21,21 @@ export default function TransferRow({ transfer, selectable = false, selected = f
 
       <div className="transfer-cell">
         <span className="transfer-label">Sent</span>
-        <span>{formatAmount(sendAmount, from)}</span>
+        <span>{formatAmount(sendAmount, from, locale)}</span>
       </div>
 
       <div className="transfer-cell">
         <span className="transfer-label">Received</span>
-        <span>{formatAmount(receiveAmount, to)}</span>
+        <span>{formatAmount(receiveAmount, to, locale)}</span>
       </div>
 
       <div className="transfer-cell">
         <span className="transfer-label">Date</span>
-        <span>{formatDate(createdAt)}</span>
+        <span>{formatDate(createdAt, locale)}</span>
       </div>
 
       <div className="transfer-cell transfer-status">
         <StatusBadge status={status} />
-      </div>
-
-      <div className="transfer-cell transfer-actions">
-        <CopyButton value={transfer.id} label={`Copy transaction hash ${transfer.id}`} />
       </div>
     </div>
   )

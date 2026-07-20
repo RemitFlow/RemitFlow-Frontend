@@ -1,13 +1,26 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { connectWallet, getStoredWallet, disconnectWallet, signTransaction } from '../services/wallet.js'
+import { connectWallet, getStoredWallet, disconnectWallet } from '../services/wallet.js'
+import { useLocalStorage } from '../hooks/useLocalStorage.js'
+import { DEFAULT_LOCALE, LOCALES, isSupportedLocale } from '../constants/locales.js'
 
-// Global app context: holds the connected wallet and exposes wallet actions.
+const LOCALE_STORAGE_KEY = 'remitflow:locale'
+
+// Global app context: holds the connected wallet, the locale preference used
+// for currency/date/number formatting, and exposes the actions for both.
 const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
   const [wallet, setWallet] = useState(null)
   const [connecting, setConnecting] = useState(false)
-  const [signing, setSigning] = useState(false)
+  const [storedLocale, setStoredLocale] = useLocalStorage(LOCALE_STORAGE_KEY, DEFAULT_LOCALE)
+
+  // Guard against a stale or tampered value in localStorage (e.g. left over
+  // from a version that supported a different set of locales).
+  const locale = isSupportedLocale(storedLocale) ? storedLocale : DEFAULT_LOCALE
+
+  function setLocale(code) {
+    setStoredLocale(isSupportedLocale(code) ? code : DEFAULT_LOCALE)
+  }
 
   // Restore a previously connected wallet on first render.
   useEffect(() => {
@@ -31,23 +44,15 @@ export function AppProvider({ children }) {
     setWallet(null)
   }
 
-  async function sign(payload) {
-    setSigning(true)
-    try {
-      return await signTransaction(payload)
-    } finally {
-      setSigning(false)
-    }
-  }
-
   const value = {
     wallet,
     connecting,
-    signing,
     isConnected: Boolean(wallet),
     connect,
     disconnect,
-    sign
+    locale,
+    setLocale,
+    locales: LOCALES
   }
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

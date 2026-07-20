@@ -4,16 +4,16 @@ import Skeleton from '../components/Skeleton.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import EmptyState from '../components/EmptyState.jsx'
 import Button from '../components/Button.jsx'
-import PullToRefresh from '../components/PullToRefresh.jsx'
 import { useTransfers } from '../hooks/useTransfers.js'
+import { useApp } from '../context/AppContext.jsx'
 import './Transfers.css'
 
 /**
  * Transfers page: lists all transfers with their status.
- * Supports pull-to-refresh on mobile lists.
  */
 export default function Transfers() {
   const { transfers, loading, error, reload } = useTransfers()
+  const { locale } = useApp()
 
   return (
     <div className="transfers">
@@ -24,37 +24,34 @@ export default function Transfers() {
         </Link>
       </div>
 
-      <PullToRefresh onRefresh={reload}>
-        {loading && (
-          <div className="transfers-list">
-            <Skeleton count={3} height="4.5rem" />
-          </div>
-        )}
+      {loading && (
+        <div className="transfers-list">
+          <Skeleton count={3} height="4.5rem" />
+        </div>
+      )}
 
-        {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
+      {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
 
-        {!loading && !error && transfers.length === 0 && (
-          <EmptyState
-            icon="💸"
-            title="No transfers yet"
-            message="Once you send money, your transfers will show up here."
-            action={
-              <Link to="/send">
-                <Button>Send your first transfer</Button>
-              </Link>
-            }
-          />
-        )}
+      {!loading && !error && transfers.length === 0 && (
+        <EmptyState
+          icon="💸"
+          title="No transfers yet"
+          message="Once you send money, your transfers will show up here."
+          action={
+            <Link to="/send">
+              <Button>Send your first transfer</Button>
+            </Link>
+          }
+        />
+      )}
 
-        {!loading && !error && transfers.length > 0 && (
-          <div className="transfers-list">
-            {transfers.map((t) => (
-              <TransferRow key={t.id} transfer={t} />
-            ))}
-          </div>
-        )}
-      </PullToRefresh>
+      {!loading && !error && transfers.length > 0 && (
+        <div className="transfers-list">
+          {transfers.map((t) => (
+            <TransferRow key={t.id} transfer={t} locale={locale} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }
-

@@ -20,9 +20,10 @@ The app runs at http://localhost:5173 by default.
 - **Transfers** — list of your transfers with status badges (pending,
   completed, failed), plus loading, error and empty states.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
-- **Connection-lost banner** — a banner appears across the top of the app when
-  the browser reports it has lost network connectivity, and clears once it's
-  restored.
+- **Locale preference** — pick a language/region from the navbar (e.g.
+  `en-US`, `fr-FR`, `hi-IN`) to control number grouping, decimal separators
+  and symbol placement for every formatted amount and date in the app. The
+  choice is saved to `localStorage` and restored on your next visit.
 
 ## Tech Stack
 
@@ -38,10 +39,10 @@ src/
   components/   reusable UI (Navbar, Footer, QuoteCard, TransferRow, ...)
   pages/        route screens (Home, SendMoney, Transfers, NotFound)
   services/     mock api, wallet, fx and quote logic
-  hooks/        useWallet, useTransfers, useOnlineStatus
-  context/      AppContext (wallet state)
+  hooks/        useWallet, useTransfers
+  context/      AppContext (wallet state and locale preference)
   utils/        format and validation helpers
-  constants/    currencies and fee config
+  constants/    currencies, locales and fee config
 ```
 
 ## Environment
@@ -61,32 +62,18 @@ cp .env.example .env
 - `npm run test:watch` — watch mode for local test development
 - `npm run lighthouse` — run Lighthouse CI against the local preview server
 
-## Accessibility
-
-The app respects the following user-preference media queries:
-
-- **`prefers-reduced-motion`** — disables skeleton shimmer and loader spinner animations.
-- **`prefers-contrast: more`** — deepens backgrounds, lightens text, strengthens borders, and makes translucent backgrounds more opaque to meet higher contrast needs.
-- **`prefers-contrast: less`** — softens backgrounds, dims text, and reduces border visibility for users who prefer lower contrast.
-
 ## Testing
 
-Integration tests cover the send-money form flow, including validation errors and successful transfer submission that lands on the transfers screen. Component tests cover the connection-lost banner appearing and clearing as the browser's online status changes.
-
-Component tests cover accessibility features such as route change announcements for screen readers.
-
-## Accessibility
-
-RemitFlow aims to be usable by everyone. The following accessibility features are implemented:
-
-- **Skip-to-content link** — keyboard users can bypass the navigation.
-- **Visible focus ring** — `:focus-visible` outlines are styled with the primary colour.
-- **ARIA live region for route announcements** — when the user navigates between pages, screen readers announce the new page title via a visually hidden `aria-live="polite"` region.
-- **Focus management on navigation** — keyboard focus moves to the main content area after each route change.
-- **Semantic roles** — components use `role="alert"`, `role="dialog"`, `role="progressbar"`, `role="status"`, and `role="tooltip"` as appropriate.
-- **Form field associations** — all inputs are paired with `<label htmlFor={id}>` and use `aria-invalid` / `aria-describedby` for error feedback.
+Integration tests cover the send-money form flow (validation errors and
+successful transfer submission) and the locale preference (switching the
+navbar locale reformats currency amounts and the choice persists across
+reloads). Unit tests under `test/unit` cover the locale-aware formatting
+helpers (`formatAmount`, `formatDate`, `formatNumber`), the `LocaleSelect`
+component, and the `AppContext` locale persistence/fallback behavior.
 
 ## Lighthouse CI
+
+Lighthouse checks are configured in [lighthouserc.json](lighthouserc.json) and run in GitHub Actions on pull requests to the main branch. To validate locally, build the app and run:
 
 ```bash
 npm run build

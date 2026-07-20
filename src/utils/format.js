@@ -1,6 +1,15 @@
 // Formatting helpers for currency, dates and addresses.
+import { DEFAULT_LOCALE } from '../constants/locales.js'
 
-export function formatAmount(amount, currency = 'USD', locale = 'en-US') {
+/**
+ * Format an amount as a currency string.
+ * @param {number|string} amount - the amount to format
+ * @param {string} [currency] - ISO currency code, e.g. "USD"
+ * @param {string} [locale] - BCP 47 locale tag used for grouping, decimal
+ *   separator and symbol placement, e.g. "en-US" or "fr-FR"
+ * @returns {string} the formatted currency string
+ */
+export function formatAmount(amount, currency = 'USD', locale = DEFAULT_LOCALE) {
   const num = Number(amount) || 0
   return new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -10,7 +19,13 @@ export function formatAmount(amount, currency = 'USD', locale = 'en-US') {
   }).format(num)
 }
 
-export function formatDate(value, locale = 'en-US') {
+/**
+ * Format a date for display.
+ * @param {string|number|Date} value - the date to format
+ * @param {string} [locale] - BCP 47 locale tag
+ * @returns {string} the formatted date, or "-" when value is missing
+ */
+export function formatDate(value, locale = DEFAULT_LOCALE) {
   if (!value) return '-'
   const d = new Date(value)
   return d.toLocaleString(locale, {
@@ -63,9 +78,10 @@ export function formatPercent(value, decimals = 2) {
  * Format a plain number with grouped thousands and no currency symbol.
  * @param {number} value - the number to format
  * @param {number} [decimals] - maximum decimal places to show
+ * @param {string} [locale] - BCP 47 locale tag
  * @returns {string} the formatted number
  */
-export function formatNumber(value, decimals = 2, locale = 'en-US') {
+export function formatNumber(value, decimals = 2, locale = DEFAULT_LOCALE) {
   const num = Number(value) || 0
   return new Intl.NumberFormat(locale, {
     minimumFractionDigits: 0,
