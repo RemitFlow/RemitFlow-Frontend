@@ -18,8 +18,9 @@
   font-size: 0.95rem;
 }
 
-.text-field-input:focus {
-  outline: none;
+.text-field-input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
   border-color: var(--color-primary);
 }
 
