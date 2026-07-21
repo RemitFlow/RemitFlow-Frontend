@@ -15,7 +15,9 @@ export default {
       options: ['button', 'submit']
     },
     disabled: { control: 'boolean' },
-    children: { control: 'text' }
+    children: { control: 'text' },
+    ariaLabel: { control: 'text' },
+    title: { control: 'text' }
   }
 }
 
@@ -44,6 +46,15 @@ export const Disabled = {
   args: {
     children: 'Disabled',
     disabled: true
+  }
+}
+
+export const IconOnly = {
+  args: {
+    children: '✕',
+    variant: 'ghost',
+    ariaLabel: 'Close',
+    title: 'Close'
   }
 }
 

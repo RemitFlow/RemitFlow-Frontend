@@ -7,13 +7,17 @@ import './Button.css'
  * @param {boolean} [props.disabled]
  * @param {Function} [props.onClick]
  * @param {'button'|'submit'} [props.type]
+ * @param {string} [props.ariaLabel] - accessible label for icon-only buttons
+ * @param {string} [props.title] - native tooltip text
  */
 export default function Button({
   children,
   variant = 'primary',
   disabled = false,
   type = 'button',
-  onClick
+  onClick,
+  ariaLabel,
+  title
 }) {
   return (
     <button
@@ -21,6 +25,8 @@ export default function Button({
       className={`btn btn-${variant}`}
       disabled={disabled}
       onClick={onClick}
+      aria-label={ariaLabel}
+      title={title}
     >
       {children}
     </button>
