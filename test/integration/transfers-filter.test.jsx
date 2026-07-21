@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../../src/App.jsx'
 
 const TRANSFERS = [
@@ -28,8 +28,14 @@ const TRANSFERS = [
 
 describe('Transfers page filter sync', () => {
   beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-06-05T12:00:00Z'))
     window.history.pushState({}, '', '/transfers')
     localStorage.setItem('remitflow.transfers', JSON.stringify(TRANSFERS))
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   async function waitForTransfers() {
@@ -105,5 +111,27 @@ describe('Transfers page filter sync', () => {
     })
     expect(screen.getByText(/amina@exam/)).toBeInTheDocument()
     expect(screen.getByText(/GBQAZ7Z3X7/)).toBeInTheDocument()
+  })
+
+  it('filters by date-range preset and syncs to URL', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await waitForTransfers()
+
+    await user.selectOptions(screen.getByLabelText(/filter by date range/i), '7d')
+
+    await waitFor(() => {
+      expect(window.location.search).toContain('range=7d')
+      expect(screen.getByText(/GBQAZ7Z3X7/)).toBeInTheDocument()
+      expect(screen.queryByText(/amina@exam/)).not.toBeInTheDocument()
+    })
+  })
+
+  it('reads date-range preset from URL on page load', async () => {
+    window.history.pushState({}, '', '/transfers?range=7d')
+    render(<App />)
+
+    await screen.findByText(/GBQAZ7Z3X7/)
+    expect(screen.queryByText(/amina@exam/)).not.toBeInTheDocument()
   })
 })

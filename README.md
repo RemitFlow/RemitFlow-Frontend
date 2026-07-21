@@ -18,7 +18,8 @@ The app runs at http://localhost:5173 by default.
 - **Send Money** — enter a recipient and amount, pick currencies, and see a
   live FX quote with the RemitFlow fee broken out before sending.
 - **Transfers** — list of your transfers with status badges (pending,
-  completed, failed), plus loading, error and empty states.
+  completed, failed), search/status/date-range filters synced to the URL,
+  plus loading, error and empty states.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
 
 ## Tech Stack
@@ -61,7 +62,8 @@ cp .env.example .env
 ## Testing
 
 Integration tests cover send-money validation, successful transfer submission,
-pending button behavior and duplicate-submission prevention.
+pending button behavior, duplicate-submission prevention, and Transfers page
+filter sync (search, status, and date-range presets such as last 7/30/90 days).
 
 ## Lighthouse CI
 
