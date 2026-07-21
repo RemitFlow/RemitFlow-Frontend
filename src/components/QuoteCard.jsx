@@ -1,7 +1,7 @@
-import { formatAmount, formatRate, formatPercent } from '../utils/format.js'
-import { FEE_PERCENT } from '../constants/fees.js'
-import { DEFAULT_LOCALE } from '../constants/locales.js'
-import './QuoteCard.css'
+import { formatAmount, formatRate, formatPercent } from '../utils/format.js';
+import { FEE_PERCENT } from '../constants/fees.js';
+import { DEFAULT_LOCALE } from '../constants/locales.js';
+import './QuoteCard.css';
 
 /**
  * Displays the breakdown of an FX quote: rate, fee and amount received.
@@ -10,9 +10,9 @@ import './QuoteCard.css'
  * @param {string} [props.locale] - locale used for currency formatting
  */
 export default function QuoteCard({ quote, locale = DEFAULT_LOCALE }) {
-  if (!quote) return null
+  if (!quote) return null;
 
-  const { from, to, rate, sendAmount, fee, receiveAmount } = quote
+  const { from, to, rate, sendAmount, fee, receiveAmount } = quote;
 
   return (
     <div className="quote-card">
@@ -45,5 +45,5 @@ export default function QuoteCard({ quote, locale = DEFAULT_LOCALE }) {
         indicative and update at confirmation.
       </p>
     </div>
-  )
+  );
 }

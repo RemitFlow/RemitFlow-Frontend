@@ -7,6 +7,32 @@
   background: var(--color-surface);
   border-radius: 10px;
   border: 1px solid #1f2a3a;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.transfer-row.is-selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.transfer-row.has-checkbox {
+  grid-template-columns: auto 2fr 1fr 1fr 1fr auto;
+}
+
+.transfer-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transfer-checkbox input[type='checkbox'] {
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  margin: 0;
 }
 
 .transfer-cell {
@@ -24,7 +50,7 @@
 }
 
 .transfer-recipient span:last-child {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 .transfer-status {

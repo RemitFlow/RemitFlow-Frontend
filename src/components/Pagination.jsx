@@ -1,4 +1,4 @@
-import './Pagination.css'
+import './Pagination.css';
 
 /**
  * Simple previous/next pagination control.
@@ -8,7 +8,7 @@ import './Pagination.css'
  * @param {Function} props.onChange - called with the next page number
  */
 export default function Pagination({ page, totalPages, onChange }) {
-  if (totalPages <= 1) return null
+  if (totalPages <= 1) return null;
 
   return (
     <nav className="pagination" aria-label="Pagination">
@@ -32,5 +32,5 @@ export default function Pagination({ page, totalPages, onChange }) {
         Next
       </button>
     </nav>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react';
 
 /**
  * Manages a set of selected ids independent of pagination, so a selection can
@@ -18,42 +18,42 @@ import { useCallback, useMemo, useState } from 'react'
  * }}
  */
 export function useSelection() {
-  const [selectedIds, setSelectedIds] = useState(() => new Set())
+  const [selectedIds, setSelectedIds] = useState(() => new Set());
 
-  const isSelected = useCallback((id) => selectedIds.has(id), [selectedIds])
+  const isSelected = useCallback((id) => selectedIds.has(id), [selectedIds]);
 
   const toggle = useCallback((id) => {
     setSelectedIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }, [])
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
   const selectMany = useCallback((ids) => {
     setSelectedIds((prev) => {
-      const next = new Set(prev)
-      ids.forEach((id) => next.add(id))
-      return next
-    })
-  }, [])
+      const next = new Set(prev);
+      ids.forEach((id) => next.add(id));
+      return next;
+    });
+  }, []);
 
   const deselectMany = useCallback((ids) => {
     setSelectedIds((prev) => {
-      const next = new Set(prev)
-      ids.forEach((id) => next.delete(id))
-      return next
-    })
-  }, [])
+      const next = new Set(prev);
+      ids.forEach((id) => next.delete(id));
+      return next;
+    });
+  }, []);
 
   const replaceAll = useCallback((ids) => {
-    setSelectedIds(new Set(ids))
-  }, [])
+    setSelectedIds(new Set(ids));
+  }, []);
 
-  const clear = useCallback(() => setSelectedIds(new Set()), [])
+  const clear = useCallback(() => setSelectedIds(new Set()), []);
 
-  const selectedCount = selectedIds.size
+  const selectedCount = selectedIds.size;
 
   return useMemo(
     () => ({
@@ -64,8 +64,17 @@ export function useSelection() {
       selectMany,
       deselectMany,
       replaceAll,
-      clear
+      clear,
     }),
-    [selectedIds, selectedCount, isSelected, toggle, selectMany, deselectMany, replaceAll, clear]
-  )
+    [
+      selectedIds,
+      selectedCount,
+      isSelected,
+      toggle,
+      selectMany,
+      deselectMany,
+      replaceAll,
+      clear,
+    ],
+  );
 }

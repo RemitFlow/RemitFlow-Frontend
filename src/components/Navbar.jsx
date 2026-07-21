@@ -1,15 +1,15 @@
-import { NavLink, Link } from 'react-router-dom'
-import WalletButton from './WalletButton.jsx'
-import LocaleSelect from './LocaleSelect.jsx'
-import { useApp } from '../context/AppContext.jsx'
-import './Navbar.css'
+import { NavLink, Link } from 'react-router-dom';
+import WalletButton from './WalletButton.jsx';
+import LocaleSelect from './LocaleSelect.jsx';
+import { useApp } from '../context/AppContext.jsx';
+import './Navbar.css';
 
 /**
  * Top navigation bar with links, the locale preference and the wallet
  * connect button.
  */
 export default function Navbar() {
-  const { locale, setLocale } = useApp()
+  const { locale, setLocale } = useApp();
 
   return (
     <header className="navbar">
@@ -40,5 +40,5 @@ export default function Navbar() {
         <WalletButton />
       </div>
     </header>
-  )
+  );
 }

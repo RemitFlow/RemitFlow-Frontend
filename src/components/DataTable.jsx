@@ -1,5 +1,5 @@
-import { useColumnResize } from '../hooks/useColumnResize.js'
-import './DataTable.css'
+import { useColumnResize } from '../hooks/useColumnResize.js';
+import './DataTable.css';
 
 /**
  * A reusable data table with column resize handles and keyboard-accessible
@@ -29,13 +29,13 @@ export default function DataTable({
   error,
   onRetry,
   emptyState,
-  id
+  id,
 }) {
-  const { widths, resizing, getResizeProps } = useColumnResize(columns)
+  const { widths, resizing, getResizeProps } = useColumnResize(columns);
 
   const gridTemplateColumns = columns
     .map((col) => `${widths[col.key]}px`)
-    .join(' ')
+    .join(' ');
 
   return (
     <div className="data-table" id={id} role="grid" aria-label="Data table">
@@ -53,10 +53,10 @@ export default function DataTable({
             aria-label={col.label}
             style={{ width: widths[col.key] }}
           >
-            <span className="data-table-header-label" aria-hidden="true">{col.label}</span>
-            {idx < columns.length - 1 && (
-              <div {...getResizeProps(col.key)} />
-            )}
+            <span className="data-table-header-label" aria-hidden="true">
+              {col.label}
+            </span>
+            {idx < columns.length - 1 && <div {...getResizeProps(col.key)} />}
           </div>
         ))}
       </div>
@@ -98,12 +98,9 @@ export default function DataTable({
           </div>
         )}
 
-        {!loading &&
-          !error &&
-          data.length === 0 &&
-          emptyState && (
-            <div className="data-table-message">{emptyState}</div>
-          )}
+        {!loading && !error && data.length === 0 && emptyState && (
+          <div className="data-table-message">{emptyState}</div>
+        )}
 
         {!loading &&
           !error &&
@@ -132,7 +129,7 @@ export default function DataTable({
         {resizing && <div className="data-table-resize-overlay" />}
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -148,9 +145,12 @@ export default function DataTable({
  */
 export function DataTableCell({ label, children, title, className }) {
   return (
-    <div className={`data-table-cell-content${className ? ' ' + className : ''}`} title={title}>
+    <div
+      className={`data-table-cell-content${className ? ' ' + className : ''}`}
+      title={title}
+    >
       <span className="data-table-cell-label">{label}</span>
       <span className="data-table-cell-value">{children}</span>
     </div>
-  )
+  );
 }

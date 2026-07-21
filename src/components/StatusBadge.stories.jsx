@@ -1,4 +1,4 @@
-import StatusBadge from './StatusBadge.jsx'
+import StatusBadge from './StatusBadge.jsx';
 
 export default {
   title: 'Components/StatusBadge',
@@ -7,28 +7,28 @@ export default {
   argTypes: {
     status: {
       control: 'select',
-      options: ['pending', 'completed', 'failed']
-    }
-  }
-}
+      options: ['pending', 'completed', 'failed'],
+    },
+  },
+};
 
 export const Pending = {
   args: {
-    status: 'pending'
-  }
-}
+    status: 'pending',
+  },
+};
 
 export const Completed = {
   args: {
-    status: 'completed'
-  }
-}
+    status: 'completed',
+  },
+};
 
 export const Failed = {
   args: {
-    status: 'failed'
-  }
-}
+    status: 'failed',
+  },
+};
 
 export const AllStatuses = {
   render: () => (
@@ -37,5 +37,5 @@ export const AllStatuses = {
       <StatusBadge status="completed" />
       <StatusBadge status="failed" />
     </div>
-  )
-}
+  ),
+};

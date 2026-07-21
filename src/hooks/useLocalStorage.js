@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react';
 
 /**
  * State that is persisted to localStorage and survives reloads.
@@ -10,27 +10,27 @@ import { useCallback, useState } from 'react'
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
     try {
-      const raw = localStorage.getItem(key)
-      return raw != null ? JSON.parse(raw) : initialValue
+      const raw = localStorage.getItem(key);
+      return raw != null ? JSON.parse(raw) : initialValue;
     } catch (err) {
-      return initialValue
+      return initialValue;
     }
-  })
+  });
 
   const set = useCallback(
     (next) => {
       setValue((prev) => {
-        const resolved = typeof next === 'function' ? next(prev) : next
+        const resolved = typeof next === 'function' ? next(prev) : next;
         try {
-          localStorage.setItem(key, JSON.stringify(resolved))
+          localStorage.setItem(key, JSON.stringify(resolved));
         } catch (err) {
           // storage may be unavailable; keep the in-memory value.
         }
-        return resolved
-      })
+        return resolved;
+      });
     },
-    [key]
-  )
+    [key],
+  );
 
-  return [value, set]
+  return [value, set];
 }

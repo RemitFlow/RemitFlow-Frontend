@@ -1,12 +1,12 @@
-import './Alert.css'
+import './Alert.css';
 
 // Leading glyph shown for each alert tone.
 const ICONS = {
   info: 'ℹ️',
   success: '✅',
   warning: '⚠️',
-  error: '⛔'
-}
+  error: '⛔',
+};
 
 /**
  * Inline message banner for surfacing contextual notices.
@@ -26,5 +26,5 @@ export default function Alert({ variant = 'info', title, children }) {
         <div className="alert-message">{children}</div>
       </div>
     </div>
-  )
+  );
 }

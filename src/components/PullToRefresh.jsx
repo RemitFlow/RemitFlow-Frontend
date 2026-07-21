@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState } from 'react'
-import Loader from './Loader.jsx'
-import './PullToRefresh.css'
+import { useCallback, useRef, useState } from 'react';
+import Loader from './Loader.jsx';
+import './PullToRefresh.css';
 
 /**
  * PullToRefresh wrapper component for mobile lists.
@@ -18,67 +18,67 @@ export default function PullToRefresh({
   children,
   pullThreshold = 60,
   disabled = false,
-  className = ''
+  className = '',
 }) {
-  const [pullDistance, setPullDistance] = useState(0)
-  const [isPulling, setIsPulling] = useState(false)
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const containerRef = useRef(null)
-  const startYRef = useRef(0)
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isPulling, setIsPulling] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const containerRef = useRef(null);
+  const startYRef = useRef(0);
 
   const handleRefresh = useCallback(async () => {
-    if (isRefreshing || !onRefresh) return
-    setIsRefreshing(true)
+    if (isRefreshing || !onRefresh) return;
+    setIsRefreshing(true);
     try {
-      await onRefresh()
+      await onRefresh();
     } finally {
-      setIsRefreshing(false)
-      setPullDistance(0)
-      setIsPulling(false)
+      setIsRefreshing(false);
+      setPullDistance(0);
+      setIsPulling(false);
     }
-  }, [isRefreshing, onRefresh])
+  }, [isRefreshing, onRefresh]);
 
   const handleTouchStart = (e) => {
-    if (disabled || isRefreshing) return
-    const container = containerRef.current
-    const scrollTop = container ? container.scrollTop : window.scrollY
+    if (disabled || isRefreshing) return;
+    const container = containerRef.current;
+    const scrollTop = container ? container.scrollTop : window.scrollY;
     if (scrollTop <= 0 && e.touches && e.touches.length === 1) {
-      startYRef.current = e.touches[0].clientY
-      setIsPulling(true)
+      startYRef.current = e.touches[0].clientY;
+      setIsPulling(true);
     }
-  }
+  };
 
   const handleTouchMove = (e) => {
-    if (!isPulling || disabled || isRefreshing || !startYRef.current) return
-    const container = containerRef.current
-    const scrollTop = container ? container.scrollTop : window.scrollY
-    if (scrollTop > 0) return
+    if (!isPulling || disabled || isRefreshing || !startYRef.current) return;
+    const container = containerRef.current;
+    const scrollTop = container ? container.scrollTop : window.scrollY;
+    if (scrollTop > 0) return;
 
-    const currentY = e.touches[0].clientY
-    const diff = currentY - startYRef.current
+    const currentY = e.touches[0].clientY;
+    const diff = currentY - startYRef.current;
 
     if (diff > 0) {
       // Resistance factor for pull motion
-      const distance = Math.min(diff * 0.5, 120)
-      setPullDistance(distance)
+      const distance = Math.min(diff * 0.5, 120);
+      setPullDistance(distance);
     } else {
-      setPullDistance(0)
+      setPullDistance(0);
     }
-  }
+  };
 
   const handleTouchEnd = () => {
-    if (!isPulling) return
-    setIsPulling(false)
-    startYRef.current = 0
+    if (!isPulling) return;
+    setIsPulling(false);
+    startYRef.current = 0;
 
     if (pullDistance >= pullThreshold && !isRefreshing) {
-      handleRefresh()
+      handleRefresh();
     } else {
-      setPullDistance(0)
+      setPullDistance(0);
     }
-  }
+  };
 
-  const isTriggered = pullDistance >= pullThreshold
+  const isTriggered = pullDistance >= pullThreshold;
 
   return (
     <div
@@ -95,7 +95,7 @@ export default function PullToRefresh({
         }`}
         style={{
           height: isRefreshing ? `${pullThreshold}px` : `${pullDistance}px`,
-          opacity: isRefreshing || pullDistance > 0 ? 1 : 0
+          opacity: isRefreshing || pullDistance > 0 ? 1 : 0,
         }}
         aria-live="polite"
         data-testid="ptr-indicator"
@@ -127,7 +127,7 @@ export default function PullToRefresh({
             pullDistance > 0 || isRefreshing
               ? `translateY(${isRefreshing ? pullThreshold : pullDistance}px)`
               : 'none',
-          transition: isPulling ? 'none' : 'transform 0.2s ease-out'
+          transition: isPulling ? 'none' : 'transform 0.2s ease-out',
         }}
       >
         {children}
@@ -145,6 +145,5 @@ export default function PullToRefresh({
         Refresh
       </button>
     </div>
-  )
+  );
 }
-

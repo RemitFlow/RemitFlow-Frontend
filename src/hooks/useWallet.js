@@ -1,4 +1,4 @@
-import { useApp } from '../context/AppContext.jsx'
+import { useApp } from '../context/AppContext.jsx';
 
 /**
  * Convenience hook for accessing wallet state and actions.
@@ -6,6 +6,22 @@ import { useApp } from '../context/AppContext.jsx'
  *   signing: boolean, connect: Function, disconnect: Function, sign: Function}}
  */
 export function useWallet() {
-  const { wallet, isConnected, connecting, signing, connect, disconnect, sign } = useApp()
-  return { wallet, isConnected, connecting, signing, connect, disconnect, sign }
+  const {
+    wallet,
+    isConnected,
+    connecting,
+    signing,
+    connect,
+    disconnect,
+    sign,
+  } = useApp();
+  return {
+    wallet,
+    isConnected,
+    connecting,
+    signing,
+    connect,
+    disconnect,
+    sign,
+  };
 }

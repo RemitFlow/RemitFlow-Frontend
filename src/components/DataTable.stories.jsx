@@ -1,6 +1,6 @@
-import DataTable, { DataTableCell } from './DataTable.jsx'
-import StatusBadge from './StatusBadge.jsx'
-import { formatAmount, formatDate, shortenAddress } from '../utils/format.js'
+import DataTable, { DataTableCell } from './DataTable.jsx';
+import StatusBadge from './StatusBadge.jsx';
+import { formatAmount, formatDate, shortenAddress } from '../utils/format.js';
 
 export default {
   title: 'Components/DataTable',
@@ -8,9 +8,9 @@ export default {
   tags: ['autodocs'],
   argTypes: {
     loading: { control: 'boolean' },
-    error: { control: 'text' }
-  }
-}
+    error: { control: 'text' },
+  },
+};
 
 const TRANSFER_COLUMNS = [
   {
@@ -22,12 +22,14 @@ const TRANSFER_COLUMNS = [
       <DataTableCell label="To">
         <span
           title={row.recipient}
-          style={{ fontFamily: 'ui-monospace, "SFMono-Regular", Menlo, monospace' }}
+          style={{
+            fontFamily: 'ui-monospace, "SFMono-Regular", Menlo, monospace',
+          }}
         >
           {shortenAddress(row.recipient, 10, 6)}
         </span>
       </DataTableCell>
-    )
+    ),
   },
   {
     key: 'sent',
@@ -35,8 +37,10 @@ const TRANSFER_COLUMNS = [
     width: 140,
     minWidth: 100,
     render: (row) => (
-      <DataTableCell label="Sent">{formatAmount(row.sendAmount, row.from)}</DataTableCell>
-    )
+      <DataTableCell label="Sent">
+        {formatAmount(row.sendAmount, row.from)}
+      </DataTableCell>
+    ),
   },
   {
     key: 'received',
@@ -44,8 +48,10 @@ const TRANSFER_COLUMNS = [
     width: 140,
     minWidth: 100,
     render: (row) => (
-      <DataTableCell label="Received">{formatAmount(row.receiveAmount, row.to)}</DataTableCell>
-    )
+      <DataTableCell label="Received">
+        {formatAmount(row.receiveAmount, row.to)}
+      </DataTableCell>
+    ),
   },
   {
     key: 'date',
@@ -54,7 +60,7 @@ const TRANSFER_COLUMNS = [
     minWidth: 90,
     render: (row) => (
       <DataTableCell label="Date">{formatDate(row.createdAt)}</DataTableCell>
-    )
+    ),
   },
   {
     key: 'status',
@@ -66,9 +72,9 @@ const TRANSFER_COLUMNS = [
       <DataTableCell label="Status">
         <StatusBadge status={row.status} />
       </DataTableCell>
-    )
-  }
-]
+    ),
+  },
+];
 
 const sampleData = [
   {
@@ -79,7 +85,7 @@ const sampleData = [
     sendAmount: 450,
     receiveAmount: 694463.7,
     status: 'completed',
-    createdAt: '2026-07-15T10:30:00Z'
+    createdAt: '2026-07-15T10:30:00Z',
   },
   {
     id: '2',
@@ -89,7 +95,7 @@ const sampleData = [
     sendAmount: 200,
     receiveAmount: 17800.8,
     status: 'pending',
-    createdAt: '2026-07-18T08:15:00Z'
+    createdAt: '2026-07-18T08:15:00Z',
   },
   {
     id: '3',
@@ -99,27 +105,27 @@ const sampleData = [
     sendAmount: 150,
     receiveAmount: 8302.5,
     status: 'failed',
-    createdAt: '2026-07-17T14:20:00Z'
-  }
-]
+    createdAt: '2026-07-17T14:20:00Z',
+  },
+];
 
 export const WithData = {
   args: {
     columns: TRANSFER_COLUMNS,
     data: sampleData,
     loading: false,
-    error: null
-  }
-}
+    error: null,
+  },
+};
 
 export const Loading = {
   args: {
     columns: TRANSFER_COLUMNS,
     data: [],
     loading: true,
-    error: null
-  }
-}
+    error: null,
+  },
+};
 
 export const Error = {
   args: {
@@ -127,9 +133,9 @@ export const Error = {
     data: [],
     loading: false,
     error: 'Could not load transfers. Please try again.',
-    onRetry: () => {}
-  }
-}
+    onRetry: () => {},
+  },
+};
 
 export const Empty = {
   args: {
@@ -145,15 +151,15 @@ export const Empty = {
           Once you send money, your transfers will show up here.
         </p>
       </div>
-    )
-  }
-}
+    ),
+  },
+};
 
 export const SingleRow = {
   args: {
     columns: TRANSFER_COLUMNS,
     data: [sampleData[0]],
     loading: false,
-    error: null
-  }
-}
+    error: null,
+  },
+};

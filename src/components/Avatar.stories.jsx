@@ -1,4 +1,4 @@
-import Avatar from './Avatar.jsx'
+import Avatar from './Avatar.jsx';
 
 export default {
   title: 'Components/Avatar',
@@ -7,53 +7,53 @@ export default {
   argTypes: {
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg']
+      options: ['sm', 'md', 'lg'],
     },
-    name: { control: 'text' }
-  }
-}
+    name: { control: 'text' },
+  },
+};
 
 export const Small = {
   args: {
     name: 'Chidi Okonkwo',
-    size: 'sm'
-  }
-}
+    size: 'sm',
+  },
+};
 
 export const Medium = {
   args: {
     name: 'Ngozi Adebayo',
-    size: 'md'
-  }
-}
+    size: 'md',
+  },
+};
 
 export const Large = {
   args: {
     name: 'Oluwaseun Balogun',
-    size: 'lg'
-  }
-}
+    size: 'lg',
+  },
+};
 
 export const EmailBased = {
   args: {
     name: 'fatima@example.com',
-    size: 'md'
-  }
-}
+    size: 'md',
+  },
+};
 
 export const SingleName = {
   args: {
     name: 'Emeka',
-    size: 'md'
-  }
-}
+    size: 'md',
+  },
+};
 
 export const WithUnderscores = {
   args: {
     name: 'john_doe_account',
-    size: 'md'
-  }
-}
+    size: 'md',
+  },
+};
 
 export const AllSizes = {
   render: () => (
@@ -62,5 +62,5 @@ export const AllSizes = {
       <Avatar name="Chidi Okonkwo" size="md" />
       <Avatar name="Chidi Okonkwo" size="lg" />
     </div>
-  )
-}
+  ),
+};

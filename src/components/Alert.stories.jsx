@@ -1,4 +1,4 @@
-import Alert from './Alert.jsx'
+import Alert from './Alert.jsx';
 
 export default {
   title: 'Components/Alert',
@@ -7,51 +7,52 @@ export default {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['info', 'success', 'warning', 'error']
+      options: ['info', 'success', 'warning', 'error'],
     },
     title: { control: 'text' },
-    children: { control: 'text' }
-  }
-}
+    children: { control: 'text' },
+  },
+};
 
 export const Info = {
   args: {
     variant: 'info',
     title: 'Heads up',
-    children: 'Your transfer has been queued for processing.'
-  }
-}
+    children: 'Your transfer has been queued for processing.',
+  },
+};
 
 export const Success = {
   args: {
     variant: 'success',
     title: 'Transfer complete',
-    children: '₦450,000.00 has been sent to Chidi Okonkwo.'
-  }
-}
+    children: '₦450,000.00 has been sent to Chidi Okonkwo.',
+  },
+};
 
 export const Warning = {
   args: {
     variant: 'warning',
     title: 'Rate expiring',
-    children: 'This quote expires in 2 minutes. Confirm now to lock the rate.'
-  }
-}
+    children: 'This quote expires in 2 minutes. Confirm now to lock the rate.',
+  },
+};
 
 export const Error = {
   args: {
     variant: 'error',
     title: 'Transfer failed',
-    children: 'Your bank declined the transaction. Please try a different method.'
-  }
-}
+    children:
+      'Your bank declined the transaction. Please try a different method.',
+  },
+};
 
 export const WithoutTitle = {
   args: {
     variant: 'info',
-    children: 'A new exchange rate is available for USD → NGN.'
-  }
-}
+    children: 'A new exchange rate is available for USD → NGN.',
+  },
+};
 
 export const AllVariants = {
   render: () => (
@@ -69,5 +70,5 @@ export const AllVariants = {
         Something went wrong.
       </Alert>
     </div>
-  )
-}
+  ),
+};

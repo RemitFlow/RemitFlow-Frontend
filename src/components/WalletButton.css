@@ -11,7 +11,7 @@
 }
 
 .wallet-address {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
   font-size: 0.85rem;
   color: var(--color-muted);
   background: var(--color-surface);

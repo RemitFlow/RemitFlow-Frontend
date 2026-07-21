@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect } from 'react';
 
 /**
  * Call a handler when a click or touch lands outside the referenced element.
@@ -9,16 +9,16 @@ import { useEffect } from 'react'
 export function useOnClickOutside(ref, handler) {
   useEffect(() => {
     function listener(event) {
-      const el = ref.current
-      if (!el || el.contains(event.target)) return
-      handler(event)
+      const el = ref.current;
+      if (!el || el.contains(event.target)) return;
+      handler(event);
     }
 
-    document.addEventListener('mousedown', listener)
-    document.addEventListener('touchstart', listener)
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
     return () => {
-      document.removeEventListener('mousedown', listener)
-      document.removeEventListener('touchstart', listener)
-    }
-  }, [ref, handler])
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [ref, handler]);
 }

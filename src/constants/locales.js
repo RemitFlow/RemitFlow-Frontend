@@ -6,10 +6,10 @@ export const LOCALES = [
   { code: 'fr-FR', name: 'Français (France)' },
   { code: 'pt-BR', name: 'Português (Brasil)' },
   { code: 'hi-IN', name: 'हिन्दी (भारत)' },
-  { code: 'ar-EG', name: 'العربية (مصر)' }
-]
+  { code: 'ar-EG', name: 'العربية (مصر)' },
+];
 
-export const DEFAULT_LOCALE = 'en-US'
+export const DEFAULT_LOCALE = 'en-US';
 
 /**
  * Check whether a locale code is one RemitFlow offers in its locale picker.
@@ -17,5 +17,5 @@ export const DEFAULT_LOCALE = 'en-US'
  * @returns {boolean}
  */
 export function isSupportedLocale(code) {
-  return LOCALES.some((l) => l.code === code)
+  return LOCALES.some((l) => l.code === code);
 }

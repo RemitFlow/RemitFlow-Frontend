@@ -1,4 +1,4 @@
-import './Loader.css'
+import './Loader.css';
 
 /**
  * Simple spinner used for loading states.
@@ -11,5 +11,5 @@ export default function Loader({ label = 'Loading...' }) {
       <span className="loader-spinner" aria-hidden="true" />
       {label && <span className="loader-label">{label}</span>}
     </div>
-  )
+  );
 }

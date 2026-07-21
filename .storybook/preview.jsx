@@ -1,5 +1,5 @@
-import { MemoryRouter } from 'react-router-dom'
-import '../src/index.css'
+import { MemoryRouter } from 'react-router-dom';
+import '../src/index.css';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
@@ -7,17 +7,17 @@ const preview = {
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/i
-      }
+        date: /Date$/i,
+      },
     },
     backgrounds: {
       default: 'light',
       values: [
         { name: 'light', value: '#ffffff' },
         { name: 'dark', value: '#1a1a2e' },
-        { name: 'high-contrast', value: '#03050f' }
-      ]
-    }
+        { name: 'high-contrast', value: '#03050f' },
+      ],
+    },
   },
   decorators: [
     (Story) => (
@@ -26,8 +26,8 @@ const preview = {
           <Story />
         </div>
       </MemoryRouter>
-    )
-  ]
-}
+    ),
+  ],
+};
 
-export default preview
+export default preview;

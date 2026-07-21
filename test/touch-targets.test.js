@@ -3,10 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 function readCSS(filename) {
-  return fs.readFileSync(
-    path.resolve(process.cwd(), 'src', filename),
-    'utf8',
-  );
+  return fs.readFileSync(path.resolve(process.cwd(), 'src', filename), 'utf8');
 }
 
 const MIN_TARGET = '44px';
@@ -48,7 +45,9 @@ describe('touch target minimum sizes (44px)', () => {
     const css = readCSS(path.join('components', 'ErrorBoundary.css'));
 
     it('.error-boundary-button has min-height 44px', () => {
-      expect(css).toMatch(/\.error-boundary-button\s*\{[^}]*min-height:\s*44px/);
+      expect(css).toMatch(
+        /\.error-boundary-button\s*\{[^}]*min-height:\s*44px/,
+      );
     });
   });
 
@@ -139,7 +138,9 @@ describe('touch target minimum sizes (44px)', () => {
       const css = readCSS(path.join('components', 'CurrencySelect.css'));
 
       it('.currency-select-input has min-height 44px', () => {
-        expect(css).toMatch(/\.currency-select-input\s*\{[^}]*min-height:\s*44px/);
+        expect(css).toMatch(
+          /\.currency-select-input\s*\{[^}]*min-height:\s*44px/,
+        );
       });
     });
 
@@ -147,7 +148,9 @@ describe('touch target minimum sizes (44px)', () => {
       const css = readCSS(path.join('components', 'LocaleSelect.css'));
 
       it('.locale-select-input has min-height 44px', () => {
-        expect(css).toMatch(/\.locale-select-input\s*\{[^}]*min-height:\s*44px/);
+        expect(css).toMatch(
+          /\.locale-select-input\s*\{[^}]*min-height:\s*44px/,
+        );
       });
     });
   });
@@ -156,7 +159,9 @@ describe('touch target minimum sizes (44px)', () => {
     const css = readCSS(path.join('components', 'PullToRefresh.css'));
 
     it('.ptr-manual-trigger:focus-visible has min-height 44px', () => {
-      expect(css).toMatch(/\.ptr-manual-trigger:focus-visible\s*\{[^}]*min-height:\s*44px/);
+      expect(css).toMatch(
+        /\.ptr-manual-trigger:focus-visible\s*\{[^}]*min-height:\s*44px/,
+      );
     });
   });
 });

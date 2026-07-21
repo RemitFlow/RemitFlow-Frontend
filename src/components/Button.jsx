@@ -1,4 +1,4 @@
-import './Button.css'
+import './Button.css';
 
 /**
  * Reusable button.
@@ -13,7 +13,7 @@ export default function Button({
   variant = 'primary',
   disabled = false,
   type = 'button',
-  onClick
+  onClick,
 }) {
   return (
     <button
@@ -24,5 +24,5 @@ export default function Button({
     >
       {children}
     </button>
-  )
+  );
 }

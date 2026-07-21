@@ -1,5 +1,5 @@
-import { useToggle } from '../hooks/useToggle.js'
-import './Tooltip.css'
+import { useToggle } from '../hooks/useToggle.js';
+import './Tooltip.css';
 
 /**
  * Wraps content and reveals a small text bubble on hover or focus.
@@ -8,7 +8,7 @@ import './Tooltip.css'
  * @param {React.ReactNode} props.children - the trigger element
  */
 export default function Tooltip({ text, children }) {
-  const [open, setOpen] = useToggle(false)
+  const [open, setOpen] = useToggle(false);
 
   return (
     <span
@@ -25,5 +25,5 @@ export default function Tooltip({ text, children }) {
         </span>
       )}
     </span>
-  )
+  );
 }
