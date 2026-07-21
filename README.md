@@ -21,6 +21,8 @@ The app runs at http://localhost:5173 by default.
   completed, failed), search/status/date-range filters synced to the URL,
   plus loading, error and empty states.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
+- **Keyboard navigation** — skip link, header, page content, and footer follow a
+  logical tab order; navigation actions use a single focus stop each.
 
 ## Tech Stack
 
@@ -62,8 +64,9 @@ cp .env.example .env
 ## Testing
 
 Integration tests cover send-money validation, successful transfer submission,
-pending button behavior, duplicate-submission prevention, and Transfers page
-filter sync (search, status, and date-range presets such as last 7/30/90 days).
+pending button behavior, duplicate-submission prevention, Transfers page filter
+sync (search, status, and date-range presets), and keyboard tab order across
+the main pages.
 
 ## Accessibility
 

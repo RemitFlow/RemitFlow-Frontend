@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import Chart from '../components/Chart.jsx'
 import TransferRow from '../components/TransferRow.jsx'
 import Skeleton from '../components/Skeleton.jsx'
@@ -82,9 +82,7 @@ export default function Transfers() {
     <div className="transfers">
       <div className="transfers-header">
         <h1 className="page-title">Your Transfers</h1>
-        <Link to="/send">
-          <Button>New Transfer</Button>
-        </Link>
+        <Button to="/send">New Transfer</Button>
       </div>
 
       <div className="transfers-filters">
@@ -143,9 +141,7 @@ export default function Transfers() {
             hasActiveFilters ? (
               <Button onClick={() => setSearchParams({})}>Clear filters</Button>
             ) : (
-              <Link to="/send">
-                <Button>Send your first transfer</Button>
-              </Link>
+              <Button to="/send">Send your first transfer</Button>
             )
           }
         />
