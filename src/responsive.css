@@ -1,5 +1,15 @@
 /* Responsive tweaks for narrow viewports. */
 
+@media (min-width: 721px) and (max-width: 1024px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .app-main {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
 @media (max-width: 720px) {
   .navbar {
     flex-wrap: wrap;
