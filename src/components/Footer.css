@@ -18,6 +18,9 @@
 .footer-link {
   color: var(--color-muted);
   text-decoration: none;
+  padding: 0.5rem 0;
+  display: inline-block;
+  min-height: 44px;
 }
 
 .footer-link:hover {

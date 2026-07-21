@@ -16,40 +16,27 @@
 
 .transfers-filters {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
   flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
-.transfers-filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.transfers-filter-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
-.transfers-filter-select,
-.transfers-filter-input {
+.transfers-filters-search {
+  flex: 1 1 12rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #1f2a3a;
-  border-radius: 8px;
-  background: var(--color-surface);
-  color: var(--color-text);
+  border: 1px solid #ccc;
+  border-radius: 6px;
   font-size: 0.9rem;
-  min-width: 160px;
 }
 
-.transfers-filter-select:focus,
-.transfers-filter-input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 1px;
+.transfers-filters-status,
+.transfers-filters-range {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: #fff;
+  min-width: 140px;
 }
 
 .transfers-list {

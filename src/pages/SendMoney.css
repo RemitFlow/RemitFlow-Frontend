@@ -40,8 +40,8 @@
 }
 
 .send-swap {
-  height: 40px;
-  width: 40px;
+  height: 44px;
+  width: 44px;
   border: 1px solid #334155;
   border-radius: 8px;
   background: var(--color-surface);

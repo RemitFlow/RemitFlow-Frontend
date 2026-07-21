@@ -16,6 +16,7 @@
   border: 1px solid #334155;
   border-radius: 8px;
   font-size: 0.95rem;
+  min-height: 44px;
 }
 
 .locale-select-input:focus {

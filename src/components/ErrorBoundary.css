@@ -28,6 +28,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .error-boundary-button:hover {

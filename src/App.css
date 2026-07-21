@@ -21,6 +21,7 @@
   color: #fff;
   border-radius: 0 0 8px 8px;
   transition: top 0.15s ease;
+  min-height: 44px;
 }
 
 .skip-link:focus {

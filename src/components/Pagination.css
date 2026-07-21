@@ -15,6 +15,7 @@
   border: 1px solid #1f2a3a;
   border-radius: 8px;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .pagination-btn:hover:not(:disabled) {

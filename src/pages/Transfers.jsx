@@ -1,106 +1,82 @@
-import { useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
-import Chart from '../components/Chart.jsx';
-import TransferRow from '../components/TransferRow.jsx';
-import Skeleton from '../components/Skeleton.jsx';
-import ErrorMessage from '../components/ErrorMessage.jsx';
-import EmptyState from '../components/EmptyState.jsx';
-import Button from '../components/Button.jsx';
-import Pagination from '../components/Pagination.jsx';
-import PullToRefresh from '../components/PullToRefresh.jsx';
-import SelectionToolbar from '../components/SelectionToolbar.jsx';
-import { useTransfers } from '../hooks/useTransfers.js';
-import { useSelection } from '../hooks/useSelection.js';
-import { useApp } from '../context/AppContext.jsx';
-import './Transfers.css';
+import { useCallback, useMemo } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import Chart from '../components/Chart.jsx'
+import TransferRow from '../components/TransferRow.jsx'
+import Skeleton from '../components/Skeleton.jsx'
+import ErrorMessage from '../components/ErrorMessage.jsx'
+import EmptyState from '../components/EmptyState.jsx'
+import Button from '../components/Button.jsx'
+import { useTransfers } from '../hooks/useTransfers.js'
+import { useApp } from '../context/AppContext.jsx'
+import { DATE_RANGE_PRESETS, isWithinDateRange } from '../utils/dateRange.js'
+import './Transfers.css'
 
-const PAGE_SIZE = 5;
+const STATUS_OPTIONS = [
+  { value: '', label: 'All statuses' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'failed', label: 'Failed' }
+]
 
 /**
- * Transfers page: lists all transfers with their status, supports filtering,
- * search, pagination, selection across pages, and pull-to-refresh.
+ * Transfers page: lists all transfers with their status.
+ * Filter state is synced to the URL query string.
  */
 export default function Transfers() {
-  const { transfers, loading, error, reload } = useTransfers();
-  const { locale } = useApp();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
+  const { transfers, loading, error, reload } = useTransfers()
+  const { locale } = useApp()
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const selection = useSelection();
+  const search = searchParams.get('search') || ''
+  const status = searchParams.get('status') || ''
+  const range = searchParams.get('range') || ''
 
-  // Read filters from URL params.
-  const statusFilter = searchParams.get('status') || '';
-  const searchTerm = searchParams.get('search') || '';
+  const filteredTransfers = useMemo(() => {
+    return transfers.filter((t) => {
+      if (status && t.status !== status) return false
+      if (search && !t.recipient.toLowerCase().includes(search.toLowerCase())) return false
+      if (!isWithinDateRange(t.createdAt, range)) return false
+      return true
+    })
+  }, [transfers, search, status, range])
 
-  // Update a URL param and reset page to 1.
-  function setFilterParam(key, value) {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      if (value) {
-        next.set(key, value);
-      } else {
-        next.delete(key);
-      }
-      return next;
-    });
-    setPage(1);
-  }
+  const handleSearchChange = useCallback(
+    (e) => {
+      const value = e.target.value
+      setSearchParams((prev) => {
+        if (value) prev.set('search', value)
+        else prev.delete('search')
+        return prev
+      })
+    },
+    [setSearchParams]
+  )
 
-  function clearFilters() {
-    setSearchParams({});
-    setPage(1);
-  }
+  const handleStatusChange = useCallback(
+    (e) => {
+      const value = e.target.value
+      setSearchParams((prev) => {
+        if (value) prev.set('status', value)
+        else prev.delete('status')
+        return prev
+      })
+    },
+    [setSearchParams]
+  )
 
-  // Apply client-side filtering and search.
-  const filtered = useMemo(() => {
-    let result = transfers;
-    if (statusFilter) {
-      result = result.filter((t) => t.status === statusFilter);
-    }
-    if (searchTerm) {
-      const lower = searchTerm.toLowerCase();
-      result = result.filter(
-        (t) =>
-          t.recipient.toLowerCase().includes(lower) ||
-          t.id.toLowerCase().includes(lower),
-      );
-    }
-    return result;
-  }, [transfers, statusFilter, searchTerm]);
+  const handleRangeChange = useCallback(
+    (e) => {
+      const value = e.target.value
+      setSearchParams((prev) => {
+        if (value) prev.set('range', value)
+        else prev.delete('range')
+        return prev
+      })
+    },
+    [setSearchParams]
+  )
 
-  const totalCount = filtered.length;
-  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-  const safePage = Math.min(page, totalPages);
-  const paged = useMemo(
-    () => filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
-    [filtered, safePage],
-  );
-
-  const pageIds = paged.map((t) => t.id);
-  const allPageSelected =
-    pageIds.length > 0 && pageIds.every((id) => selection.isSelected(id));
-  const somePageSelected = pageIds.some((id) => selection.isSelected(id));
-  const allAcrossSelected =
-    totalCount > 0 && selection.selectedCount === totalCount;
-  const hasMorePages = totalPages > 1;
-
-  function handleTogglePage() {
-    if (allPageSelected) {
-      selection.deselectMany(pageIds);
-    } else {
-      selection.selectMany(pageIds);
-    }
-  }
-
-  function handleSelectAllAcross() {
-    selection.replaceAll(filtered.map((t) => t.id));
-  }
-
-  function handleClear() {
-    selection.clear();
-  }
-
-  const hasActiveFilters = Boolean(statusFilter || searchTerm);
+  const hasActiveFilters = Boolean(search || status || range)
 
   return (
     <div className="transfers">
@@ -111,23 +87,44 @@ export default function Transfers() {
         </Link>
       </div>
 
-      {/* Filter and search controls */}
       <div className="transfers-filters">
-        <div className="transfers-filter-group">
-          <label htmlFor="filter-status" className="transfers-filter-label">
-            Filter by status
-          </label>
-          <select
-            id="filter-status"
-            className="transfers-filter-select"
-            value={statusFilter}
-            onChange={(e) => setFilterParam('status', e.target.value)}
-          >
-            <option value="">All</option>
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-            <option value="failed">Failed</option>
-          </select>
+        <input
+          type="search"
+          className="transfers-filters-search"
+          placeholder="Search by recipient…"
+          value={search}
+          onChange={handleSearchChange}
+          aria-label="Search transfers by recipient"
+        />
+        <select
+          className="transfers-filters-status"
+          value={status}
+          onChange={handleStatusChange}
+          aria-label="Filter by status"
+        >
+          {STATUS_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <select
+          className="transfers-filters-range"
+          value={range}
+          onChange={handleRangeChange}
+          aria-label="Filter by date range"
+        >
+          {DATE_RANGE_PRESETS.map((opt) => (
+            <option key={opt.value || 'all'} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {loading && (
+        <div className="transfers-list">
+          <Skeleton count={3} height="4.5rem" />
         </div>
         <div className="transfers-filter-group">
           <label htmlFor="filter-search" className="transfers-filter-label">
@@ -144,79 +141,41 @@ export default function Transfers() {
         </div>
       </div>
 
-      <PullToRefresh onRefresh={reload}>
-        {loading && (
-          <div className="transfers-list">
-            <Skeleton count={3} height="4.5rem" />
-          </div>
-        )}
+      {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
 
-        {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
-
-        {!loading && !error && totalCount === 0 && hasActiveFilters && (
-          <EmptyState
-            icon="🔍"
-            title="No matching transfers"
-            message="Try adjusting your filters or search terms."
-            action={<Button onClick={clearFilters}>Clear filters</Button>}
-          />
-        )}
-
-        {!loading && !error && totalCount === 0 && !hasActiveFilters && (
-          <EmptyState
-            icon="💸"
-            title="No transfers yet"
-            message="Once you send money, your transfers will show up here."
-            action={
+      {!loading && !error && filteredTransfers.length === 0 && (
+        <EmptyState
+          icon={hasActiveFilters ? '🔍' : '💸'}
+          title={hasActiveFilters ? 'No matching transfers' : 'No transfers yet'}
+          message={
+            hasActiveFilters
+              ? 'Try adjusting your search or filters.'
+              : 'Once you send money, your transfers will show up here.'
+          }
+          action={
+            hasActiveFilters ? (
+              <Button onClick={() => setSearchParams({})}>Clear filters</Button>
+            ) : (
               <Link to="/send">
                 <Button>Send your first transfer</Button>
               </Link>
-            }
-          />
-        )}
-
-        {!loading && !error && totalCount > 0 && (
-          <>
-            <SelectionToolbar
-              pageCount={pageIds.length}
-              selectedCount={selection.selectedCount}
-              totalCount={totalCount}
-              allPageSelected={allPageSelected}
-              somePageSelected={somePageSelected}
-              allAcrossSelected={allAcrossSelected}
-              hasMorePages={hasMorePages}
-              onTogglePage={handleTogglePage}
-              onSelectAllAcross={handleSelectAllAcross}
-              onClear={handleClear}
-            />
-
-            <div className="transfers-list">
-              <Chart
-                title="Recent Transfer Amounts"
-                data={paged
-                  .slice(0, 5)
-                  .map((t) => ({ value: parseFloat(t.sendAmount) }))}
-              />
-              {paged.map((t) => (
-                <TransferRow
-                  key={t.id}
-                  transfer={t}
-                  locale={locale}
-                  selected={selection.isSelected(t.id)}
-                  onToggleSelect={() => selection.toggle(t.id)}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </PullToRefresh>
-
-      {!loading && !error && totalCount > 0 && (
-        <Pagination
-          page={safePage}
-          totalPages={totalPages}
-          onChange={setPage}
+            )
+          }
         />
+      )}
+
+      {!loading && !error && filteredTransfers.length > 0 && (
+        <div className="transfers-list">
+          <Chart
+            title="Recent Transfer Amounts"
+            data={filteredTransfers
+              .slice(0, 5)
+              .map((t) => ({ value: parseFloat(t.sendAmount) }))}
+          />
+          {filteredTransfers.map((t) => (
+            <TransferRow key={t.id} transfer={t} locale={locale} />
+          ))}
+        </div>
       )}
     </div>
   );

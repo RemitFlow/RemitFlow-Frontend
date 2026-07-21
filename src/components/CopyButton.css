@@ -9,9 +9,8 @@
   color: var(--color-muted);
   font-size: 0.78rem;
   cursor: pointer;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  min-height: 44px;
 }
 
 .copy-button:hover {

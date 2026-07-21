@@ -16,13 +16,15 @@
   cursor: pointer;
   font-size: 0.9rem;
   color: var(--color-text);
+  min-height: 44px;
 }
 
 .selection-checkbox input {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: 1.125rem;
+  height: 1.125rem;
   accent-color: var(--color-primary);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .selection-count {
@@ -41,12 +43,13 @@
 .selection-link {
   background: none;
   border: none;
-  padding: 0;
+  padding: 0.25rem 0.125rem;
   font: inherit;
   font-weight: 600;
   color: var(--color-primary);
   cursor: pointer;
   text-decoration: underline;
+  min-height: 44px;
 }
 
 .selection-link:hover {

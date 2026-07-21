@@ -73,4 +73,5 @@
   border: 1px solid var(--color-primary);
   border-radius: 6px;
   cursor: pointer;
+  min-height: 44px;
 }
