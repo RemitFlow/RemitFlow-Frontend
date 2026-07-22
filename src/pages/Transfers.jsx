@@ -124,6 +124,7 @@ export default function Transfers() {
 
       {loading && (
         <div className="transfers-list">
+          <Chart loading title="Recent Transfer Amounts" data={[]} />
           <Skeleton count={3} height="4.5rem" />
         </div>
       )}
