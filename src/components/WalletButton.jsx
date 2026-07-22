@@ -1,13 +1,23 @@
-import { useWallet } from '../hooks/useWallet.js';
-import { shortenAddress } from '../utils/format.js';
-import Button from './Button.jsx';
-import './WalletButton.css';
+import { useWallet } from '../hooks/useWallet.js'
+import { shortenAddress } from '../utils/format.js'
+import Button from './Button.jsx'
+import Alert from './Alert.jsx'
+import './WalletButton.css'
 
 /**
  * Connect / disconnect the mock Stellar wallet.
  */
 export default function WalletButton() {
-  const { wallet, isConnected, connecting, connect, disconnect } = useWallet();
+  const { wallet, isConnected, connecting, connectionError, connect, disconnect } = useWallet()
+
+  async function handleConnect() {
+    try {
+      await connect()
+    } catch (err) {
+      // Error is already stored in context, just prevent propagation
+      console.error('Wallet connection failed:', err)
+    }
+  }
 
   if (isConnected) {
     return (
@@ -24,8 +34,15 @@ export default function WalletButton() {
   }
 
   return (
-    <Button onClick={connect} disabled={connecting}>
-      {connecting ? 'Connecting...' : 'Connect Wallet'}
-    </Button>
-  );
+    <div className="wallet-button-wrapper">
+      <Button onClick={handleConnect} disabled={connecting}>
+        {connecting ? 'Connecting...' : 'Connect Wallet'}
+      </Button>
+      {connectionError && (
+        <Alert variant="error" style={{ marginTop: '0.5rem' }}>
+          {connectionError}
+        </Alert>
+      )}
+    </div>
+  )
 }

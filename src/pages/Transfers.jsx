@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import Chart from '../components/Chart.jsx'
+import { formatAmount } from '../utils/format.js'
 import TransferRow from '../components/TransferRow.jsx'
 import Skeleton from '../components/Skeleton.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
@@ -166,7 +167,8 @@ export default function Transfers() {
             title="Recent Transfer Amounts"
             data={filteredTransfers
               .slice(0, 5)
-              .map((t) => ({ value: parseFloat(t.sendAmount) }))}
+              .map((t) => ({ value: parseFloat(t.sendAmount), label: t.recipient, currency: t.from }))}
+            formatValue={(d) => formatAmount(d.value, d.currency)}
           />
           {filteredTransfers.map((t) => (
             <TransferRow key={t.id} transfer={t} locale={locale} />

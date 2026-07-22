@@ -10,11 +10,20 @@ const DEMO_PUBLIC_KEY =
 
 /**
  * Simulate connecting a Stellar wallet.
+ * In production, this would integrate with Freighter/Albedo and handle user rejections.
  * @returns {Promise<{publicKey: string, balance: number}>}
  */
 export function connectWallet() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
+    // Simulate a 10% chance of user rejection for testing
+    const shouldReject = Math.random() < 0.1
+    
     setTimeout(() => {
+      if (shouldReject) {
+        reject(new Error('User rejected the connection request'))
+        return
+      }
+      
       const account = {
         publicKey: DEMO_PUBLIC_KEY,
         balance: 1000,

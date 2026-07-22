@@ -21,8 +21,10 @@ The app runs at http://localhost:5173 by default.
   completed, failed), search/status/date-range filters synced to the URL,
   plus loading, error and empty states.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
-- **Keyboard navigation** — skip link, header, page content, and footer follow a
-  logical tab order; navigation actions use a single focus stop each.
+  - Robust error handling for rejected connections
+  - Connection timeout protection (30 seconds)
+  - Clear error feedback to users
+  - Automatic error state clearing on retry or disconnect
 
 ## Tech Stack
 
@@ -64,6 +66,26 @@ cp .env.example .env
 - `npm run lighthouse` — run Lighthouse CI against the local preview server
 
 ## Testing
+
+The test suite includes comprehensive coverage of wallet connection handling:
+
+- **Wallet Service Tests** (`test/services/wallet.test.js`)
+  - Successful connection flow
+  - User rejection handling
+  - Storage persistence
+  - Disconnection cleanup
+
+- **AppContext Wallet Tests** (`test/unit/AppContext.wallet.test.jsx`)
+  - Connection state management
+  - Error handling and recovery
+  - Timeout protection
+  - State restoration from localStorage
+
+- **WalletButton Tests** (`test/components/WalletButton.test.jsx`)
+  - UI feedback for connection states
+  - Error message display
+  - Retry behavior
+  - User interaction flows
 
 Integration tests cover send-money validation, successful transfer submission,
 pending button behavior, duplicate-submission prevention, Transfers page filter
