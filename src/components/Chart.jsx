@@ -1,8 +1,15 @@
 import React, { useRef } from 'react';
 import './Chart.css';
 import Button from './Button.jsx';
+import EmptyState from './EmptyState.jsx';
 
-export default function Chart({ data, title }) {
+export default function Chart({
+  data,
+  title,
+  emptyStateIcon = '📊',
+  emptyStateTitle = 'No chart data',
+  emptyStateMessage = 'Add some data to visualize.'
+}) {
   const chartRef = useRef(null);
 
   const downloadChart = () => {
@@ -19,6 +26,18 @@ export default function Chart({ data, title }) {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-container">
+        <EmptyState
+          icon={emptyStateIcon}
+          title={emptyStateTitle}
+          message={emptyStateMessage}
+        />
+      </div>
+    );
+  }
 
   const maxValue = Math.max(...data.map(d => d.value), 1);
 
