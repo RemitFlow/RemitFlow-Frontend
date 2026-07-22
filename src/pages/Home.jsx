@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
-import Button from '../components/Button.jsx';
-import { POPULAR_CORRIDORS, getCurrency } from '../constants/currencies.js';
-import { useDocumentTitle } from '../hooks/useDocumentTitle.js';
-import './Home.css';
+import Button from '../components/Button.jsx'
+import { POPULAR_CORRIDORS, getCurrency } from '../constants/currencies.js'
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
+import './Home.css'
 
 // Selling points shown on the landing page.
 const FEATURES = [
@@ -40,12 +39,10 @@ export default function Home() {
           seconds, with low and transparent fees.
         </p>
         <div className="hero-actions">
-          <Link to="/send">
-            <Button>Send Money</Button>
-          </Link>
-          <Link to="/transfers">
-            <Button variant="secondary">View Transfers</Button>
-          </Link>
+          <Button to="/send">Send Money</Button>
+          <Button to="/transfers" variant="secondary">
+            View Transfers
+          </Button>
         </div>
       </section>
 

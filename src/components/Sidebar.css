@@ -5,10 +5,11 @@
   min-width: 240px;
   background: var(--color-surface);
   border-right: 1px solid #1f2a3a;
-  padding: 0;
-  transition:
-    width 0.25s ease,
-    min-width 0.25s ease;
+  padding-top: var(--safe-area-inset-top);
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  transition: width 0.25s ease, min-width 0.25s ease;
   overflow: hidden;
   height: 100vh;
   position: sticky;

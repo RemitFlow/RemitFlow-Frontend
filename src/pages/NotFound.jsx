@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
-import Button from '../components/Button.jsx';
-import { useDocumentTitle } from '../hooks/useDocumentTitle.js';
-import './NotFound.css';
+import Button from '../components/Button.jsx'
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
+import './NotFound.css'
 
 /**
  * 404 page shown for unknown routes.
@@ -16,9 +15,7 @@ export default function NotFound() {
       <p className="not-found-text">
         The page you are looking for does not exist or has moved.
       </p>
-      <Link to="/">
-        <Button>Back to Home</Button>
-      </Link>
+      <Button to="/">Back to Home</Button>
     </div>
   );
 }
