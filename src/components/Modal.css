@@ -6,6 +6,10 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  padding-top: calc(var(--safe-area-inset-top) + 1.5rem);
+  padding-bottom: calc(var(--safe-area-inset-bottom) + 1.5rem);
+  padding-left: calc(var(--safe-area-inset-left) + 1.5rem);
+  padding-right: calc(var(--safe-area-inset-right) + 1.5rem);
   background: rgba(2, 6, 23, 0.7);
 }
 

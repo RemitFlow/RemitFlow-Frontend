@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Button.css'
 
 /**
@@ -19,10 +20,28 @@ export default function Button({
   ariaLabel,
   title
 }) {
+  const className = `btn btn-${variant}`
+
+  if (to) {
+    if (disabled) {
+      return (
+        <span className={className} aria-disabled="true">
+          {children}
+        </span>
+      )
+    }
+
+    return (
+      <Link to={to} className={className}>
+        {children}
+      </Link>
+    )
+  }
+
   return (
     <button
       type={type}
-      className={`btn btn-${variant}`}
+      className={className}
       disabled={disabled}
       onClick={onClick}
       aria-label={ariaLabel}

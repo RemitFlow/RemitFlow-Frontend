@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a Question
+    url: https://github.com/RemitFlow/RemitFlow-Frontend/discussions
+    about: For questions and discussions, please use GitHub Discussions
+  - name: Security Issue
+    url: https://github.com/RemitFlow/RemitFlow-Frontend/security/advisories/new
+    about: For security vulnerabilities, please use Security Advisories

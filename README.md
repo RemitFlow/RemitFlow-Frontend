@@ -21,6 +21,10 @@ The app runs at http://localhost:5173 by default.
   completed, failed), search/status/date-range filters synced to the URL,
   plus loading, error and empty states.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
+  - Robust error handling for rejected connections
+  - Connection timeout protection (30 seconds)
+  - Clear error feedback to users
+  - Automatic error state clearing on retry or disconnect
 
 ## Tech Stack
 
@@ -61,9 +65,30 @@ cp .env.example .env
 
 ## Testing
 
+The test suite includes comprehensive coverage of wallet connection handling:
+
+- **Wallet Service Tests** (`test/services/wallet.test.js`)
+  - Successful connection flow
+  - User rejection handling
+  - Storage persistence
+  - Disconnection cleanup
+
+- **AppContext Wallet Tests** (`test/unit/AppContext.wallet.test.jsx`)
+  - Connection state management
+  - Error handling and recovery
+  - Timeout protection
+  - State restoration from localStorage
+
+- **WalletButton Tests** (`test/components/WalletButton.test.jsx`)
+  - UI feedback for connection states
+  - Error message display
+  - Retry behavior
+  - User interaction flows
+
 Integration tests cover send-money validation, successful transfer submission,
-pending button behavior, duplicate-submission prevention, and Transfers page
-filter sync (search, status, and date-range presets such as last 7/30/90 days).
+pending button behavior, duplicate-submission prevention, Transfers page filter
+sync (search, status, and date-range presets), and keyboard tab order across
+the main pages.
 
 ## Accessibility
 
@@ -71,6 +96,21 @@ All interactive elements (buttons, links, inputs, selects, icon buttons, and
 checkboxes) meet a minimum touch target of 44×44 CSS pixels, compliant with
 WCAG 2.5.5 (Target Size). A dedicated test suite in `test/touch-targets.test.js`
 audits the CSS declarations to ensure compliance isn't regressed.
+
+## Notched / Rounded Devices
+
+The app supports notched and rounded-screen devices (e.g. iPhone X+,
+Android flagships) via CSS `env(safe-area-inset-*)`:
+
+- CSS custom properties are defined in `src/index.css` (`--safe-area-inset-top`,
+  `--safe-area-inset-bottom`, `--safe-area-inset-left`,
+  `--safe-area-inset-right`) with a `0px` fallback.
+- The `<meta name="viewport">` tag already includes `viewport-fit=cover`.
+- Layout components (`Navbar`, `Footer`, `Sidebar`, `Modal`) consume the
+  custom properties to keep content clear of notches, rounded corners and the
+  home indicator.
+- The `useSafeAreaInsets` hook (in `src/hooks/useSafeAreaInsets.js`) exposes
+  the numeric pixel values for any component that needs them in JavaScript.
 
 ## Lighthouse CI
 
@@ -80,6 +120,16 @@ Lighthouse checks are configured in [lighthouserc.json](lighthouserc.json) and r
 npm run build
 npm run lighthouse
 ```
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- Development workflow and coding standards
+- Pull request process
+- Testing requirements
+- Issue reporting guidelines
+
+For issue tracking and triage process, see [.github/ISSUE_TRIAGE.md](.github/ISSUE_TRIAGE.md).
 
 ## Disclaimer
 
