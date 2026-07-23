@@ -87,6 +87,15 @@ describe('touch target minimum sizes (44px)', () => {
     it('.navbar-link has min-height 44px', () => {
       expect(css).toMatch(/\.navbar-link\s*\{[^}]*min-height:\s*44px/);
     });
+
+    it('.navbar-hamburger has min-height and min-width 44px', () => {
+      expect(css).toMatch(/\.navbar-hamburger\s*\{[^}]*min-width:\s*44px/);
+      expect(css).toMatch(/\.navbar-hamburger\s*\{[^}]*min-height:\s*44px/);
+    });
+
+    it('.navbar-drawer-link has min-height 44px', () => {
+      expect(css).toMatch(/\.navbar-drawer-link\s*\{[^}]*min-height:\s*44px/);
+    });
   });
 
   describe('Footer', () => {
