@@ -12,6 +12,7 @@ const AppContext = createContext(null)
 export function AppProvider({ children }) {
   const [wallet, setWallet] = useState(null)
   const [connecting, setConnecting] = useState(false)
+  const [connectionError, setConnectionError] = useState(null)
   const [storedLocale, setStoredLocale] = useLocalStorage(LOCALE_STORAGE_KEY, DEFAULT_LOCALE)
 
   // Guard against a stale or tampered value in localStorage (e.g. left over
@@ -30,10 +31,22 @@ export function AppProvider({ children }) {
 
   async function connect() {
     setConnecting(true)
+    setConnectionError(null)
+    
     try {
-      const account = await connectWallet()
+      // Add a timeout to prevent hanging indefinitely
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Connection timeout')), 30000)
+      )
+      
+      const account = await Promise.race([connectWallet(), timeoutPromise])
       setWallet(account)
       return account
+    } catch (err) {
+      // Handle rejected connections (user cancellation, timeout, or other errors)
+      const errorMessage = err.message || 'Failed to connect wallet'
+      setConnectionError(errorMessage)
+      throw err
     } finally {
       setConnecting(false)
     }
@@ -42,11 +55,13 @@ export function AppProvider({ children }) {
   function disconnect() {
     disconnectWallet()
     setWallet(null)
+    setConnectionError(null)
   }
 
   const value = {
     wallet,
     connecting,
+    connectionError,
     isConnected: Boolean(wallet),
     connect,
     disconnect,

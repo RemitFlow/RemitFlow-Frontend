@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.5rem calc(var(--safe-area-inset-bottom) + 1.25rem);
   margin-top: 2rem;
   border-top: 1px solid #1f2a3a;
   color: var(--color-muted);
