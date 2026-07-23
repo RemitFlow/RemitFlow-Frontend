@@ -9,6 +9,10 @@
   margin-top: 0;
 }
 
+.chart-wrapper {
+  position: relative;
+}
+
 .chart-svg {
   display: block;
   width: 100%;

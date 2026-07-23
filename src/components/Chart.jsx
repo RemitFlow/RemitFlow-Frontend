@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import './Chart.css';
 import Button from './Button.jsx';
 
@@ -22,6 +22,7 @@ const SHIMMER_BARS = [
  */
 export default function Chart({ data, title, loading = false }) {
   const chartRef = useRef(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const downloadChart = () => {
     const svg = chartRef.current;
@@ -39,6 +40,7 @@ export default function Chart({ data, title, loading = false }) {
   };
 
   const maxValue = Math.max(...data.map(d => d.value), 1);
+  const barCount = data.length;
 
   return (
     <div className="chart-container" aria-busy={loading}>
