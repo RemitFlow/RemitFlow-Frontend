@@ -65,6 +65,48 @@
   }
 }
 
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  justify-content: center;
+}
+
+.chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: opacity 0.15s ease;
+}
+
+.chart-legend-item:hover {
+  border-color: #ddd;
+}
+
+.chart-legend-item--dimmed {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+.chart-legend-swatch {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.chart-legend-label {
+  white-space: nowrap;
+}
+
 .download-button {
   margin-top: 1rem;
 }

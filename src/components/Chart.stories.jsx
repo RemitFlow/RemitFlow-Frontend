@@ -8,6 +8,7 @@ export default {
   argTypes: {
     title: { control: 'text' },
     data: { control: 'object' },
+    series: { control: 'object' },
     formatValue: { control: false }
   }
 }
@@ -46,5 +47,36 @@ export const SingleBar = {
     title: 'Single Transfer',
     data: [{ value: 250, label: 'juan@example.com', currency: 'USD' }],
     formatValue: (d) => formatAmount(d.value, d.currency)
+  }
+}
+
+export const MultiSeries = {
+  args: {
+    title: 'Sent vs Received Amounts',
+    series: [
+      {
+        name: 'Sent',
+        color: '#6366f1',
+        data: [
+          { value: 200, label: 'amina@example.com' },
+          { value: 120, label: 'GBQAZ7Z3X7...' },
+          { value: 450, label: 'chidi@example.com' },
+          { value: 80, label: 'devi@example.com' },
+          { value: 310, label: 'emeka@example.com' }
+        ]
+      },
+      {
+        name: 'Received',
+        color: '#10b981',
+        data: [
+          { value: 180, label: 'amina@example.com' },
+          { value: 100, label: 'GBQAZ7Z3X7...' },
+          { value: 500, label: 'chidi@example.com' },
+          { value: 60, label: 'devi@example.com' },
+          { value: 280, label: 'emeka@example.com' }
+        ]
+      }
+    ],
+    formatValue: (d) => `$${d.value.toFixed(2)}`
   }
 }
