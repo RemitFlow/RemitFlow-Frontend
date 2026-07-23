@@ -9,6 +9,7 @@ import SendMoney from './pages/SendMoney.jsx'
 import Transfers from './pages/Transfers.jsx'
 import NotFound from './pages/NotFound.jsx'
 import './App.css'
+import './print.css'
 
 /**
  * Root application component: wires up the context, router and layout.

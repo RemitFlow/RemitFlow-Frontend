@@ -1,0 +1,94 @@
+@media print {
+  /* ── Reset to light background for readability ─────────────── */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* ── Hide chrome (navigation, footer, skip-link, scroll-to-top) ── */
+  .navbar,
+  .footer,
+  .skip-link,
+  .scroll-to-top {
+    display: none !important;
+  }
+
+  /* ── Hide interactive / button elements ─────────────────── */
+  .btn {
+    display: none !important;
+  }
+
+  /* ── Main content: full width, remove padding ──────────── */
+  .app-main {
+    max-width: none;
+    padding: 0 1rem;
+    margin: 0;
+  }
+
+  /* ── Surface elements: white bg, visible borders ────────── */
+  .transfer-row,
+  .feature-card,
+  .corridor-chip,
+  .chart-container,
+  .quote-card,
+  .modal-panel {
+    background: #fff !important;
+    border-color: #ccc !important;
+    break-inside: avoid;
+  }
+
+  /* ── Status badges: preserve color on white ─────────────── */
+  .status-badge {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .status-pending {
+    background: #fef3cd !important;
+    color: #856404 !important;
+  }
+
+  .status-completed {
+    background: #d4edda !important;
+    color: #155724 !important;
+  }
+
+  .status-failed {
+    background: #f8d7da !important;
+    color: #721c24 !important;
+  }
+
+  /* ── Chart: preserve bar colors, hide tooltip ────────────── */
+  .chart-bar {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .chart-tooltip {
+    display: none !important;
+  }
+
+  .download-button {
+    display: none !important;
+  }
+
+  /* ── Page text color overrides ───────────────────────────── */
+  .page-title,
+  .chart-title,
+  .transfer-cell,
+  .feature-title,
+  .feature-text,
+  .hero-title,
+  .hero-subtitle {
+    color: #000 !important;
+  }
+
+  .transfer-label {
+    color: #555 !important;
+  }
+
+  /* ── Page margins ────────────────────────────────────────── */
+  @page {
+    margin: 1.5cm;
+  }
+}

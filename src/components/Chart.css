@@ -68,3 +68,18 @@
 .download-button {
   margin-top: 1rem;
 }
+
+@media print {
+  .chart-container {
+    border-color: #ccc !important;
+    break-inside: avoid;
+  }
+
+  .chart-tooltip {
+    display: none !important;
+  }
+
+  .download-button {
+    display: none !important;
+  }
+}

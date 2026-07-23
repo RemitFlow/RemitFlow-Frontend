@@ -45,3 +45,17 @@
   gap: 0.75rem;
   margin-top: 0.75rem;
 }
+
+@media print {
+  .transfers-filters {
+    display: none !important;
+  }
+
+  .transfers-header .btn {
+    display: none !important;
+  }
+
+  .transfers-list {
+    margin-top: 0;
+  }
+}
