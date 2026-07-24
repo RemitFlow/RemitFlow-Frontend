@@ -9,6 +9,18 @@ import SendMoney from './pages/SendMoney.jsx';
 import Transfers from './pages/Transfers.jsx';
 import NotFound from './pages/NotFound.jsx';
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { AppProvider } from './context/AppContext.jsx'
+import { LocaleProvider } from './context/I18nContext.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
+import Navbar from './components/Navbar.jsx'
+import Sidebar from './components/Sidebar.jsx'
+import Footer from './components/Footer.jsx'
+import Home from './pages/Home.jsx'
+import SendMoney from './pages/SendMoney.jsx'
+import Transfers from './pages/Transfers.jsx'
+import NotFound from './pages/NotFound.jsx'
+import './App.css'
 
 /**
  * Root application component: wires up the context, router and layout.
@@ -22,6 +34,8 @@ export default function App() {
             <a href="#main-content" className="skip-link">
               Skip to content
             </a>
+            <Sidebar />
+            <div className="app-content">
             <Navbar />
             <main id="main-content" className="app-main">
               <ErrorBoundary>
@@ -34,6 +48,7 @@ export default function App() {
               </ErrorBoundary>
             </main>
             <Footer />
+            </div>
           </div>
         </BrowserRouter>
       </AppProvider>

@@ -39,6 +39,7 @@ The app runs at http://localhost:5173 by default.
 ```
 src/
   components/   reusable UI (Navbar, Footer, Tabs, QuoteCard, TransferRow, ...)
+  components/   reusable UI (Navbar, Sidebar, Footer, QuoteCard, TransferRow, ...)
   pages/        route screens (Home, SendMoney, Transfers, NotFound)
   services/     mock api, wallet, fx and quote logic
   hooks/        useWallet, useTransfers
@@ -66,6 +67,20 @@ cp .env.example .env
 - `npm run format:check` — check formatting without modifying files (CI)
 - `npm run lighthouse` — run Lighthouse CI against the local preview server
 
+## Responsive Layout
+
+The app adapts to three viewport ranges:
+
+| Range | Target | Layout |
+|---|---|---|
+| >1024px | Desktop | Full sidebar (240px), 3-column features grid |
+| 721–1024px | Tablet landscape | Full sidebar with toggle, 2-column features grid, compact content padding |
+| ≤720px | Tablet portrait / mobile | Collapsed sidebar (60px), single-column layouts, wrapped navbar |
+| ≤420px | Small mobile | Stacked hero actions, single-column currency grid |
+
+The Sidebar is rendered alongside the main content area on all viewports wider than
+720px and collapses automatically at narrower widths.
+
 ## Testing
 
 The test suite includes comprehensive coverage of wallet connection handling:
@@ -89,9 +104,9 @@ The test suite includes comprehensive coverage of wallet connection handling:
   - User interaction flows
 
 Integration tests cover send-money validation, successful transfer submission,
-pending button behavior, duplicate-submission prevention, Transfers page filter
-sync (search, status, and date-range presets), and keyboard tab order across
-the main pages.
+pending button behavior, duplicate-submission prevention, Transfers page
+filter sync (search, status, and date-range presets such as last 7/30/90 days),
+and landscape tablet layout integration.
 
 ## Accessibility
 
