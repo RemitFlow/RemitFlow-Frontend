@@ -11,11 +11,6 @@
 }
 
 @media (max-width: 720px) {
-  .navbar {
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
   .features {
     grid-template-columns: 1fr;
   }

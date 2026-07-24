@@ -51,8 +51,138 @@
   margin-left: auto;
 }
 
+/* ── Hamburger button ─────────────────────────── */
+
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px;
+  border-radius: 6px;
+  color: var(--color-text);
+}
+
+.navbar-hamburger:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.navbar-hamburger-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+
+/* ── Mobile backdrop ─────────────────────────── */
+
+.navbar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ── Mobile drawer ─────────────────────────── */
+
+.navbar-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  width: 280px;
+  height: 100vh;
+  background: var(--color-surface);
+  border-left: 1px solid #1f2a3a;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+
+.navbar-drawer--open {
+  transform: translateX(0);
+}
+
+.navbar-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 0.75rem;
+  flex: 1;
+}
+
+.navbar-drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 8px;
+  color: var(--color-muted);
+  font-weight: 500;
+  font-size: 0.925rem;
+  text-decoration: none;
+  min-height: 44px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navbar-drawer-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+}
+
+.navbar-drawer-link.active {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-primary);
+}
+
+.navbar-drawer-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.navbar-drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 0.75rem;
+  border-top: 1px solid #1f2a3a;
+}
+
+/* ── Mobile responsive ─────────────────────────── */
+
+@media (max-width: 720px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-actions {
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: flex;
+  }
+}
+
 @media (prefers-contrast: more) {
   .navbar {
     border-bottom-width: 2px;
+  }
+
+  .navbar-drawer {
+    border-left-width: 2px;
   }
 }
