@@ -1,114 +1,114 @@
 # GitHub Issue Labels for RemitFlow Frontend
 # Apply this configuration using: gh label create --force -R <repo>
 
-- name: "type: bug"
+- name: 'type: bug'
   description: "Something isn't working as expected"
-  color: "d73a4a"
+  color: 'd73a4a'
 
-- name: "type: feature"
-  description: "New feature or enhancement request"
-  color: "0e8a16"
+- name: 'type: feature'
+  description: 'New feature or enhancement request'
+  color: '0e8a16'
 
-- name: "type: documentation"
-  description: "Improvements or additions to documentation"
-  color: "0075ca"
+- name: 'type: documentation'
+  description: 'Improvements or additions to documentation'
+  color: '0075ca'
 
-- name: "type: chore"
-  description: "Maintenance tasks, dependencies, tooling"
-  color: "fef2c0"
+- name: 'type: chore'
+  description: 'Maintenance tasks, dependencies, tooling'
+  color: 'fef2c0'
 
-- name: "type: performance"
-  description: "Performance improvements"
-  color: "1d76db"
+- name: 'type: performance'
+  description: 'Performance improvements'
+  color: '1d76db'
 
-- name: "type: accessibility"
-  description: "Accessibility improvements (a11y)"
-  color: "7057ff"
+- name: 'type: accessibility'
+  description: 'Accessibility improvements (a11y)'
+  color: '7057ff'
 
-- name: "type: refactor"
-  description: "Code refactoring without behavior change"
-  color: "fbca04"
+- name: 'type: refactor'
+  description: 'Code refactoring without behavior change'
+  color: 'fbca04'
 
-- name: "priority: critical"
-  description: "Must be fixed immediately"
-  color: "b60205"
+- name: 'priority: critical'
+  description: 'Must be fixed immediately'
+  color: 'b60205'
 
-- name: "priority: high"
-  description: "Should be addressed soon"
-  color: "d93f0b"
+- name: 'priority: high'
+  description: 'Should be addressed soon'
+  color: 'd93f0b'
 
-- name: "priority: medium"
-  description: "Normal priority"
-  color: "fbca04"
+- name: 'priority: medium'
+  description: 'Normal priority'
+  color: 'fbca04'
 
-- name: "priority: low"
-  description: "Nice to have, not urgent"
-  color: "0e8a16"
+- name: 'priority: low'
+  description: 'Nice to have, not urgent'
+  color: '0e8a16'
 
-- name: "status: needs-triage"
-  description: "Needs initial review and prioritization"
-  color: "ededed"
+- name: 'status: needs-triage'
+  description: 'Needs initial review and prioritization'
+  color: 'ededed'
 
-- name: "status: awaiting-response"
-  description: "Waiting for more information from reporter"
-  color: "d876e3"
+- name: 'status: awaiting-response'
+  description: 'Waiting for more information from reporter'
+  color: 'd876e3'
 
-- name: "status: accepted"
-  description: "Ready to be worked on"
-  color: "c2e0c6"
+- name: 'status: accepted'
+  description: 'Ready to be worked on'
+  color: 'c2e0c6'
 
-- name: "status: in-progress"
-  description: "Currently being worked on"
-  color: "0052cc"
+- name: 'status: in-progress'
+  description: 'Currently being worked on'
+  color: '0052cc'
 
-- name: "status: blocked"
-  description: "Cannot proceed due to dependencies"
-  color: "e99695"
+- name: 'status: blocked'
+  description: 'Cannot proceed due to dependencies'
+  color: 'e99695'
 
-- name: "status: wontfix"
-  description: "Will not be addressed"
-  color: "ffffff"
+- name: 'status: wontfix'
+  description: 'Will not be addressed'
+  color: 'ffffff'
 
-- name: "status: duplicate"
-  description: "Duplicate of another issue"
-  color: "cfd3d7"
+- name: 'status: duplicate'
+  description: 'Duplicate of another issue'
+  color: 'cfd3d7'
 
-- name: "component: UI"
-  description: "Related to user interface components"
-  color: "5319e7"
+- name: 'component: UI'
+  description: 'Related to user interface components'
+  color: '5319e7'
 
-- name: "component: routing"
-  description: "Related to React Router navigation"
-  color: "bfd4f2"
+- name: 'component: routing'
+  description: 'Related to React Router navigation'
+  color: 'bfd4f2'
 
-- name: "component: wallet"
-  description: "Related to Stellar wallet integration"
-  color: "1d76db"
+- name: 'component: wallet'
+  description: 'Related to Stellar wallet integration'
+  color: '1d76db'
 
-- name: "component: api"
-  description: "Related to API services and data fetching"
-  color: "006b75"
+- name: 'component: api'
+  description: 'Related to API services and data fetching'
+  color: '006b75'
 
-- name: "component: testing"
-  description: "Related to tests and test infrastructure"
-  color: "d4c5f9"
+- name: 'component: testing'
+  description: 'Related to tests and test infrastructure'
+  color: 'd4c5f9'
 
-- name: "component: build"
-  description: "Related to build process or Vite configuration"
-  color: "c5def5"
+- name: 'component: build'
+  description: 'Related to build process or Vite configuration'
+  color: 'c5def5'
 
-- name: "good first issue"
-  description: "Good for newcomers to the project"
-  color: "7057ff"
+- name: 'good first issue'
+  description: 'Good for newcomers to the project'
+  color: '7057ff'
 
-- name: "help wanted"
-  description: "Extra attention or help needed"
-  color: "008672"
+- name: 'help wanted'
+  description: 'Extra attention or help needed'
+  color: '008672'
 
-- name: "breaking change"
-  description: "Introduces a breaking change"
-  color: "d73a4a"
+- name: 'breaking change'
+  description: 'Introduces a breaking change'
+  color: 'd73a4a'
 
-- name: "dependencies"
-  description: "Updates to project dependencies"
-  color: "0366d6"
+- name: 'dependencies'
+  description: 'Updates to project dependencies'
+  color: '0366d6'

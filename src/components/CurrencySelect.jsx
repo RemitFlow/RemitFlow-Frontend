@@ -1,5 +1,5 @@
-import { CURRENCIES } from '../constants/currencies.js'
-import './CurrencySelect.css'
+import { CURRENCIES } from '../constants/currencies.js';
+import './CurrencySelect.css';
 
 /**
  * Dropdown for picking a currency.
@@ -30,5 +30,5 @@ export default function CurrencySelect({ value, onChange, label, id }) {
         ))}
       </select>
     </div>
-  )
+  );
 }

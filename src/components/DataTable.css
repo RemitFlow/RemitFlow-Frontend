@@ -59,7 +59,9 @@
   height: 100%;
   background: #334155;
   border-radius: 1px;
-  transition: background-color 0.15s ease, height 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    height 0.15s ease;
 }
 
 .col-resize-handle:hover::after,
@@ -128,7 +130,7 @@
 }
 
 .data-table-cell-mono .data-table-cell-value {
-  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 /* ── Alignment ──────────────────────────────────────────────────────── */
@@ -167,8 +169,13 @@
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 /* ── Message states ─────────────────────────────────────────────────── */

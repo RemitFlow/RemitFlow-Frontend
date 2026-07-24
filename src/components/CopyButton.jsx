@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import './CopyButton.css'
+import { useState } from 'react';
+import './CopyButton.css';
 
 /**
  * Button that copies a value to the clipboard and shows brief confirmation.
@@ -8,13 +8,13 @@ import './CopyButton.css'
  * @param {string} [props.label] - accessible label for the action
  */
 export default function CopyButton({ value, label = 'Copy' }) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(value)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
     } catch (err) {
       // Clipboard may be blocked; leave the label unchanged.
     }
@@ -30,5 +30,5 @@ export default function CopyButton({ value, label = 'Copy' }) {
     >
       {copied ? '✓ Copied' : '⧉ Copy'}
     </button>
-  )
+  );
 }

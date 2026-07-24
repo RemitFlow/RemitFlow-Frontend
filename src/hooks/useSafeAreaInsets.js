@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 function readInset(name) {
-  if (typeof document === 'undefined') return 0
-  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-  if (!raw) return 0
-  const match = raw.match(/^(\d+(?:\.\d+)?)/)
-  return match ? Number.parseFloat(match[1]) : 0
+  if (typeof document === 'undefined') return 0;
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  if (!raw) return 0;
+  const match = raw.match(/^(\d+(?:\.\d+)?)/);
+  return match ? Number.parseFloat(match[1]) : 0;
 }
 
 /**
@@ -19,7 +21,7 @@ export function useSafeAreaInsets() {
     bottom: readInset('--safe-area-inset-bottom'),
     left: readInset('--safe-area-inset-left'),
     right: readInset('--safe-area-inset-right'),
-  }))
+  }));
 
   useEffect(() => {
     function sync() {
@@ -28,16 +30,16 @@ export function useSafeAreaInsets() {
         bottom: readInset('--safe-area-inset-bottom'),
         left: readInset('--safe-area-inset-left'),
         right: readInset('--safe-area-inset-right'),
-      })
+      });
     }
 
-    window.addEventListener('resize', sync)
-    window.addEventListener('orientationchange', sync)
+    window.addEventListener('resize', sync);
+    window.addEventListener('orientationchange', sync);
     return () => {
-      window.removeEventListener('resize', sync)
-      window.removeEventListener('orientationchange', sync)
-    }
-  }, [])
+      window.removeEventListener('resize', sync);
+      window.removeEventListener('orientationchange', sync);
+    };
+  }, []);
 
-  return insets
+  return insets;
 }

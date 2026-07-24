@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
 function readSize() {
   if (typeof window === 'undefined') {
-    return { width: 0, height: 0 }
+    return { width: 0, height: 0 };
   }
-  return { width: window.innerWidth, height: window.innerHeight }
+  return { width: window.innerWidth, height: window.innerHeight };
 }
 
 /**
@@ -12,15 +12,15 @@ function readSize() {
  * @returns {{width: number, height: number}} the window dimensions in pixels
  */
 export function useWindowSize() {
-  const [size, setSize] = useState(readSize)
+  const [size, setSize] = useState(readSize);
 
   useEffect(() => {
     function handleResize() {
-      setSize(readSize())
+      setSize(readSize());
     }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  return size
+  return size;
 }

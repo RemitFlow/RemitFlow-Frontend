@@ -1,5 +1,5 @@
-import EmptyState from './EmptyState.jsx'
-import Button from './Button.jsx'
+import EmptyState from './EmptyState.jsx';
+import Button from './Button.jsx';
 
 export default {
   title: 'Components/EmptyState',
@@ -8,42 +8,43 @@ export default {
   argTypes: {
     icon: { control: 'text' },
     title: { control: 'text' },
-    message: { control: 'text' }
-  }
-}
+    message: { control: 'text' },
+  },
+};
 
 export const Default = {
   args: {
     icon: '📭',
     title: 'No transfers yet',
-    message: 'Your transfer history will appear here once you send money.'
-  }
-}
+    message: 'Your transfer history will appear here once you send money.',
+  },
+};
 
 export const CustomIcon = {
   args: {
     icon: '💸',
     title: 'Start sending money',
-    message: 'RemitFlow helps you send money across borders instantly with the Stellar network.'
-  }
-}
+    message:
+      'RemitFlow helps you send money across borders instantly with the Stellar network.',
+  },
+};
 
 export const WithAction = {
   args: {
     icon: '🔍',
     title: 'No results found',
     message: 'Try adjusting your search or filters.',
-    action: <Button variant="primary">Clear filters</Button>
-  }
-}
+    action: <Button variant="primary">Clear filters</Button>,
+  },
+};
 
 export const Minimal = {
   args: {
     icon: '',
     title: 'Nothing here',
-    message: ''
-  }
-}
+    message: '',
+  },
+};
 
 export const AllExamples = {
   render: () => (
@@ -68,5 +69,5 @@ export const AllExamples = {
         action={<Button variant="primary">Send now</Button>}
       />
     </div>
-  )
-}
+  ),
+};

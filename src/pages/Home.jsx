@@ -1,32 +1,32 @@
-import Button from '../components/Button.jsx'
-import { POPULAR_CORRIDORS, getCurrency } from '../constants/currencies.js'
-import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
-import './Home.css'
+import Button from '../components/Button.jsx';
+import { POPULAR_CORRIDORS, getCurrency } from '../constants/currencies.js';
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js';
+import './Home.css';
 
 // Selling points shown on the landing page.
 const FEATURES = [
   {
     icon: '⚡',
     title: 'Fast settlement',
-    text: 'Transfers settle in seconds on the Stellar network, not days.'
+    text: 'Transfers settle in seconds on the Stellar network, not days.',
   },
   {
     icon: '💸',
     title: 'Low fees',
-    text: 'A flat, transparent fee — no hidden FX markups.'
+    text: 'A flat, transparent fee — no hidden FX markups.',
   },
   {
     icon: '🌍',
     title: 'Global reach',
-    text: 'Send to friends and family across supported corridors.'
-  }
-]
+    text: 'Send to friends and family across supported corridors.',
+  },
+];
 
 /**
  * Marketing landing page.
  */
 export default function Home() {
-  useDocumentTitle('Home')
+  useDocumentTitle('Home');
 
   return (
     <div className="home">
@@ -60,18 +60,24 @@ export default function Home() {
         <h2 className="corridors-title">Popular corridors</h2>
         <ul className="corridors-list">
           {POPULAR_CORRIDORS.map(({ from, to }) => {
-            const src = getCurrency(from)
-            const dest = getCurrency(to)
+            const src = getCurrency(from);
+            const dest = getCurrency(to);
             return (
               <li key={`${from}-${to}`} className="corridor-chip">
-                <span>{src?.flag} {from}</span>
-                <span className="corridor-arrow" aria-hidden="true">→</span>
-                <span>{dest?.flag} {to}</span>
+                <span>
+                  {src?.flag} {from}
+                </span>
+                <span className="corridor-arrow" aria-hidden="true">
+                  →
+                </span>
+                <span>
+                  {dest?.flag} {to}
+                </span>
               </li>
-            )
+            );
           })}
         </ul>
       </section>
     </div>
-  )
+  );
 }

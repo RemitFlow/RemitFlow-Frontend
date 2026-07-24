@@ -3,10 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 function readCSS(filename) {
-  return fs.readFileSync(
-    path.resolve(process.cwd(), 'src', filename),
-    'utf8',
-  );
+  return fs.readFileSync(path.resolve(process.cwd(), 'src', filename), 'utf8');
 }
 
 describe('safe-area insets', () => {
@@ -14,19 +11,27 @@ describe('safe-area insets', () => {
     const css = readCSS('index.css');
 
     it('defines --safe-area-inset-top with env() fallback', () => {
-      expect(css).toContain('--safe-area-inset-top: env(safe-area-inset-top, 0px)');
+      expect(css).toContain(
+        '--safe-area-inset-top: env(safe-area-inset-top, 0px)',
+      );
     });
 
     it('defines --safe-area-inset-bottom with env() fallback', () => {
-      expect(css).toContain('--safe-area-inset-bottom: env(safe-area-inset-bottom, 0px)');
+      expect(css).toContain(
+        '--safe-area-inset-bottom: env(safe-area-inset-bottom, 0px)',
+      );
     });
 
     it('defines --safe-area-inset-left with env() fallback', () => {
-      expect(css).toContain('--safe-area-inset-left: env(safe-area-inset-left, 0px)');
+      expect(css).toContain(
+        '--safe-area-inset-left: env(safe-area-inset-left, 0px)',
+      );
     });
 
     it('defines --safe-area-inset-right with env() fallback', () => {
-      expect(css).toContain('--safe-area-inset-right: env(safe-area-inset-right, 0px)');
+      expect(css).toContain(
+        '--safe-area-inset-right: env(safe-area-inset-right, 0px)',
+      );
     });
   });
 

@@ -1,7 +1,7 @@
-import { useRef } from 'react'
-import { useKeyPress } from '../hooks/useKeyPress.js'
-import { useOnClickOutside } from '../hooks/useOnClickOutside.js'
-import './Modal.css'
+import { useRef } from 'react';
+import { useKeyPress } from '../hooks/useKeyPress.js';
+import { useOnClickOutside } from '../hooks/useOnClickOutside.js';
+import './Modal.css';
 
 /**
  * Accessible dialog rendered over an overlay.
@@ -13,16 +13,16 @@ import './Modal.css'
  * @param {React.ReactNode} props.children - dialog body content
  */
 export default function Modal({ open, onClose, title, children }) {
-  const panelRef = useRef(null)
+  const panelRef = useRef(null);
 
   useKeyPress('Escape', () => {
-    if (open) onClose()
-  })
+    if (open) onClose();
+  });
   useOnClickOutside(panelRef, () => {
-    if (open) onClose()
-  })
+    if (open) onClose();
+  });
 
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div className="modal-overlay">
@@ -47,5 +47,5 @@ export default function Modal({ open, onClose, title, children }) {
         <div className="modal-body">{children}</div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import ScrollToTopButton from './ScrollToTopButton.jsx'
+import ScrollToTopButton from './ScrollToTopButton.jsx';
 
 export default {
   title: 'Components/ScrollToTopButton',
@@ -10,15 +10,15 @@ export default {
         component:
           'Floating button that appears once the page is scrolled past a ' +
           'threshold and smoothly returns to the top. Scroll the preview to ' +
-          'reveal it.'
-      }
-    }
+          'reveal it.',
+      },
+    },
   },
   argTypes: {
     threshold: { control: { type: 'number', min: 0, step: 50 } },
-    label: { control: 'text' }
-  }
-}
+    label: { control: 'text' },
+  },
+};
 
 // The button only shows past the scroll threshold, so give stories room to scroll.
 function ScrollCanvas({ children }) {
@@ -29,7 +29,7 @@ function ScrollCanvas({ children }) {
       </p>
       {children}
     </div>
-  )
+  );
 }
 
 export const Default = {
@@ -38,8 +38,8 @@ export const Default = {
     <ScrollCanvas>
       <ScrollToTopButton {...args} />
     </ScrollCanvas>
-  )
-}
+  ),
+};
 
 export const AlwaysVisible = {
   name: 'Low threshold (shows immediately)',
@@ -48,8 +48,8 @@ export const AlwaysVisible = {
     <ScrollCanvas>
       <ScrollToTopButton {...args} />
     </ScrollCanvas>
-  )
-}
+  ),
+};
 
 export const CustomLabel = {
   args: { threshold: 150, label: 'Return to top of page' },
@@ -57,5 +57,5 @@ export const CustomLabel = {
     <ScrollCanvas>
       <ScrollToTopButton {...args} />
     </ScrollCanvas>
-  )
-}
+  ),
+};

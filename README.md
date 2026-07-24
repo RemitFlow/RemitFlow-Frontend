@@ -61,6 +61,8 @@ cp .env.example .env
 - `npm run preview` — preview the production build
 - `npm test` — run the automated Vitest suite
 - `npm run test:watch` — watch mode for local test development
+- `npm run format` — format all source files with Prettier
+- `npm run format:check` — check formatting without modifying files (CI)
 - `npm run lighthouse` — run Lighthouse CI against the local preview server
 
 ## Testing
@@ -124,6 +126,7 @@ npm run lighthouse
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
+
 - Development workflow and coding standards
 - Pull request process
 - Testing requirements

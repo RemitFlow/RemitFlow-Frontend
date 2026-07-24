@@ -1,4 +1,4 @@
-import './TextField.css'
+import './TextField.css';
 
 /**
  * Labelled text input with optional error message.
@@ -20,9 +20,9 @@ export default function TextField({
   type = 'text',
   placeholder,
   error,
-  onBlur
+  onBlur,
 }) {
-  const errorId = id ? `${id}-error` : undefined
+  const errorId = id ? `${id}-error` : undefined;
   return (
     <div className="text-field">
       {label && (
@@ -47,5 +47,5 @@ export default function TextField({
         </span>
       )}
     </div>
-  )
+  );
 }

@@ -3,10 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 function readCSS(filename) {
-  return fs.readFileSync(
-    path.resolve(process.cwd(), 'src', filename),
-    'utf8',
-  );
+  return fs.readFileSync(path.resolve(process.cwd(), 'src', filename), 'utf8');
 }
 
 describe('prefers-contrast media queries', () => {
@@ -71,10 +68,13 @@ describe('prefers-contrast media queries', () => {
       'ErrorBoundary.css',
     ];
 
-    it.each(components)('%s includes a prefers-contrast: more override', (file) => {
-      const css = readCSS(path.join('components', file));
-      expect(css).toMatch(/@media\s*\(\s*prefers-contrast\s*:\s*more\s*\)/);
-    });
+    it.each(components)(
+      '%s includes a prefers-contrast: more override',
+      (file) => {
+        const css = readCSS(path.join('components', file));
+        expect(css).toMatch(/@media\s*\(\s*prefers-contrast\s*:\s*more\s*\)/);
+      },
+    );
   });
 
   describe('page CSS files', () => {

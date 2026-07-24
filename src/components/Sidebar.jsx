@@ -1,13 +1,13 @@
-import { NavLink } from 'react-router-dom'
-import { useLocalStorage } from '../hooks/useLocalStorage.js'
-import './Sidebar.css'
+import { NavLink } from 'react-router-dom';
+import { useLocalStorage } from '../hooks/useLocalStorage.js';
+import './Sidebar.css';
 
 /**
  * Collapsible sidebar navigation.
  * Collapse state is persisted to localStorage so it survives reloads.
  */
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useLocalStorage('sidebar-collapsed', false)
+  const [collapsed, setCollapsed] = useLocalStorage('sidebar-collapsed', false);
 
   return (
     <aside className={`sidebar${collapsed ? ' sidebar--collapsed' : ''}`}>
@@ -40,7 +40,12 @@ export default function Sidebar() {
         <NavLink to="/" end className="sidebar-link">
           <span className="sidebar-link-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M3 7L10 2L17 7V17H12V11H8V17H3V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+              <path
+                d="M3 7L10 2L17 7V17H12V11H8V17H3V7Z"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              />
             </svg>
           </span>
           <span className="sidebar-link-label">Home</span>
@@ -49,7 +54,13 @@ export default function Sidebar() {
         <NavLink to="/send" className="sidebar-link">
           <span className="sidebar-link-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M4 16L16 4M16 4H7M16 4V13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M4 16L16 4M16 4H7M16 4V13"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </span>
           <span className="sidebar-link-label">Send Money</span>
@@ -58,9 +69,22 @@ export default function Sidebar() {
         <NavLink to="/transfers" className="sidebar-link">
           <span className="sidebar-link-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <rect x="2" y="4" width="16" height="13" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M2 8H18" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M6 12H11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <rect
+                x="2"
+                y="4"
+                width="16"
+                height="13"
+                rx="2"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              <path d="M2 8H18" stroke="currentColor" strokeWidth="1.5" />
+              <path
+                d="M6 12H11"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
             </svg>
           </span>
           <span className="sidebar-link-label">Transfers</span>
@@ -68,8 +92,10 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <span className="sidebar-footer-branding">{collapsed ? '✦' : '✦ RemitFlow'}</span>
+        <span className="sidebar-footer-branding">
+          {collapsed ? '✦' : '✦ RemitFlow'}
+        </span>
       </div>
     </aside>
-  )
+  );
 }

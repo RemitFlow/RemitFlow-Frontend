@@ -1,10 +1,10 @@
-import SelectionToolbar from './SelectionToolbar.jsx'
+import SelectionToolbar from './SelectionToolbar.jsx';
 
 export default {
   title: 'Components/SelectionToolbar',
   component: SelectionToolbar,
-  tags: ['autodocs']
-}
+  tags: ['autodocs'],
+};
 
 const baseArgs = {
   pageCount: 5,
@@ -16,25 +16,25 @@ const baseArgs = {
   hasMorePages: true,
   onTogglePage: () => {},
   onSelectAllAcross: () => {},
-  onClear: () => {}
-}
+  onClear: () => {},
+};
 
 export const Empty = {
-  args: { ...baseArgs }
-}
+  args: { ...baseArgs },
+};
 
 export const PartialPage = {
-  args: { ...baseArgs, selectedCount: 2, somePageSelected: true }
-}
+  args: { ...baseArgs, selectedCount: 2, somePageSelected: true },
+};
 
 export const PageSelected = {
   args: {
     ...baseArgs,
     selectedCount: 5,
     somePageSelected: true,
-    allPageSelected: true
-  }
-}
+    allPageSelected: true,
+  },
+};
 
 export const AllAcrossPages = {
   args: {
@@ -42,6 +42,6 @@ export const AllAcrossPages = {
     selectedCount: 12,
     somePageSelected: true,
     allPageSelected: true,
-    allAcrossSelected: true
-  }
-}
+    allAcrossSelected: true,
+  },
+};

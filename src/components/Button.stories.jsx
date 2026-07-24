@@ -1,4 +1,4 @@
-import Button from './Button.jsx'
+import Button from './Button.jsx';
 
 export default {
   title: 'Components/Button',
@@ -8,44 +8,44 @@ export default {
     onClick: { action: 'clicked' },
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'ghost']
+      options: ['primary', 'secondary', 'ghost'],
     },
     type: {
       control: 'select',
-      options: ['button', 'submit']
+      options: ['button', 'submit'],
     },
     disabled: { control: 'boolean' },
-    children: { control: 'text' }
-  }
-}
+    children: { control: 'text' },
+  },
+};
 
 export const Primary = {
   args: {
     children: 'Send Money',
-    variant: 'primary'
-  }
-}
+    variant: 'primary',
+  },
+};
 
 export const Secondary = {
   args: {
     children: 'Cancel',
-    variant: 'secondary'
-  }
-}
+    variant: 'secondary',
+  },
+};
 
 export const Ghost = {
   args: {
     children: 'Learn more',
-    variant: 'ghost'
-  }
-}
+    variant: 'ghost',
+  },
+};
 
 export const Disabled = {
   args: {
     children: 'Disabled',
-    disabled: true
-  }
-}
+    disabled: true,
+  },
+};
 
 export const AllVariants = {
   render: () => (
@@ -55,5 +55,5 @@ export const AllVariants = {
       <Button variant="ghost">Ghost</Button>
       <Button disabled>Disabled</Button>
     </div>
-  )
-}
+  ),
+};

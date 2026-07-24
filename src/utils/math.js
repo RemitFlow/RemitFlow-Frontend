@@ -8,7 +8,7 @@
  * @returns {number} the clamped value
  */
 export function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max)
+  return Math.min(Math.max(value, min), max);
 }
 
 /**
@@ -18,8 +18,8 @@ export function clamp(value, min, max) {
  * @returns {number} the rounded value
  */
 export function roundTo(value, decimals = 2) {
-  const factor = 10 ** decimals
-  return Math.round((Number(value) + Number.EPSILON) * factor) / factor
+  const factor = 10 ** decimals;
+  return Math.round((Number(value) + Number.EPSILON) * factor) / factor;
 }
 
 /**
@@ -29,5 +29,5 @@ export function roundTo(value, decimals = 2) {
  * @returns {number} the resulting portion
  */
 export function percentOf(amount, percent) {
-  return Number(amount) * Number(percent)
+  return Number(amount) * Number(percent);
 }

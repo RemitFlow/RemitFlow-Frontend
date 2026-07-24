@@ -16,6 +16,7 @@ Thank you for your interest in contributing to RemitFlow! This document provides
 ## Code of Conduct
 
 We are committed to providing a welcoming and inclusive environment. Please:
+
 - Be respectful and constructive in all interactions
 - Focus on what is best for the community
 - Show empathy towards other community members
@@ -33,6 +34,7 @@ We are committed to providing a welcoming and inclusive environment. Please:
 
 1. Fork the repository on GitHub
 2. Clone your fork locally:
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/RemitFlow-Frontend.git
    cd RemitFlow-Frontend
@@ -70,6 +72,7 @@ git checkout -b fix/your-bug-fix
 ```
 
 Branch naming conventions:
+
 - `feature/` - New features or enhancements
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -126,6 +129,7 @@ npm run preview
 ### Submitting a Pull Request
 
 1. Push your branch to your fork:
+
    ```bash
    git push origin your-branch-name
    ```
@@ -160,23 +164,29 @@ test(integration): add transfer filter tests
 
 ```markdown
 ## Description
+
 Brief summary of changes
 
 ## Motivation
+
 Why is this change needed?
 
 ## Changes Made
+
 - Change 1
 - Change 2
 - Change 3
 
 ## Testing
+
 How were these changes tested?
 
 ## Screenshots (if applicable)
+
 [Add screenshots for UI changes]
 
 ## Checklist
+
 - [ ] Tests pass locally
 - [ ] Code follows style guidelines
 - [ ] Documentation updated
@@ -232,6 +242,7 @@ src/
 ### Accessibility
 
 All contributions must maintain accessibility standards:
+
 - Semantic HTML elements (`<button>`, `<nav>`, `<main>`, etc.)
 - ARIA labels for icon buttons and non-text controls
 - Keyboard navigation support
@@ -373,6 +384,7 @@ See [Issue Triage Process](.github/ISSUE_TRIAGE.md) for more details.
 ### Recognition
 
 Contributors are recognized in:
+
 - GitHub Contributors page
 - Release notes (for significant contributions)
 - Project README (for major features)
@@ -380,6 +392,7 @@ Contributors are recognized in:
 ## Questions?
 
 If you have questions about contributing:
+
 1. Check existing documentation (README, this file)
 2. Search closed issues and PRs
 3. Ask in GitHub Discussions

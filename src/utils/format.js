@@ -1,5 +1,5 @@
 // Formatting helpers for currency, dates and addresses.
-import { DEFAULT_LOCALE } from '../constants/locales.js'
+import { DEFAULT_LOCALE } from '../constants/locales.js';
 
 /**
  * Format an amount as a currency string.
@@ -9,14 +9,18 @@ import { DEFAULT_LOCALE } from '../constants/locales.js'
  *   separator and symbol placement, e.g. "en-US" or "fr-FR"
  * @returns {string} the formatted currency string
  */
-export function formatAmount(amount, currency = 'USD', locale = DEFAULT_LOCALE) {
-  const num = Number(amount) || 0
+export function formatAmount(
+  amount,
+  currency = 'USD',
+  locale = DEFAULT_LOCALE,
+) {
+  const num = Number(amount) || 0;
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(num)
+    maximumFractionDigits: 2,
+  }).format(num);
 }
 
 /**
@@ -26,13 +30,13 @@ export function formatAmount(amount, currency = 'USD', locale = DEFAULT_LOCALE) 
  * @returns {string} the formatted date, or "-" when value is missing
  */
 export function formatDate(value, locale = DEFAULT_LOCALE) {
-  if (!value) return '-'
-  const d = new Date(value)
+  if (!value) return '-';
+  const d = new Date(value);
   return d.toLocaleString(locale, {
     year: 'numeric',
     month: 'short',
-    day: 'numeric'
-  })
+    day: 'numeric',
+  });
 }
 
 /**
@@ -43,8 +47,8 @@ export function formatDate(value, locale = DEFAULT_LOCALE) {
  * @returns {string}
  */
 export function formatRate(rate, from, to) {
-  if (rate == null) return '-'
-  return `1 ${from} = ${rate.toFixed(4)} ${to}`
+  if (rate == null) return '-';
+  return `1 ${from} = ${rate.toFixed(4)} ${to}`;
 }
 
 /**
@@ -55,12 +59,12 @@ export function formatRate(rate, from, to) {
  * @returns {string} the cleaned amount, or '' if the input has no digits
  */
 export function formatCurrencyInput(value) {
-  if (value == null) return ''
-  const cleaned = String(value).replace(/[^0-9.]/g, '')
-  if (cleaned === '' || cleaned === '.') return ''
-  const num = Number(cleaned)
-  if (!Number.isFinite(num)) return ''
-  return num.toFixed(2)
+  if (value == null) return '';
+  const cleaned = String(value).replace(/[^0-9.]/g, '');
+  if (cleaned === '' || cleaned === '.') return '';
+  const num = Number(cleaned);
+  if (!Number.isFinite(num)) return '';
+  return num.toFixed(2);
 }
 
 /**
@@ -70,8 +74,8 @@ export function formatCurrencyInput(value) {
  * @returns {string} the formatted percentage
  */
 export function formatPercent(value, decimals = 2) {
-  const num = Number(value) || 0
-  return `${(num * 100).toFixed(decimals)}%`
+  const num = Number(value) || 0;
+  return `${(num * 100).toFixed(decimals)}%`;
 }
 
 /**
@@ -82,11 +86,11 @@ export function formatPercent(value, decimals = 2) {
  * @returns {string} the formatted number
  */
 export function formatNumber(value, decimals = 2, locale = DEFAULT_LOCALE) {
-  const num = Number(value) || 0
+  const num = Number(value) || 0;
   return new Intl.NumberFormat(locale, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: decimals
-  }).format(num)
+    maximumFractionDigits: decimals,
+  }).format(num);
 }
 
 /**
@@ -97,6 +101,6 @@ export function formatNumber(value, decimals = 2, locale = DEFAULT_LOCALE) {
  * @returns {string} the shortened value, or the original if already short
  */
 export function shortenAddress(value, head = 6, tail = 4) {
-  if (!value || value.length <= head + tail) return value || '-'
-  return `${value.slice(0, head)}...${value.slice(-tail)}`
+  if (!value || value.length <= head + tail) return value || '-';
+  return `${value.slice(0, head)}...${value.slice(-tail)}`;
 }

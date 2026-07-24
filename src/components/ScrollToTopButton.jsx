@@ -1,5 +1,5 @@
-import { useScrollToTop } from '../hooks/useScrollToTop.js'
-import './ScrollToTopButton.css'
+import { useScrollToTop } from '../hooks/useScrollToTop.js';
+import './ScrollToTopButton.css';
 
 /**
  * Floating button that appears after the page is scrolled down and returns the
@@ -11,9 +11,9 @@ import './ScrollToTopButton.css'
  */
 export default function ScrollToTopButton({
   threshold = 300,
-  label = 'Scroll to top'
+  label = 'Scroll to top',
 }) {
-  const { visible, scrollToTop } = useScrollToTop(threshold)
+  const { visible, scrollToTop } = useScrollToTop(threshold);
 
   return (
     <button
@@ -29,5 +29,5 @@ export default function ScrollToTopButton({
         ↑
       </span>
     </button>
-  )
+  );
 }

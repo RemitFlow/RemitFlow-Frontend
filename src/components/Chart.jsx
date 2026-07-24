@@ -21,7 +21,7 @@ export default function Chart({ data, title, formatValue }) {
     URL.revokeObjectURL(url);
   };
 
-  const maxValue = Math.max(...data.map(d => d.value), 1);
+  const maxValue = Math.max(...data.map((d) => d.value), 1);
   const barCount = data.length;
 
   return (
@@ -44,12 +44,20 @@ export default function Chart({ data, title, formatValue }) {
           ))}
         </svg>
         {hoveredIndex !== null && (
-          <div className="chart-tooltip" role="tooltip" style={{ left: `${(hoveredIndex + 0.5) * (100 / barCount)}%` }}>
+          <div
+            className="chart-tooltip"
+            role="tooltip"
+            style={{ left: `${(hoveredIndex + 0.5) * (100 / barCount)}%` }}
+          >
             <div className="chart-tooltip-value">
-              {formatValue ? formatValue(data[hoveredIndex]) : data[hoveredIndex].value}
+              {formatValue
+                ? formatValue(data[hoveredIndex])
+                : data[hoveredIndex].value}
             </div>
             {data[hoveredIndex].label && (
-              <div className="chart-tooltip-label">{data[hoveredIndex].label}</div>
+              <div className="chart-tooltip-label">
+                {data[hoveredIndex].label}
+              </div>
             )}
           </div>
         )}

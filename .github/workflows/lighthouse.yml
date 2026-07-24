@@ -15,14 +15,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Check formatting (Prettier)
+        run: npm run format:check
+
       - name: Build app
         run: npm run build
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
 
       - name: Run Lighthouse CI
         run: npm run lighthouse

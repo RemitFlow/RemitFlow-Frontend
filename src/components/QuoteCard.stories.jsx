@@ -1,13 +1,13 @@
-import QuoteCard from './QuoteCard.jsx'
+import QuoteCard from './QuoteCard.jsx';
 
 export default {
   title: 'Components/QuoteCard',
   component: QuoteCard,
   tags: ['autodocs'],
   argTypes: {
-    quote: { control: 'object' }
-  }
-}
+    quote: { control: 'object' },
+  },
+};
 
 const sampleQuote = {
   from: 'USD',
@@ -15,8 +15,8 @@ const sampleQuote = {
   rate: 1550.25,
   sendAmount: 450,
   fee: 2.35,
-  receiveAmount: 694463.7
-}
+  receiveAmount: 694463.7,
+};
 
 const euroQuote = {
   from: 'EUR',
@@ -24,8 +24,8 @@ const euroQuote = {
   rate: 89.5,
   sendAmount: 200,
   fee: 1.1,
-  receiveAmount: 17800.8
-}
+  receiveAmount: 17800.8,
+};
 
 const gbpQuote = {
   from: 'GBP',
@@ -33,26 +33,26 @@ const gbpQuote = {
   rate: 71.2,
   sendAmount: 100,
   fee: 0.6,
-  receiveAmount: 7077.28
-}
+  receiveAmount: 7077.28,
+};
 
 export const Default = {
   args: {
-    quote: sampleQuote
-  }
-}
+    quote: sampleQuote,
+  },
+};
 
 export const EURtoINR = {
   args: {
-    quote: euroQuote
-  }
-}
+    quote: euroQuote,
+  },
+};
 
 export const GBPtoPHP = {
   args: {
-    quote: gbpQuote
-  }
-}
+    quote: gbpQuote,
+  },
+};
 
 export const SmallAmount = {
   args: {
@@ -62,24 +62,31 @@ export const SmallAmount = {
       rate: 18.05,
       sendAmount: 50,
       fee: 0.25,
-      receiveAmount: 898.99
-    }
-  }
-}
+      receiveAmount: 898.99,
+    },
+  },
+};
 
 export const NullQuote = {
   args: {
-    quote: null
-  }
-}
+    quote: null,
+  },
+};
 
 export const AllExamples = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 420 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1.5rem',
+        maxWidth: 420,
+      }}
+    >
       <QuoteCard quote={sampleQuote} />
       <QuoteCard quote={euroQuote} />
       <QuoteCard quote={gbpQuote} />
       <QuoteCard quote={null} />
     </div>
-  )
-}
+  ),
+};

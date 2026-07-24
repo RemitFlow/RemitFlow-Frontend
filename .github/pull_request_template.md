@@ -10,9 +10,9 @@
 
 <!-- List the key changes in this PR -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Type of Change
 
@@ -47,9 +47,11 @@
 <!-- Add before/after screenshots for UI changes -->
 
 ### Before
+
 <!-- Screenshot or description of old behavior -->
 
 ### After
+
 <!-- Screenshot or description of new behavior -->
 
 ## Accessibility

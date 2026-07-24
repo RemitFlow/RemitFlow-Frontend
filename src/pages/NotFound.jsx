@@ -1,12 +1,12 @@
-import Button from '../components/Button.jsx'
-import { useDocumentTitle } from '../hooks/useDocumentTitle.js'
-import './NotFound.css'
+import Button from '../components/Button.jsx';
+import { useDocumentTitle } from '../hooks/useDocumentTitle.js';
+import './NotFound.css';
 
 /**
  * 404 page shown for unknown routes.
  */
 export default function NotFound() {
-  useDocumentTitle('Page Not Found')
+  useDocumentTitle('Page Not Found');
 
   return (
     <div className="not-found">
@@ -17,5 +17,5 @@ export default function NotFound() {
       </p>
       <Button to="/">Back to Home</Button>
     </div>
-  )
+  );
 }

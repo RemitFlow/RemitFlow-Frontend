@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import './Button.css'
+import { Link } from 'react-router-dom';
+import './Button.css';
 
 /**
  * Reusable button.
@@ -16,9 +16,9 @@ export default function Button({
   disabled = false,
   type = 'button',
   onClick,
-  to
+  to,
 }) {
-  const className = `btn btn-${variant}`
+  const className = `btn btn-${variant}`;
 
   if (to) {
     if (disabled) {
@@ -26,14 +26,14 @@ export default function Button({
         <span className={className} aria-disabled="true">
           {children}
         </span>
-      )
+      );
     }
 
     return (
       <Link to={to} className={className}>
         {children}
       </Link>
-    )
+    );
   }
 
   return (
@@ -45,5 +45,5 @@ export default function Button({
     >
       {children}
     </button>
-  )
+  );
 }
