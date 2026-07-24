@@ -21,6 +21,10 @@ The app runs at http://localhost:5173 by default.
   completed, failed), search/status/date-range filters synced to the URL,
   plus loading, error and empty states.
 - **Tabs** — reusable tabbed interface with swipe gesture support for mobile, accessible keyboard navigation, and controlled/uncontrolled modes.
+- **Print support** — a dedicated print stylesheet (`src/print.css`)
+  optimises the Transfers dashboard and other pages for printing: hides
+  navigation chrome, interactive elements, and applies a light background
+  with readable text and preserved chart/status colours.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
   - Robust error handling for rejected connections
   - Connection timeout protection (30 seconds)

@@ -104,5 +104,17 @@
     animation: none;
     background: var(--color-surface);
     border: 1px solid #475569;
+@media print {
+  .chart-container {
+    border-color: #ccc !important;
+    break-inside: avoid;
+  }
+
+  .chart-tooltip {
+    display: none !important;
+  }
+
+  .download-button {
+    display: none !important;
   }
 }
