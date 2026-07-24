@@ -103,5 +103,11 @@ describe('Chart component', () => {
     )
     expect(screen.getByText('Nothing to show')).toBeInTheDocument()
     expect(screen.getByText('Please add some data.')).toBeInTheDocument()
+  it('renders shimmer placeholder when loading', () => {
+    render(<Chart loading data={[]} title="Test Chart" />)
+    const container = screen.getByText('Test Chart').closest('.chart-container')
+    expect(container).toHaveAttribute('aria-busy', 'true')
+    expect(container.querySelector('.chart-shimmer')).toBeInTheDocument()
+    expect(container.querySelector('.chart-shimmer-btn')).toBeInTheDocument()
   })
 })

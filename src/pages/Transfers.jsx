@@ -277,6 +277,48 @@ export default function Transfers() {
       <PullToRefresh onRefresh={reload} disabled={loading}>
         {renderContent()}
       </PullToRefresh>
+      {loading && (
+        <div className="transfers-list">
+          <Chart loading title="Recent Transfer Amounts" data={[]} />
+          <Skeleton count={3} height="4.5rem" />
+        </div>
+      )}
+
+      {!loading && error && <ErrorMessage message={error} onRetry={reload} />}
+
+      {!loading && !error && filteredTransfers.length === 0 && (
+        <EmptyState
+          icon={hasActiveFilters ? '🔍' : '💸'}
+          title={hasActiveFilters ? 'No matching transfers' : 'No transfers yet'}
+          message={
+            hasActiveFilters
+              ? 'Try adjusting your search or filters.'
+              : 'Once you send money, your transfers will show up here.'
+          }
+          action={
+            hasActiveFilters ? (
+              <Button onClick={() => setSearchParams({})}>Clear filters</Button>
+            ) : (
+              <Button to="/send">Send your first transfer</Button>
+            )
+          }
+        />
+      )}
+
+      {!loading && !error && filteredTransfers.length > 0 && (
+        <div className="transfers-list">
+          <Chart
+            title="Recent Transfer Amounts"
+            data={filteredTransfers
+              .slice(0, 5)
+              .map((t) => ({ value: parseFloat(t.sendAmount), label: t.recipient, currency: t.from }))}
+            formatValue={(d) => formatAmount(d.value, d.currency)}
+          />
+          {filteredTransfers.map((t) => (
+            <TransferRow key={t.id} transfer={t} locale={locale} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -19,52 +19,48 @@
   height: auto;
 }
 
-.chart-bar {
-  cursor: pointer;
-  transition: fill 0.15s ease;
-}
-
-.chart-tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  transform: translateX(-50%);
-  z-index: 10;
-  padding: 0.35rem 0.6rem;
-  border-radius: 6px;
-  background: #0b1120;
-  border: 1px solid #334155;
-  color: var(--color-text);
-  font-size: 0.75rem;
-  white-space: nowrap;
-  pointer-events: none;
-  margin-bottom: 0.5rem;
+.chart-shimmer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.15rem;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 4px;
+  height: 100px;
+  padding: 0 4px;
 }
 
-.chart-tooltip-value {
-  font-weight: 600;
-  font-size: 0.8rem;
+.chart-shimmer-bar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    #2a3850 37%,
+    var(--color-surface) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
 }
 
-.chart-tooltip-label {
-  font-size: 0.65rem;
-  color: var(--color-muted, #94a3b8);
-  max-width: 10rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-@media (prefers-contrast: more) {
-  .chart-tooltip {
-    border-width: 2px;
-    background: #000;
-  }
+.chart-shimmer-btn {
+  display: inline-block;
+  border-radius: 8px;
 }
 
 .download-button {
   margin-top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chart-shimmer-bar,
+  .chart-shimmer-btn {
+    animation: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .chart-shimmer-bar {
+    animation: none;
+    background: var(--color-surface);
+    border: 1px solid #475569;
+  }
 }
