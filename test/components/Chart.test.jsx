@@ -110,4 +110,79 @@ describe('Chart component', () => {
     expect(container.querySelector('.chart-shimmer')).toBeInTheDocument()
     expect(container.querySelector('.chart-shimmer-btn')).toBeInTheDocument()
   })
+
+  describe('multi-series with legend', () => {
+    const seriesData = [
+      { name: 'Sent', color: '#6366f1', data: [{ value: 200 }, { value: 120 }] },
+      { name: 'Received', color: '#10b981', data: [{ value: 180 }, { value: 100 }] }
+    ]
+
+    it('renders legend when series prop is provided', () => {
+      render(<Chart series={seriesData} title="Multi" />)
+      expect(screen.getByText('Sent')).toBeInTheDocument()
+      expect(screen.getByText('Received')).toBeInTheDocument()
+    })
+
+    it('renders correct number of bars for multi-series', () => {
+      const { container } = render(<Chart series={seriesData} title="Multi" />)
+      const bars = container.querySelectorAll('.chart-bar')
+      expect(bars).toHaveLength(4)
+    })
+
+    it('toggles series visibility on legend click', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<Chart series={seriesData} title="Multi" />)
+
+      expect(container.querySelectorAll('.chart-bar')).toHaveLength(4)
+
+      await user.click(screen.getByText('Sent'))
+
+      const bars = container.querySelectorAll('.chart-bar')
+      expect(bars).toHaveLength(4)
+      expect(bars[0].getAttribute('opacity')).toBe('0.3')
+      expect(bars[1].getAttribute('opacity')).toBe('1')
+      expect(bars[2].getAttribute('opacity')).toBe('0.3')
+      expect(bars[3].getAttribute('opacity')).toBe('1')
+    })
+
+    it('dims legend item when series is hidden', async () => {
+      const user = userEvent.setup()
+      render(<Chart series={seriesData} title="Multi" />)
+
+      const sentButton = screen.getByText('Sent')
+      expect(sentButton.closest('.chart-legend-item--dimmed')).toBeNull()
+
+      await user.click(sentButton)
+      expect(sentButton.closest('.chart-legend-item--dimmed')).toBeInTheDocument()
+
+      await user.click(sentButton)
+      expect(sentButton.closest('.chart-legend-item--dimmed')).toBeNull()
+    })
+
+    it('shows series name in tooltip on bar hover', async () => {
+      const user = userEvent.setup()
+      const { container } = render(<Chart series={seriesData} title="Multi" />)
+      const bars = container.querySelectorAll('.chart-bar')
+
+      await user.hover(bars[0])
+      expect(screen.getByRole('tooltip')).toHaveTextContent('Sent')
+    })
+
+    it('does not render legend when using data prop', () => {
+      const { container } = render(<Chart data={[{ value: 10 }]} title="Single" />)
+      expect(container.querySelector('.chart-legend')).toBeNull()
+    })
+
+    it('uses default colors when series omit color', () => {
+      const seriesNoColor = [
+        { name: 'A', data: [{ value: 10 }] },
+        { name: 'B', data: [{ value: 20 }] }
+      ]
+      const { container } = render(<Chart series={seriesNoColor} title="Colors" />)
+      const bars = container.querySelectorAll('.chart-bar')
+      expect(bars).toHaveLength(2)
+      expect(bars[0]).toHaveAttribute('fill', '#6366f1')
+      expect(bars[1]).toHaveAttribute('fill', '#10b981')
+    })
+  })
 })
