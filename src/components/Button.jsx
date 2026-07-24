@@ -8,7 +8,8 @@ import './Button.css';
  * @param {boolean} [props.disabled]
  * @param {Function} [props.onClick]
  * @param {'button'|'submit'} [props.type]
- * @param {string} [props.to] - when set, renders as a router link styled as a button
+ * @param {string} [props.ariaLabel] - accessible label for icon-only buttons
+ * @param {string} [props.title] - native tooltip text
  */
 export default function Button({
   children,
@@ -17,6 +18,8 @@ export default function Button({
   type = 'button',
   onClick,
   to,
+  ariaLabel,
+  title
 }) {
   const className = `btn btn-${variant}`;
 
@@ -42,6 +45,8 @@ export default function Button({
       className={className}
       disabled={disabled}
       onClick={onClick}
+      aria-label={ariaLabel}
+      title={title}
     >
       {children}
     </button>

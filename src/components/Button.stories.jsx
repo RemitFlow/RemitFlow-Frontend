@@ -18,6 +18,10 @@ export default {
     children: { control: 'text' },
   },
 };
+    ariaLabel: { control: 'text' },
+    title: { control: 'text' }
+  }
+}
 
 export const Primary = {
   args: {
@@ -46,6 +50,15 @@ export const Disabled = {
     disabled: true,
   },
 };
+
+export const IconOnly = {
+  args: {
+    children: '✕',
+    variant: 'ghost',
+    ariaLabel: 'Close',
+    title: 'Close'
+  }
+}
 
 export const AllVariants = {
   render: () => (
