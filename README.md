@@ -20,6 +20,7 @@ The app runs at http://localhost:5173 by default.
 - **Transfers** — list of your transfers with status badges (pending,
   completed, failed), search/status/date-range filters synced to the URL,
   plus loading, error and empty states.
+- **Tabs** — reusable tabbed interface with swipe gesture support for mobile, accessible keyboard navigation, and controlled/uncontrolled modes.
 - **Mock wallet** — connect a demo Stellar wallet (no network calls).
   - Robust error handling for rejected connections
   - Connection timeout protection (30 seconds)
@@ -37,7 +38,7 @@ The app runs at http://localhost:5173 by default.
 
 ```
 src/
-  components/   reusable UI (Navbar, Footer, QuoteCard, TransferRow, ...)
+  components/   reusable UI (Navbar, Footer, Tabs, QuoteCard, TransferRow, ...)
   pages/        route screens (Home, SendMoney, Transfers, NotFound)
   services/     mock api, wallet, fx and quote logic
   hooks/        useWallet, useTransfers
@@ -98,6 +99,25 @@ All interactive elements (buttons, links, inputs, selects, icon buttons, and
 checkboxes) meet a minimum touch target of 44×44 CSS pixels, compliant with
 WCAG 2.5.5 (Target Size). A dedicated test suite in `test/touch-targets.test.js`
 audits the CSS declarations to ensure compliance isn't regressed.
+
+## Tabs Component
+
+The `Tabs` component supports both controlled and uncontrolled modes:
+
+```jsx
+<Tabs
+  tabs={[
+    { label: 'Send', content: <SendForm /> },
+    { label: 'History', content: <TransferHistory /> }
+  ]}
+  activeIndex={0}          // omit for uncontrolled
+  onChange={(i) => {}}     // called on tab switch
+/>
+```
+
+- **Swipe gestures**: On touch devices, swipe left/right to switch between tabs (50px threshold).
+- **Accessibility**: Uses ARIA `tablist`, `tab`, and `tabpanel` roles with proper `aria-selected`, `aria-controls`, and `aria-labelledby` relationships.
+- **Keyboard**: Active tab is focusable via `tabIndex`. Tab headers are `<button>` elements.
 
 ## Notched / Rounded Devices
 
