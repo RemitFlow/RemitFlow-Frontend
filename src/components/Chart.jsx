@@ -1,8 +1,15 @@
 import React, { useRef, useState } from 'react';
 import './Chart.css';
 import Button from './Button.jsx';
+import EmptyState from './EmptyState.jsx';
 
-export default function Chart({ data, title, formatValue }) {
+export default function Chart({
+  data,
+  title,
+  emptyStateIcon = '📊',
+  emptyStateTitle = 'No chart data',
+  emptyStateMessage = 'Add some data to visualize.'
+}) {
   const chartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 
@@ -22,6 +29,19 @@ export default function Chart({ data, title, formatValue }) {
   };
 
   const maxValue = Math.max(...data.map((d) => d.value), 1);
+  if (!data || data.length === 0) {
+    return (
+      <div className="chart-container">
+        <EmptyState
+          icon={emptyStateIcon}
+          title={emptyStateTitle}
+          message={emptyStateMessage}
+        />
+      </div>
+    );
+  }
+
+  const maxValue = Math.max(...data.map(d => d.value), 1);
   const barCount = data.length;
 
   return (

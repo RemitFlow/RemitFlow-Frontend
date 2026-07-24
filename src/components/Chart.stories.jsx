@@ -1,12 +1,12 @@
 import Chart from './Chart.jsx';
 import { formatAmount } from '../utils/format.js';
+import Chart from './Chart.jsx'
 
 export default {
   title: 'Components/Chart',
   component: Chart,
   tags: ['autodocs'],
   argTypes: {
-    title: { control: 'text' },
     data: { control: 'object' },
     formatValue: { control: false },
   },
@@ -32,19 +32,43 @@ export const Default = {
     ],
   },
 };
+    title: { control: 'text' },
+    emptyStateIcon: { control: 'text' },
+    emptyStateTitle: { control: 'text' },
+    emptyStateMessage: { control: 'text' }
+  }
+}
 
-export const WithFormattedValues = {
+export const Default = {
+  args: {
+    data: [{ value: 10 }, { value: 20 }, { value: 15 }, { value: 30 }],
+    title: 'Monthly Transfers'
+  }
+}
+
+export const Empty = {
   args: {
     title: 'Recent Transfer Amounts',
     data: sampleData,
     formatValue: (d) => formatAmount(d.value, d.currency),
   },
 };
+    data: [],
+    title: 'Monthly Transfers'
+  }
+}
 
-export const SingleBar = {
+export const CustomEmptyState = {
   args: {
     title: 'Single Transfer',
     data: [{ value: 250, label: 'juan@example.com', currency: 'USD' }],
     formatValue: (d) => formatAmount(d.value, d.currency),
   },
 };
+    data: [],
+    title: 'Monthly Transfers',
+    emptyStateIcon: '💸',
+    emptyStateTitle: 'No transfers yet',
+    emptyStateMessage: 'Your first transfer will appear here.'
+  }
+}
