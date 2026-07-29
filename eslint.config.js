@@ -37,6 +37,21 @@ export default [
     },
   },
 
+  // Node.js + Vitest globals for test files, relaxed unused-vars
+  // (tests often import components rendered indirectly via <App />)
+  {
+    files: ['test/**/*.js', 'test/**/*.jsx'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.vitest,
+      },
+    },
+    rules: {
+      'no-unused-vars': 'off',
+    },
+  },
+
   // Project-level rule overrides
   {
     rules: {

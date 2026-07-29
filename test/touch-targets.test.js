@@ -6,8 +6,6 @@ function readCSS(filename) {
   return fs.readFileSync(path.resolve(process.cwd(), 'src', filename), 'utf8');
 }
 
-const MIN_TARGET = '44px';
-
 describe('touch target minimum sizes (44px)', () => {
   describe('button elements', () => {
     const css = readCSS(path.join('components', 'Button.css'));

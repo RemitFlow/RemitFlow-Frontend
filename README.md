@@ -171,6 +171,12 @@ npm run build
 npm run lighthouse
 ```
 
+## Documentation
+
+- **[Typography Scale](docs/TYPOGRAPHY_SCALE.md)** — font sizes, line heights,
+  font weights, and font families used throughout the app. Refer to this when
+  adding or styling new components.
+
 ## Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:

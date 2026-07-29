@@ -13,7 +13,7 @@ import * as api from '../../src/services/api.js';
 async function fillValidForm(user) {
   await user.type(screen.getByLabelText(/recipient/i), 'amina@example.com');
   await user.type(screen.getByLabelText(/amount/i), '15');
-  await user.selectOptions(screen.getByLabelText(/to/i), 'NGN');
+  await user.selectOptions(screen.getByLabelText(/^to$/i), 'NGN');
 }
 
 function createdTransfer(payload) {

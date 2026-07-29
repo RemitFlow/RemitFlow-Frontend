@@ -43,6 +43,7 @@ export function connectWallet() {
  * @param {object} payload - the transaction details to "sign"
  * @returns {Promise<{signature: string}>}
  */
+// eslint-disable-next-line no-unused-vars
 export function signTransaction(_payload) {
   return new Promise((resolve) => {
     setTimeout(() => {
