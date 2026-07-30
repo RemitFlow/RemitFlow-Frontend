@@ -18,7 +18,7 @@ The app runs at http://localhost:5173 by default.
 - **Send Money** — enter a recipient and amount, pick currencies, and see a
   live FX quote with the RemitFlow fee broken out before sending.
 - **Transfers** — list of your transfers with status badges (pending,
-  completed, failed), search/status/date-range filters synced to the URL,
+  completed, failed), debounced search input, status and date-range filters synced to the URL,
   plus loading, error and empty states.
 - **Tabs** — reusable tabbed interface with swipe gesture support for mobile, accessible keyboard navigation, and controlled/uncontrolled modes.
 - **Print support** — a dedicated print stylesheet (`src/print.css`)

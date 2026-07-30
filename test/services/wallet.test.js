@@ -46,7 +46,7 @@ describe('connectWallet', () => {
 
     try {
       await connectWallet();
-    } catch (err) {
+    } catch {
       // Expected to throw
     }
 

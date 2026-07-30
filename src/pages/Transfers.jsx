@@ -11,6 +11,7 @@ import Pagination from '../components/Pagination.jsx';
 import PullToRefresh from '../components/PullToRefresh.jsx';
 import SelectionToolbar from '../components/SelectionToolbar.jsx';
 import { useTransfers } from '../hooks/useTransfers.js';
+import { useDebouncedValue } from '../hooks/useDebouncedValue.js';
 import { useApp } from '../context/AppContext.jsx';
 import { DATE_RANGE_PRESETS, isWithinDateRange } from '../utils/dateRange.js';
 import './Transfers.css';
@@ -36,6 +37,28 @@ export default function Transfers() {
   const search = searchParams.get('search') || '';
   const status = searchParams.get('status') || '';
   const range = searchParams.get('range') || '';
+
+  const [searchInput, setSearchInput] = useState(search);
+  const debouncedSearch = useDebouncedValue(searchInput, 250);
+
+  // Sync searchInput when URL search parameter changes externally
+  useEffect(() => {
+    setSearchInput(search);
+  }, [search]);
+
+  // Sync debounced search value to URL query parameters
+  useEffect(() => {
+    setSearchParams((prev) => {
+      const current = prev.get('search') || '';
+      if (current === debouncedSearch) return prev;
+      if (debouncedSearch) {
+        prev.set('search', debouncedSearch);
+      } else {
+        prev.delete('search');
+      }
+      return prev;
+    });
+  }, [debouncedSearch, setSearchParams]);
 
   // Selection state
   const [selectedIds, setSelectedIds] = useState(() => new Set());
@@ -79,17 +102,9 @@ export default function Transfers() {
     : selectedIds.size;
   const hasMorePages = totalPages > 1;
 
-  const handleSearchChange = useCallback(
-    (e) => {
-      const value = e.target.value;
-      setSearchParams((prev) => {
-        if (value) prev.set('search', value);
-        else prev.delete('search');
-        return prev;
-      });
-    },
-    [setSearchParams],
-  );
+  const handleSearchChange = useCallback((e) => {
+    setSearchInput(e.target.value);
+  }, []);
 
   const handleStatusChange = useCallback(
     (e) => {
@@ -244,7 +259,7 @@ export default function Transfers() {
           type="search"
           className="transfers-filters-search"
           placeholder="Search by recipient…"
-          value={search}
+          value={searchInput}
           onChange={handleSearchChange}
           aria-label="Search transfers by recipient"
         />
