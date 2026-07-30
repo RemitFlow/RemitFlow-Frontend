@@ -107,6 +107,15 @@ The test suite includes comprehensive coverage of wallet connection handling:
   - Retry behavior
   - User interaction flows
 
+- **Formatting Utility Tests** (`test/unit/format.test.js`)
+  - Currency amount formatting (`formatAmount`) with locale and currency symbol support
+  - Date and timestamp formatting (`formatDate`)
+  - Exchange rate formatting (`formatRate`)
+  - Input normalization (`formatCurrencyInput`)
+  - Percentage formatting (`formatPercent`)
+  - Grouped number formatting (`formatNumber`)
+  - Address and Stellar public key truncation (`shortenAddress`)
+
 Integration tests cover send-money validation, successful transfer submission,
 pending button behavior, duplicate-submission prevention, Transfers page
 filter sync (search, status, and date-range presets such as last 7/30/90 days),

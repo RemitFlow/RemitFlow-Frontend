@@ -43,7 +43,7 @@ export function connectWallet() {
  * @param {object} payload - the transaction details to "sign"
  * @returns {Promise<{signature: string}>}
  */
-export function signTransaction(_payload) {
+export function signTransaction() {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
