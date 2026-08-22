@@ -54,6 +54,20 @@ a {
   border-radius: 4px;
 }
 
+/* Visually hidden but exposed to assistive technology. Used for live-region
+   announcements (route changes, form summaries) that must not be visible. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ── Contrast preferences ───────────────────────────────────── */
 
 /* Higher contrast: deepen backgrounds, lighten text, strengthen borders. */
