@@ -11,6 +11,7 @@ import Pagination from '../components/Pagination.jsx';
 import PullToRefresh from '../components/PullToRefresh.jsx';
 import SelectionToolbar from '../components/SelectionToolbar.jsx';
 import { useTransfers } from '../hooks/useTransfers.js';
+import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
 import { useApp } from '../context/AppContext.jsx';
 import { DATE_RANGE_PRESETS, isWithinDateRange } from '../utils/dateRange.js';
 import './Transfers.css';
@@ -31,7 +32,14 @@ const PAGE_SIZE = 5;
 export default function Transfers() {
   const { transfers, loading, error, reload } = useTransfers();
   const { locale } = useApp();
+  const isOnline = useOnlineStatus();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Becomes true while the browser is offline, then flips back to false the
+  // moment connectivity returns so we can reconcile transfers against the
+  // backend (a transfer may have completed while the response was lost).
+  const [wasOffline, setWasOffline] = useState(false);
+  const [syncingAfterReconnect, setSyncingAfterReconnect] = useState(false);
 
   const search = searchParams.get('search') || '';
   const status = searchParams.get('status') || '';
@@ -50,6 +58,20 @@ export default function Transfers() {
     setSelectedIds(new Set());
     setSelectAllAcross(false);
   }, [search, status, range]);
+
+  // Track connectivity so that a reconnect triggers an automatic reload.
+  // The reload reconciles the true status of transfers that may have been
+  // created or settled while the connection was down — without resubmitting
+  // anything.
+  useEffect(() => {
+    if (isOnline && wasOffline && !loading) {
+      setSyncingAfterReconnect(true);
+      reload().finally(() => {
+        setSyncingAfterReconnect(false);
+      });
+    }
+    setWasOffline(!isOnline);
+  }, [isOnline, wasOffline, loading, reload]);
 
   const filteredTransfers = useMemo(() => {
     return transfers.filter((t) => {
@@ -238,6 +260,12 @@ export default function Transfers() {
         <h1 className="page-title">Your Transfers</h1>
         <Button to="/send">New Transfer</Button>
       </div>
+
+      {syncingAfterReconnect && (
+        <div className="transfers-sync-notice" role="status" aria-live="polite">
+          ✓ Back online — refreshing your transfers to show the latest status.
+        </div>
+      )}
 
       <div className="transfers-filters">
         <input
