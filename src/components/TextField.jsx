@@ -8,6 +8,7 @@ import './TextField.css';
  * @param {Function} props.onChange - called with the raw string value
  * @param {string} [props.id]
  * @param {string} [props.type]
+ * @param {string} [props.inputMode]
  * @param {string} [props.placeholder]
  * @param {string} [props.error] - validation error to display
  * @param {Function} [props.onBlur] - called with the current value on blur
@@ -18,6 +19,7 @@ export default function TextField({
   onChange,
   id,
   type = 'text',
+  inputMode,
   placeholder,
   error,
   onBlur,
@@ -34,6 +36,7 @@ export default function TextField({
         id={id}
         className={`text-field-input ${error ? 'has-error' : ''}`}
         type={type}
+        inputMode={inputMode}
         value={value}
         placeholder={placeholder}
         aria-invalid={error ? 'true' : 'false'}

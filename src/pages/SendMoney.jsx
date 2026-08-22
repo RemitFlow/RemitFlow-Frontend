@@ -6,7 +6,7 @@ import QuoteCard from '../components/QuoteCard.jsx';
 import Button from '../components/Button.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import { buildQuote } from '../services/quote.js';
-import { formatCurrencyInput } from '../utils/format.js';
+import { formatCurrencyInput, parseCurrencyInput } from '../utils/format.js';
 import {
   isPositiveAmount,
   validateRecipient,
@@ -42,9 +42,13 @@ export default function SendMoney() {
 
   // Recompute the quote whenever the (debounced) inputs change.
   const quote = useMemo(() => {
-    if (!isPositiveAmount(debouncedAmount)) return null;
-    return buildQuote(debouncedAmount, from, to);
-  }, [debouncedAmount, from, to]);
+    const parsed = parseCurrencyInput(debouncedAmount, {
+      currency: from,
+      locale,
+    });
+    if (!parsed.ok) return null;
+    return buildQuote(parsed.value, from, to);
+  }, [debouncedAmount, from, locale, to]);
 
   function swapCurrencies() {
     setFrom(to);
@@ -53,7 +57,7 @@ export default function SendMoney() {
 
   // Tidy the amount field to two decimals once the user leaves it.
   function handleAmountBlur(value) {
-    const formatted = formatCurrencyInput(value);
+    const formatted = formatCurrencyInput(value, from, locale);
     if (formatted) setAmount(formatted);
   }
 
@@ -62,9 +66,16 @@ export default function SendMoney() {
     if (!validateRecipient(recipient)) {
       next.recipient = 'Enter a valid email or Stellar address.';
     }
-    if (!isPositiveAmount(amount)) {
-      next.amount = 'Enter an amount greater than zero.';
-    } else if (wallet && !isWithinBalance(amount, wallet.balance)) {
+    const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
+    if (!parsedAmount.ok) {
+      next.amount = parsedAmount.error;
+    } else if (
+      wallet &&
+      !isWithinBalance(parsedAmount.value, wallet.balance, {
+        currency: from,
+        locale,
+      })
+    ) {
       next.amount = 'Amount exceeds your wallet balance.';
     }
     if (from === to) {
@@ -99,7 +110,12 @@ export default function SendMoney() {
       }
 
       // Build from the live amount so a pending debounce can't submit a stale quote.
-      const finalQuote = buildQuote(amount, from, to);
+      const parsedAmount = parseCurrencyInput(amount, {
+        currency: from,
+        locale,
+      });
+      if (!parsedAmount.ok) return;
+      const finalQuote = buildQuote(parsedAmount.value, from, to);
       if (!finalQuote) return;
 
       await addTransfer({
@@ -151,7 +167,7 @@ export default function SendMoney() {
           <TextField
             id="amount"
             label="Amount"
-            type="number"
+            inputMode="decimal"
             value={amount}
             onChange={setAmount}
             onBlur={handleAmountBlur}

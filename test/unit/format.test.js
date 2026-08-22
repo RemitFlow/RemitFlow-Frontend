@@ -3,6 +3,8 @@ import {
   formatAmount,
   formatDate,
   formatNumber,
+  formatCurrencyInput,
+  parseCurrencyInput,
 } from '../../src/utils/format.js';
 
 describe('formatAmount', () => {
@@ -63,5 +65,40 @@ describe('formatNumber', () => {
     const result = formatNumber(1234.5, 2, 'fr-FR');
     expect(result).toContain('234,5');
     expect(result).not.toBe(formatNumber(1234.5, 2, 'en-US'));
+  });
+});
+
+describe('parseCurrencyInput', () => {
+  const cases = [
+    ['en-US', '1,234.50'],
+    ['fr-FR', '1 234,50'],
+    ['es-MX', '1,234.50'],
+    ['hi-IN', '1,234.50'],
+    ['ar-EG', '١٬٢٣٤٫٥٠'],
+  ];
+
+  it.each(cases)(
+    'round-trips %s locale input to a canonical decimal string',
+    (locale, input) => {
+      const parsed = parseCurrencyInput(input, { currency: 'USD', locale });
+      expect(parsed).toMatchObject({ ok: true, value: '1234.50' });
+      expect(formatCurrencyInput(input, 'USD', locale)).toBe('1234.50');
+    },
+  );
+
+  it('rejects unsupported precision instead of rounding user intent', () => {
+    expect(parseCurrencyInput('1.239', { currency: 'USD' })).toMatchObject({
+      ok: false,
+      error: 'USD supports at most 2 decimal places.',
+    });
+  });
+
+  it('rejects zero and negative submission amounts', () => {
+    expect(parseCurrencyInput('0.00', { currency: 'USD' })).toMatchObject({
+      ok: false,
+    });
+    expect(parseCurrencyInput('-1.00', { currency: 'USD' })).toMatchObject({
+      ok: false,
+    });
   });
 });
