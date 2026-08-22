@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "test": "vitest run test/integration test/unit test/lighthouse-config.test.js",
+    "test": "vitest run test/integration test/unit test/components test/services test/lighthouse-config.test.js",
     "test:lighthouse": "vitest run test/lighthouse-config.test.js",
     "test:watch": "vitest"
   },
@@ -32,6 +32,7 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.2.1",
+    "axe-core": "^4.13.0",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",

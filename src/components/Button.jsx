@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Button.css';
 
@@ -10,17 +11,23 @@ import './Button.css';
  * @param {'button'|'submit'} [props.type]
  * @param {string} [props.ariaLabel] - accessible label for icon-only buttons
  * @param {string} [props.title] - native tooltip text
+ * @param {string} [props.ariaHasPopup] - ARIA popup type when the button
+ *   opens a dialog or menu (e.g. "dialog")
  */
-export default function Button({
-  children,
-  variant = 'primary',
-  disabled = false,
-  type = 'button',
-  onClick,
-  to,
-  ariaLabel,
-  title,
-}) {
+const Button = forwardRef(function Button(
+  {
+    children,
+    variant = 'primary',
+    disabled = false,
+    type = 'button',
+    onClick,
+    to,
+    ariaLabel,
+    title,
+    ariaHasPopup,
+  },
+  ref,
+) {
   const className = `btn btn-${variant}`;
 
   if (to) {
@@ -47,8 +54,12 @@ export default function Button({
       onClick={onClick}
       aria-label={ariaLabel}
       title={title}
+      aria-haspopup={ariaHasPopup}
+      ref={ref}
     >
       {children}
     </button>
   );
-}
+});
+
+export default Button;

@@ -39,7 +39,7 @@ export default function Navbar() {
         RemitFlow
       </Link>
 
-      <nav className="navbar-links">
+      <nav className="navbar-links" aria-label="Primary">
         <NavLink to="/" end className="navbar-link">
           Home
         </NavLink>
@@ -80,7 +80,7 @@ export default function Navbar() {
         className={`navbar-drawer${menuOpen ? ' navbar-drawer--open' : ''}`}
         aria-label="Mobile navigation"
       >
-        <nav className="navbar-drawer-nav">
+        <nav className="navbar-drawer-nav" aria-label="Mobile">
           <NavLink
             to="/"
             end
