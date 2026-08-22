@@ -1,3 +1,4 @@
+
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TextField from '../components/TextField.jsx';
@@ -6,6 +7,7 @@ import QuoteCard from '../components/QuoteCard.jsx';
 import Button from '../components/Button.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import { buildQuote } from '../services/quote.js';
+import { getUserErrorMessage, normalizeError } from '../services/errors.js';
 import { formatCurrencyInput } from '../utils/format.js';
 import {
   isPositiveAmount,
@@ -111,7 +113,8 @@ export default function SendMoney() {
       });
       navigate('/transfers');
     } catch (err) {
-      setSubmitError('Could not submit the transfer. Please try again.');
+      const normalized = normalizeError(err, { source: 'api' });
+      setSubmitError(getUserErrorMessage(normalized));
     } finally {
       submissionLock.current = false;
       setSubmitting(false);
