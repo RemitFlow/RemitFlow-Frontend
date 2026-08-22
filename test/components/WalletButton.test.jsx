@@ -1,3 +1,4 @@
+
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -56,7 +57,7 @@ describe('WalletButton', () => {
     });
   });
 
-  it('displays error alert when connection is rejected', async () => {
+  it('displays a safe error alert when connection is rejected', async () => {
     vi.spyOn(walletService, 'connectWallet').mockRejectedValue(
       new Error('User cancelled connection'),
     );
@@ -68,19 +69,18 @@ describe('WalletButton', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/user cancelled connection/i),
+        screen.getByText(/wallet connection was cancelled/i),
       ).toBeInTheDocument();
     });
 
-    // Button should be enabled again
     expect(
       screen.getByRole('button', { name: /connect wallet/i }),
     ).not.toBeDisabled();
   });
 
-  it('displays error alert on connection timeout', async () => {
+  it('displays a safe error alert on connection timeout', async () => {
     vi.spyOn(walletService, 'connectWallet').mockImplementation(
-      () => new Promise(() => {}), // Never resolves
+      () => new Promise(() => {}),
     );
 
     renderWithProvider(<WalletButton />, 100);
@@ -91,13 +91,13 @@ describe('WalletButton', () => {
 
     await waitFor(
       () => {
-        expect(screen.getByText(/connection timeout/i)).toBeInTheDocument();
+        expect(screen.getByText(/the request timed out/i)).toBeInTheDocument();
       },
       { timeout: 2000 },
     );
   });
 
-  it('clears error on successful retry after failed connection', async () => {
+  it('clears safe error on successful retry after failed connection', async () => {
     const mockAccount = { publicKey: 'GTEST123', balance: 500 };
     vi.spyOn(walletService, 'connectWallet')
       .mockRejectedValueOnce(new Error('Connection failed'))
@@ -105,22 +105,20 @@ describe('WalletButton', () => {
 
     renderWithProvider(<WalletButton />);
 
-    // First attempt fails
     await userEvent.click(
       screen.getByRole('button', { name: /connect wallet/i }),
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/connection failed/i)).toBeInTheDocument();
+      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
     });
 
-    // Second attempt succeeds
     await userEvent.click(
       screen.getByRole('button', { name: /connect wallet/i }),
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/connection failed/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
       expect(screen.getByText(/500 XLM/)).toBeInTheDocument();
     });
   });
@@ -132,7 +130,6 @@ describe('WalletButton', () => {
 
     renderWithProvider(<WalletButton />);
 
-    // Connect
     await userEvent.click(
       screen.getByRole('button', { name: /connect wallet/i }),
     );
@@ -143,7 +140,6 @@ describe('WalletButton', () => {
       ).toBeInTheDocument();
     });
 
-    // Disconnect
     await userEvent.click(screen.getByRole('button', { name: /disconnect/i }));
 
     await waitFor(() => {
@@ -166,7 +162,6 @@ describe('WalletButton', () => {
 
     await userEvent.click(button);
 
-    // Button should be disabled during connection
     await waitFor(() => {
       const connectingButton = screen.getByRole('button', {
         name: /connecting/i,

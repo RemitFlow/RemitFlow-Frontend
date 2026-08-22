@@ -1,3 +1,4 @@
+
 import {
   act,
   fireEvent,
@@ -127,7 +128,7 @@ describe('Send money form flows', () => {
     expect(createTransfer).toHaveBeenCalledTimes(1);
   });
 
-  it('releases the submission lock after failure and permits a retry', async () => {
+  it('releases the submission lock after a safe failure and permits a retry', async () => {
     const createTransfer = vi
       .spyOn(api, 'createTransfer')
       .mockRejectedValueOnce(new Error('transfer failed'))
@@ -138,9 +139,7 @@ describe('Send money form flows', () => {
     await fillValidForm(user);
     await user.click(screen.getByRole('button', { name: /review & send/i }));
 
-    expect(
-      await screen.findByText(/could not submit the transfer/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/something went wrong/i)).toBeInTheDocument();
     const retryButton = screen.getByRole('button', { name: /review & send/i });
     expect(retryButton).toBeEnabled();
 
