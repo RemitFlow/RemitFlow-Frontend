@@ -14,9 +14,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "test": "vitest run test/integration test/unit test/lighthouse-config.test.js",
+    "test": "vitest run test/integration test/unit test/lighthouse-config.test.js test/security",
     "test:lighthouse": "vitest run test/lighthouse-config.test.js",
-    "test:watch": "vitest"
+    "test:security": "vitest run test/security",
+    "test:watch": "vitest",
+    "audit": "npm audit --audit-level=critical"
   },
   "dependencies": {
     "@stellar/stellar-sdk": "^12.0.0",
