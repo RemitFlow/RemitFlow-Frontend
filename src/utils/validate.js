@@ -1,8 +1,8 @@
 // Simple validation helpers for the Send Money form.
+import { parseCurrencyInput } from './format.js';
 
-export function isPositiveAmount(value) {
-  const num = Number(value);
-  return Number.isFinite(num) && num > 0;
+export function isPositiveAmount(value, options = {}) {
+  return parseCurrencyInput(value, options).ok;
 }
 
 export function isEmail(value) {
@@ -23,8 +23,12 @@ export function validateRecipient(value) {
  * @param {number} balance
  * @returns {boolean}
  */
-export function isWithinBalance(amount, balance) {
-  const num = Number(amount);
-  if (!Number.isFinite(num)) return false;
-  return num <= Number(balance);
+export function isWithinBalance(amount, balance, options = {}) {
+  const parsedAmount = parseCurrencyInput(amount, options);
+  const parsedBalance = parseCurrencyInput(balance, {
+    ...options,
+    allowZero: true,
+  });
+  if (!parsedAmount.ok || !parsedBalance.ok) return false;
+  return parsedAmount.minorUnits <= parsedBalance.minorUnits;
 }

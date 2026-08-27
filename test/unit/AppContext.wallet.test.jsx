@@ -1,9 +1,9 @@
+
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { AppProvider, useApp } from '../../src/context/AppContext.jsx';
 import * as walletService from '../../src/services/wallet.js';
 
-// Test component to access context
 function TestComponent() {
   const {
     wallet,
@@ -58,15 +58,12 @@ describe('AppContext wallet connection handling', () => {
       </AppProvider>,
     );
 
-    const connectButton = screen.getByText('Connect');
-    connectButton.click();
+    screen.getByText('Connect').click();
 
-    // Should show connecting state
     await waitFor(() => {
       expect(screen.getByTestId('connecting')).toHaveTextContent('yes');
     });
 
-    // Should complete connection
     await waitFor(() => {
       expect(screen.getByTestId('connecting')).toHaveTextContent('no');
       expect(screen.getByTestId('connected')).toHaveTextContent('yes');
@@ -110,14 +107,14 @@ describe('AppContext wallet connection handling', () => {
       expect(screen.getByTestId('connecting')).toHaveTextContent('no');
       expect(screen.getByTestId('connected')).toHaveTextContent('no');
       expect(screen.getByTestId('error')).toHaveTextContent(
-        'User rejected the connection request',
+        'Wallet connection was cancelled.',
       );
     });
   });
 
   it('handles connection timeout', async () => {
     vi.spyOn(walletService, 'connectWallet').mockImplementation(
-      () => new Promise(() => {}), // Never resolves
+      () => new Promise(() => {}),
     );
 
     render(
@@ -130,7 +127,7 @@ describe('AppContext wallet connection handling', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('error')).toHaveTextContent(
-        'Connection timeout',
+        'The request timed out. Please try again.',
       );
     });
   });
@@ -143,22 +140,20 @@ describe('AppContext wallet connection handling', () => {
     const mockAccount = { publicKey: 'GTEST789', balance: 750 };
     vi.spyOn(walletService, 'getStoredWallet').mockReturnValue(mockAccount);
 
-    const { rerender } = render(
+    render(
       <AppProvider>
         <TestComponent />
       </AppProvider>,
     );
 
-    // Try to connect and fail
     screen.getByText('Connect').click();
 
     await waitFor(() => {
       expect(screen.getByTestId('error')).toHaveTextContent(
-        'Connection failed',
+        'Something went wrong. Please try again.',
       );
     });
 
-    // Simulate having a connected wallet from previous session
     vi.spyOn(walletService, 'connectWallet').mockResolvedValue(mockAccount);
     screen.getByText('Connect').click();
 
@@ -166,7 +161,6 @@ describe('AppContext wallet connection handling', () => {
       expect(screen.getByTestId('connected')).toHaveTextContent('yes');
     });
 
-    // Disconnect should clear error
     screen.getByText('Disconnect').click();
 
     await waitFor(() => {
@@ -186,14 +180,14 @@ describe('AppContext wallet connection handling', () => {
       </AppProvider>,
     );
 
-    // First attempt fails
     screen.getByText('Connect').click();
 
     await waitFor(() => {
-      expect(screen.getByTestId('error')).toHaveTextContent('First error');
+      expect(screen.getByTestId('error')).toHaveTextContent(
+        'Something went wrong. Please try again.',
+      );
     });
 
-    // Second attempt succeeds
     screen.getByText('Connect').click();
 
     await waitFor(() => {
@@ -229,14 +223,12 @@ describe('AppContext wallet connection handling', () => {
       </AppProvider>,
     );
 
-    // Connect first
     screen.getByText('Connect').click();
 
     await waitFor(() => {
       expect(screen.getByTestId('connected')).toHaveTextContent('yes');
     });
 
-    // Then disconnect
     screen.getByText('Disconnect').click();
 
     await waitFor(() => {

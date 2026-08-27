@@ -1,9 +1,11 @@
+
 import { createContext, useContext, useEffect, useState } from 'react';
 import {
   connectWallet,
   getStoredWallet,
   disconnectWallet,
 } from '../services/wallet.js';
+import { getUserErrorMessage, normalizeError } from '../services/errors.js';
 import { useLocalStorage } from '../hooks/useLocalStorage.js';
 import {
   DEFAULT_LOCALE,
@@ -115,9 +117,8 @@ export function AppProvider({ children, connectTimeoutMs = 30000 }) {
       setWallet(account);
       return account;
     } catch (err) {
-      // Handle rejected connections (user cancellation, timeout, or other errors)
-      const errorMessage = err.message || 'Failed to connect wallet';
-      setConnectionError(errorMessage);
+      const normalized = normalizeError(err, { source: 'wallet' });
+      setConnectionError(getUserErrorMessage(normalized));
     } finally {
       setConnecting(false);
     }

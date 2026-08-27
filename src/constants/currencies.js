@@ -1,12 +1,30 @@
 // Supported currencies for RemitFlow transfers.
 export const CURRENCIES = [
-  { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸' },
-  { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
-  { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
-  { code: 'NGN', name: 'Nigerian Naira', symbol: '₦', flag: '🇳🇬' },
-  { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳' },
-  { code: 'PHP', name: 'Philippine Peso', symbol: '₱', flag: '🇵🇭' },
-  { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: '🇲🇽' },
+  { code: 'USD', name: 'US Dollar', symbol: '$', flag: '🇺🇸', minorUnits: 2 },
+  { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺', minorUnits: 2 },
+  {
+    code: 'GBP',
+    name: 'British Pound',
+    symbol: '£',
+    flag: '🇬🇧',
+    minorUnits: 2,
+  },
+  {
+    code: 'NGN',
+    name: 'Nigerian Naira',
+    symbol: '₦',
+    flag: '🇳🇬',
+    minorUnits: 2,
+  },
+  { code: 'INR', name: 'Indian Rupee', symbol: '₹', flag: '🇮🇳', minorUnits: 2 },
+  {
+    code: 'PHP',
+    name: 'Philippine Peso',
+    symbol: '₱',
+    flag: '🇵🇭',
+    minorUnits: 2,
+  },
+  { code: 'MXN', name: 'Mexican Peso', symbol: '$', flag: '🇲🇽', minorUnits: 2 },
 ];
 
 export const DEFAULT_SOURCE = 'USD';
@@ -29,4 +47,8 @@ export const POPULAR_CORRIDORS = [
  */
 export function getCurrency(code) {
   return CURRENCIES.find((c) => c.code === code);
+}
+
+export function getCurrencyMinorUnits(code) {
+  return getCurrency(code)?.minorUnits ?? 2;
 }
