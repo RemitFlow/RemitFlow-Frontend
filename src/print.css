@@ -58,6 +58,32 @@
     color: #721c24 !important;
   }
 
+  .status-quoted {
+    background: #e0e7ff !important;
+    color: #3730a3 !important;
+  }
+
+  .status-validating {
+    background: #dbeafe !important;
+    color: #075985 !important;
+  }
+
+  .status-authorizing {
+    background: #f3e8ff !important;
+    color: #6b21a8 !important;
+  }
+
+  .status-expired {
+    background: #e2e8f0 !important;
+    color: #334155 !important;
+  }
+
+  .status-unknown {
+    background: #f1f5f9 !important;
+    color: #334155 !important;
+    border: 1px dashed #64748b !important;
+  }
+
   /* ── Chart: preserve bar colors, hide tooltip ────────────── */
   .chart-bar {
     print-color-adjust: exact;

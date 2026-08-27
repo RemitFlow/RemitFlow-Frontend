@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "from": "USD",
+  "to": "NGN",
+  "rate": "1480.5",
+  "sendAmount": "200.00",
+  "fee": "1.10",
+  "amountAfterFee": "198.90",
+  "receiveAmount": "294471.45",
+  "createdAt": "2026-08-01T10:00:00Z",
+  "expiresAt": "2026-08-01T10:01:00Z"
+}

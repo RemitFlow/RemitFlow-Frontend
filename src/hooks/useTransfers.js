@@ -1,6 +1,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { listTransfers, createTransfer } from '../services/api.js';
+import { ContractViolationError } from '../services/contracts/schema.js';
 import { getUserErrorMessage, normalizeError } from '../services/errors.js';
 
 /**
@@ -22,9 +23,19 @@ export function useTransfers() {
       const data = await listTransfers();
       setTransfers(data);
     } catch (err) {
-      const normalized = normalizeError(err, { source: 'api' });
-      setError(getUserErrorMessage(normalized));
-      setRetryable(normalized.retryable);
+      if (err instanceof ContractViolationError) {
+        // A schema change, not a flaky request. Retrying will not help, and
+        // showing an empty list would imply the transfers no longer exist.
+        console.error(err.message);
+        setError(
+          `Your transfers could not be displayed: the data did not match the expected format (${err.contract}). Nothing has been lost — please try again shortly.`,
+        );
+        setRetryable(false);
+      } else {
+        const normalized = normalizeError(err, { source: 'api' });
+        setError(getUserErrorMessage(normalized));
+        setRetryable(normalized.retryable);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,15 @@
+{
+  "id": "tx_2100",
+  "recipient": "amina@example.com",
+  "from": "USD",
+  "to": "NGN",
+  "sendAmount": "200.00",
+  "receiveAmount": "294471.45",
+  "fee": "1.10",
+  "rate": "1480.5",
+  "status": "pending",
+  "createdAt": "2026-08-01T10:00:00Z",
+  "settlementNetwork": "stellar",
+  "corridorRiskScore": 3,
+  "complianceHold": false
+}

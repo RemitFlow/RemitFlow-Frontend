@@ -1,0 +1,14 @@
+{
+  "id": "tx_2007",
+  "recipient": "amina@example.com",
+  "from": "GBP",
+  "to": "MXN",
+  "sendAmount": "50.00",
+  "receiveAmount": "1074.70",
+  "fee": "0.35",
+  "rate": "21.645569620253",
+  "status": "expired",
+  "failureReason": null,
+  "createdAt": "2026-08-01T12:00:00Z",
+  "expiresAt": "2026-08-01T12:01:00Z"
+}

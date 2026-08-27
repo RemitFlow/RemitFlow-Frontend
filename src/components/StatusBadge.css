@@ -8,6 +8,23 @@
   letter-spacing: 0.03em;
 }
 
+/* Pre-submission states share a neutral/blue family; in-flight states are
+   amber; terminal states are green (settled), red (failed) or grey (expired). */
+.status-quoted {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+}
+
+.status-validating {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+}
+
+.status-authorizing {
+  background: rgba(168, 85, 247, 0.15);
+  color: #d8b4fe;
+}
+
 .status-pending {
   background: rgba(234, 179, 8, 0.15);
   color: #fde047;
@@ -23,7 +40,35 @@
   color: #f87171;
 }
 
+.status-expired {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+}
+
+/* A status the contract does not recognise. Rendered deliberately plainly so
+   it reads as "unexpected" rather than as one of the known states. */
+.status-unknown {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px dashed #64748b;
+}
+
 @media (prefers-contrast: more) {
+  .status-quoted {
+    background: rgba(99, 102, 241, 0.35);
+    border: 1px solid #a5b4fc;
+  }
+
+  .status-validating {
+    background: rgba(56, 189, 248, 0.35);
+    border: 1px solid #7dd3fc;
+  }
+
+  .status-authorizing {
+    background: rgba(168, 85, 247, 0.35);
+    border: 1px solid #d8b4fe;
+  }
+
   .status-pending {
     background: rgba(234, 179, 8, 0.35);
     border: 1px solid #fde047;
@@ -37,5 +82,10 @@
   .status-failed {
     background: rgba(239, 68, 68, 0.35);
     border: 1px solid #f87171;
+  }
+
+  .status-expired {
+    background: rgba(148, 163, 184, 0.35);
+    border: 1px solid #cbd5e1;
   }
 }

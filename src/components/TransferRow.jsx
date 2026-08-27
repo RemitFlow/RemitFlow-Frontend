@@ -1,12 +1,15 @@
 import StatusBadge from './StatusBadge.jsx';
-import { formatAmount, formatDate, shortenAddress } from '../utils/format.js';
+import { formatDate, shortenAddress } from '../utils/format.js';
+import { formatMoney } from '../utils/money.js';
 import { DEFAULT_LOCALE } from '../constants/locales.js';
 import './TransferRow.css';
 
 /**
  * A single row in the transfers list.
  * @param {object} props
- * @param {object} props.transfer - the transfer record
+ * @param {object} props.transfer - a contract-normalised transfer record;
+ *   amounts are decimal strings and are rendered with formatMoney so an
+ *   unparseable value shows a placeholder rather than a fabricated 0.00
  * @param {string} [props.locale] - locale used for currency/date formatting
  * @param {boolean} [props.selected] - whether this row is selected
  * @param {Function} [props.onToggleSelect] - called when the checkbox is toggled
@@ -43,12 +46,12 @@ export default function TransferRow({
 
       <div className="transfer-cell">
         <span className="transfer-label">Sent</span>
-        <span>{formatAmount(sendAmount, from, locale)}</span>
+        <span>{formatMoney(sendAmount, from, locale)}</span>
       </div>
 
       <div className="transfer-cell">
         <span className="transfer-label">Received</span>
-        <span>{formatAmount(receiveAmount, to, locale)}</span>
+        <span>{formatMoney(receiveAmount, to, locale)}</span>
       </div>
 
       <div className="transfer-cell">

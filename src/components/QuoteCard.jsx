@@ -1,4 +1,5 @@
-import { formatAmount, formatRate, formatPercent } from '../utils/format.js';
+import { formatRate, formatPercent } from '../utils/format.js';
+import { formatMoney } from '../utils/money.js';
 import { FEE_PERCENT } from '../constants/fees.js';
 import { DEFAULT_LOCALE } from '../constants/locales.js';
 import './QuoteCard.css';
@@ -20,12 +21,12 @@ export default function QuoteCard({ quote, locale = DEFAULT_LOCALE }) {
 
       <div className="quote-line">
         <span>You send</span>
-        <span>{formatAmount(sendAmount, from, locale)}</span>
+        <span>{formatMoney(sendAmount, from, locale)}</span>
       </div>
 
       <div className="quote-line quote-muted">
         <span>RemitFlow fee ({formatPercent(FEE_PERCENT, 1)} + flat)</span>
-        <span>- {formatAmount(fee, from, locale)}</span>
+        <span>- {formatMoney(fee, from, locale)}</span>
       </div>
 
       <div className="quote-line quote-muted">
@@ -37,7 +38,7 @@ export default function QuoteCard({ quote, locale = DEFAULT_LOCALE }) {
 
       <div className="quote-line quote-total">
         <span>Recipient gets</span>
-        <span>{formatAmount(receiveAmount, to, locale)}</span>
+        <span>{formatMoney(receiveAmount, to, locale)}</span>
       </div>
 
       <p className="quote-note">

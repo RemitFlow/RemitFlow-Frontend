@@ -1,6 +1,7 @@
 // Formatting helpers for currency, dates and addresses.
 import { getCurrencyMinorUnits } from '../constants/currencies.js';
 import { DEFAULT_LOCALE } from '../constants/locales.js';
+import { parseDecimal, quantize } from './money.js';
 
 const DIGIT_MAP = new Map();
 for (const numberingSystem of ['latn', 'arab', 'arabext', 'deva']) {
@@ -105,6 +106,12 @@ function decimalStringToNumber(value) {
 
 /**
  * Format an amount as a currency string.
+ *
+ * Low-level helper: it assumes two decimal places and falls back to 0 for a
+ * non-numeric amount. For money that arrived from an API use `formatMoney`
+ * in utils/money.js instead, which honours the currency's real minor unit and
+ * refuses to render an unparseable value as "0.00".
+ *
  * @param {number|string} amount - the amount to format
  * @param {string} [currency] - ISO currency code, e.g. "USD"
  * @param {string} [locale] - BCP 47 locale tag used for grouping, decimal
@@ -144,34 +151,58 @@ export function formatDate(value, locale = DEFAULT_LOCALE) {
 
 /**
  * Format an exchange rate as a "1 FROM = X TO" string.
- * @param {number} rate
+ * Accepts the decimal strings that the FX and quote services now produce as
+ * well as plain numbers; anything unparseable renders as "-".
+ * @param {number|string} rate
  * @param {string} from
  * @param {string} to
  * @returns {string}
  */
 export function formatRate(rate, from, to) {
-  if (rate == null) return '-';
-  return `1 ${from} = ${rate.toFixed(4)} ${to}`;
+  const parsed = parseDecimal(rate);
+  if (!parsed.ok) return '-';
+  return `1 ${from} = ${Number(parsed.value).toFixed(4)} ${to}`;
 }
 
 /**
- * Normalise a raw amount string into a canonical, fixed-precision value.
- * @param {string} value - the raw input value
- * @param {string} [currency] - ISO currency code
- * @param {string} [locale] - BCP 47 locale tag
- * @returns {string} the cleaned amount, or '' when the input is invalid
+ * Normalise a raw amount string into a clean, fixed-precision value for the
+ * amount field (e.g. "1,234.5" -> "1234.50").
+ *
+ * The value is parsed first and only stripped of grouping characters as a
+ * fallback. Stripping first corrupts perfectly valid input: `<input
+ * type="number">` accepts "1e3", and the old strip-then-parse implementation
+ * turned that into "13.00" — a 1000x under-send with no error anywhere. A
+ * leading minus is likewise preserved so a negative amount reaches validation
+ * as negative instead of being silently flipped positive.
+ *
+ * @param {string|number} value - the raw input value
+ * @param {string} [currency] - used for minor-unit precision
+ * @returns {string} the cleaned amount, or '' if the input is not a number
  */
 export function formatCurrencyInput(
   value,
   currency = 'USD',
   locale = DEFAULT_LOCALE,
 ) {
-  const parsed = parseCurrencyInput(value, {
+  if (value == null) return '';
+
+  let parsed = parseCurrencyInput(value, {
     currency,
     locale,
     allowZero: true,
   });
-  return parsed.ok ? parsed.value : '';
+  if (parsed.ok) return parsed.value;
+
+  let decimal = parseDecimal(value);
+  if (!decimal.ok) {
+    // Fall back to stripping display formatting (grouping separators,
+    // currency symbols, whitespace) while keeping sign and decimal point.
+    const stripped = String(value).replace(/[^0-9.eE+-]/g, '');
+    decimal = parseDecimal(stripped);
+  }
+  if (!decimal.ok) return '';
+
+  return quantize(decimal.value, currency);
 }
 
 /**

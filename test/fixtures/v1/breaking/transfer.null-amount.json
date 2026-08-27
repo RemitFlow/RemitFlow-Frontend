@@ -1,0 +1,10 @@
+{
+  "id": "tx_3004",
+  "recipient": "amina@example.com",
+  "from": "USD",
+  "to": "NGN",
+  "sendAmount": null,
+  "receiveAmount": "294471.45",
+  "status": "pending",
+  "createdAt": "2026-08-01T10:00:00Z"
+}

@@ -1,0 +1,13 @@
+{
+  "id": "tx_2006",
+  "recipient": "unreachable@example.com",
+  "from": "USD",
+  "to": "PHP",
+  "sendAmount": "75.00",
+  "receiveAmount": "4351.97",
+  "fee": "0.48",
+  "rate": "58.4",
+  "status": "failed",
+  "failureReason": "Destination account does not have a trustline for the asset",
+  "createdAt": "2026-08-01T11:00:00Z"
+}

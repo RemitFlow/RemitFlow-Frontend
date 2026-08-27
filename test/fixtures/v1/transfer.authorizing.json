@@ -1,0 +1,12 @@
+{
+  "id": "tx_2003",
+  "recipient": "GBQAZ7Z3X7DEMOPUBLICKEY4REMITFLOWWALLET123456789ABCDEF",
+  "from": "USD",
+  "to": "INR",
+  "sendAmount": "120.00",
+  "receiveAmount": "9925.76",
+  "fee": "0.70",
+  "rate": "83.2",
+  "status": "authorizing",
+  "createdAt": "2026-08-01T10:00:10Z"
+}

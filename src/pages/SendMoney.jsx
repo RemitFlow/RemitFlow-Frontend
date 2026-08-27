@@ -7,6 +7,7 @@ import Button from '../components/Button.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import Modal from '../components/Modal.jsx';
 import { buildQuote } from '../services/quote.js';
+import { ContractViolationError } from '../services/contracts/schema.js';
 import { getUserErrorMessage, normalizeError } from '../services/errors.js';
 import { formatAmount, formatCurrencyInput, parseCurrencyInput } from '../utils/format.js';
 import {
@@ -159,7 +160,12 @@ export default function SendMoney() {
     if (!validate()) return;
 
     // Build from the live amount so a pending debounce can't review a stale quote.
-    const finalQuote = buildQuote(amount, from, to);
+    const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
+    if (!parsedAmount.ok) {
+      applyErrors({ amount: parsedAmount.error });
+      return;
+    }
+    const finalQuote = buildQuote(parsedAmount.value, from, to);
     if (!finalQuote) {
       applyErrors({ amount: 'Enter an amount greater than zero.' });
       return;
@@ -193,25 +199,42 @@ export default function SendMoney() {
         return;
       }
       const finalQuote = pendingQuote ?? buildQuote(parsedAmount.value, from, to);
-      if (!finalQuote) throw new Error('quote unavailable');
+      if (!finalQuote) {
+        setSubmitError(
+          'We could not price this transfer. Check the amount and the selected currencies.',
+        );
+        return;
+      }
 
+      // Record the fee, rate and expiry alongside the amounts so the receipt
+      // can reproduce exactly what was quoted rather than re-deriving it from
+      // a rate that may since have moved.
       const created = await addTransfer({
         recipient,
         from,
         to,
         sendAmount: finalQuote.sendAmount,
         receiveAmount: finalQuote.receiveAmount,
+        fee: finalQuote.fee,
+        rate: finalQuote.rate,
+        expiresAt: finalQuote.expiresAt,
       });
       setSubmittedTransfer(created ?? finalQuote);
       setPendingQuote(null);
       setSubmitError(null);
       setPhase('success');
     } catch (err) {
-      const normalized = normalizeError(err, { source: 'api' });
-      // Close the dialog; focus lands back in the form via the effect above
-      // and the error is announced by the ErrorMessage live region.
       setPendingQuote(null);
       setPhase(null);
+      if (err instanceof ContractViolationError) {
+        // The full field-by-field diff goes to the console; the user gets a
+        // message that distinguishes "we rejected this" from "try again".
+        console.error(err.message);
+        setSubmitError(
+          'This transfer was rejected before it was sent because the details did not match the expected format. Nothing was submitted.',
+        );
+      } else {
+        const normalized = normalizeError(err, { source: 'api' });
       // A transfer can be interrupted mid-signature by a connection drop.
       // The honest message here is "unknown", not "failed": the backend may
       // have accepted the transfer even though the response never arrived.
@@ -224,6 +247,7 @@ export default function SendMoney() {
           ? getUserErrorMessage(normalized)
           : 'Connection lost while sending. Reconnect to check your transfer status.',
       );
+      }
     } finally {
       submissionLock.current = false;
       setSubmitting(false);

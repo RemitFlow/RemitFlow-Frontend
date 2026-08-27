@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Chart from '../components/Chart.jsx';
-import { formatAmount } from '../utils/format.js';
+import { formatMoney, parseDecimal } from '../utils/money.js';
+import {
+  TRANSFER_STATUSES,
+  normalizeStatus,
+} from '../services/contracts/transfer.js';
 import TransferRow from '../components/TransferRow.jsx';
+import { TRANSFER_STATUS_LABELS } from '../components/StatusBadge.jsx';
 import Skeleton from '../components/Skeleton.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import EmptyState from '../components/EmptyState.jsx';
@@ -16,11 +21,14 @@ import { useApp } from '../context/AppContext.jsx';
 import { DATE_RANGE_PRESETS, isWithinDateRange } from '../utils/dateRange.js';
 import './Transfers.css';
 
+// Derived from the contract so a new lifecycle state cannot be filterable in
+// the data but missing from the dropdown.
 const STATUS_OPTIONS = [
   { value: '', label: 'All statuses' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'completed', label: 'Completed' },
-  { value: 'failed', label: 'Failed' },
+  ...TRANSFER_STATUSES.map((value) => ({
+    value,
+    label: TRANSFER_STATUS_LABELS[value],
+  })),
 ];
 
 const PAGE_SIZE = 5;
@@ -59,6 +67,9 @@ export default function Transfers() {
     setSelectAllAcross(false);
   }, [search, status, range]);
 
+  // Normalise the query-string status so a legacy or provider spelling in a
+  // shared/bookmarked URL (?status=settled) still selects the right rows.
+  const canonicalStatus = normalizeStatus(status);
   // Track connectivity so that a reconnect triggers an automatic reload.
   // The reload reconciles the true status of transfers that may have been
   // created or settled while the connection was down — without resubmitting
@@ -75,13 +86,13 @@ export default function Transfers() {
 
   const filteredTransfers = useMemo(() => {
     return transfers.filter((t) => {
-      if (status && t.status !== status) return false;
+      if (status && normalizeStatus(t.status) !== canonicalStatus) return false;
       if (search && !t.recipient.toLowerCase().includes(search.toLowerCase()))
         return false;
       if (!isWithinDateRange(t.createdAt, range)) return false;
       return true;
     });
-  }, [transfers, search, status, range]);
+  }, [transfers, search, status, canonicalStatus, range]);
 
   // Paginated data
   const totalPages = Math.ceil(filteredTransfers.length / PAGE_SIZE) || 1;
@@ -232,12 +243,17 @@ export default function Transfers() {
         <div className="transfers-list">
           <Chart
             title="Recent Transfer Amounts"
-            data={filteredTransfers.slice(0, 5).map((t) => ({
-              value: parseFloat(t.sendAmount),
-              label: t.recipient,
-              currency: t.from,
-            }))}
-            formatValue={(d) => formatAmount(d.value, d.currency)}
+            data={filteredTransfers.slice(0, 5).map((t) => {
+              // Bar heights need a float; the label keeps the exact decimal.
+              const parsed = parseDecimal(t.sendAmount);
+              return {
+                value: parsed.ok ? Number(parsed.value) : 0,
+                amount: parsed.ok ? parsed.value : null,
+                label: t.recipient,
+                currency: t.from,
+              };
+            })}
+            formatValue={(d) => formatMoney(d.amount, d.currency)}
           />
           {pageTransfers.map((t) => (
             <TransferRow
