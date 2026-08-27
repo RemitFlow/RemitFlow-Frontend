@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx';
 import Navbar from './components/Navbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Footer from './components/Footer.jsx';
+import ConnectionBanner from './components/ConnectionBanner.jsx';
 import Home from './pages/Home.jsx';
 import SendMoney from './pages/SendMoney.jsx';
 import Transfers from './pages/Transfers.jsx';
@@ -25,6 +26,7 @@ export default function App() {
             </a>
             {showSidebar && <Sidebar />}
             <div className="app-content">
+              <ConnectionBanner />
               <Navbar />
               <main id="main-content" className="app-main">
                 <ErrorBoundary>
