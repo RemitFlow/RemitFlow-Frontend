@@ -163,3 +163,9 @@
   color: #86efac;
   font-size: 0.875rem;
 }
+
+.send-quote-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  word-break: break-all;
+}

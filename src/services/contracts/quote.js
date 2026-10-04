@@ -24,6 +24,9 @@ export const quoteContract = defineContract({
     receiveAmount: { type: 'decimal', required: true, min: 0 },
     createdAt: { type: 'timestamp', required: true },
     expiresAt: { type: 'timestamp', required: true },
+    // Optional enrichment for send-flow binding. Absent on legacy fixtures.
+    id: { type: 'string', required: false, minLength: 1 },
+    source: { type: 'string', required: false, minLength: 1 },
   },
 });
 

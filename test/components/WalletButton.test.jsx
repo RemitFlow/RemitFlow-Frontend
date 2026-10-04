@@ -1,4 +1,3 @@
-
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -118,7 +117,9 @@ describe('WalletButton', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/something went wrong/i),
+      ).not.toBeInTheDocument();
       expect(screen.getByText(/500 XLM/)).toBeInTheDocument();
     });
   });

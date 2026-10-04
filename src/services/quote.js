@@ -13,6 +13,7 @@ import {
   QUOTE_TTL_MS,
   parseQuote,
 } from './contracts/quote.js';
+import { mintQuoteId, quoteInputFingerprint } from '../utils/quoteBinding.js';
 import {
   convertMinorUnits,
   currencyExponent,
@@ -79,20 +80,32 @@ export function buildQuote(amount, from, to, options = {}) {
       : (options.now ?? Date.now());
   const ttlMs = options.ttlMs ?? QUOTE_TTL_MS;
 
+  const sendAmount = fromMinorUnits(sendMinor, fromExponent);
+  const createdAt = new Date(nowMs).toISOString();
+  const inputFingerprint = quoteInputFingerprint({
+    amount: sendAmount,
+    from,
+    to,
+  });
+
   // Round-trip through the contract so a quote is validated at the point it is
-  // produced, not only at the point it is consumed.
+  // produced, not only at the point it is consumed. id + source + fingerprint
+  // bind confirmation to this exact priced quote.
   return parseQuote(
     {
       version: QUOTE_CONTRACT_VERSION,
+      id: mintQuoteId(`${inputFingerprint}:${createdAt}`),
+      source: 'fx.table',
       from,
       to,
       rate,
-      sendAmount: fromMinorUnits(sendMinor, fromExponent),
+      sendAmount,
       fee: fromMinorUnits(feeMinor, fromExponent),
       amountAfterFee: fromMinorUnits(afterFeeMinor, fromExponent),
       receiveAmount: fromMinorUnits(receiveMinor, toExponent),
-      createdAt: new Date(nowMs).toISOString(),
+      createdAt,
       expiresAt: new Date(nowMs + ttlMs).toISOString(),
+      inputFingerprint,
     },
     { source: 'buildQuote' },
   );

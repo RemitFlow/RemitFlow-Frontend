@@ -7,14 +7,20 @@ import Button from '../components/Button.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import Modal from '../components/Modal.jsx';
 import { buildQuote } from '../services/quote.js';
+import { isQuoteExpired } from '../services/contracts/quote.js';
 import { ContractViolationError } from '../services/contracts/schema.js';
 import { getUserErrorMessage, normalizeError } from '../services/errors.js';
-import { formatAmount, formatCurrencyInput, parseCurrencyInput } from '../utils/format.js';
 import {
-  isPositiveAmount,
-  validateRecipient,
-  isWithinBalance,
-} from '../utils/validate.js';
+  formatAmount,
+  formatCurrencyInput,
+  parseCurrencyInput,
+} from '../utils/format.js';
+import { validateRecipient, isWithinBalance } from '../utils/validate.js';
+import {
+  amountsReconcile,
+  assertQuoteSignable,
+  validateCurrencyPair,
+} from '../utils/quoteBinding.js';
 import { useWallet } from '../hooks/useWallet.js';
 import { useTransfers } from '../hooks/useTransfers.js';
 import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
@@ -32,6 +38,9 @@ import './SendMoney.css';
  * 2. "Confirm transfer" submits it; progress is announced via a live region.
  * 3. A result dialog confirms success (or an announced error returns focus to
  *    the form for retry). Dialogs trap focus and return it on close.
+ *
+ * Quotes carry an id bound into the transfer payload. Field or network changes
+ * invalidate a pending quote so an expired or mismatched price cannot be signed.
  */
 export default function SendMoney() {
   const navigate = useNavigate();
@@ -48,6 +57,7 @@ export default function SendMoney() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const submissionLock = useRef(false);
+  const confirmationVersion = useRef(0);
   const wasOffline = useRef(false);
 
   // True when the form just recovered from a disconnected state. Used to
@@ -59,6 +69,7 @@ export default function SendMoney() {
   const [phase, setPhase] = useState(null);
   const [pendingQuote, setPendingQuote] = useState(null);
   const [submittedTransfer, setSubmittedTransfer] = useState(null);
+  const [quoteClock, setQuoteClock] = useState(() => Date.now());
   const submitButtonRef = useRef(null);
 
   // Debounce the amount so the quote isn't rebuilt on every keystroke.
@@ -66,6 +77,8 @@ export default function SendMoney() {
 
   // Recompute the quote whenever the (debounced) inputs change.
   const quote = useMemo(() => {
+    const corridor = validateCurrencyPair(from, to);
+    if (!corridor.ok) return null;
     const parsed = parseCurrencyInput(debouncedAmount, {
       currency: from,
       locale,
@@ -73,6 +86,33 @@ export default function SendMoney() {
     if (!parsed.ok) return null;
     return buildQuote(parsed.value, from, to);
   }, [debouncedAmount, from, locale, to]);
+
+  // Tick while a confirmation dialog is open so expiry UI stays honest.
+  useEffect(() => {
+    if (phase !== 'confirm' || !pendingQuote) return undefined;
+    const id = setInterval(() => setQuoteClock(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [phase, pendingQuote]);
+
+  // Field changes while confirming invalidate the pending quote — the user
+  // must review a fresh price bound to the live inputs.
+  useEffect(() => {
+    if (phase !== 'confirm' || !pendingQuote) return;
+    const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
+    const live = parsedAmount.ok
+      ? assertQuoteSignable(
+          pendingQuote,
+          { amount: parsedAmount.value, from, to },
+          Date.now(),
+        )
+      : { ok: false, reason: parsedAmount.error };
+    if (!live.ok && live.code !== 'expired') {
+      confirmationVersion.current += 1;
+      setPendingQuote(null);
+      setPhase(null);
+      setSubmitError(live.reason);
+    }
+  }, [amount, from, to, locale, phase, pendingQuote]);
 
   // Surface submission failures predictably: announce them and put keyboard
   // focus back on the submit control so a retry is one Enter away.
@@ -85,10 +125,16 @@ export default function SendMoney() {
     setTo(from);
   }
 
-  // Tidy the amount field to two decimals once the user leaves it.
+  // Keep the field in its input locale when padding the currency precision.
   function handleAmountBlur(value) {
     const formatted = formatCurrencyInput(value, from, locale);
-    if (formatted) setAmount(formatted);
+    if (formatted) {
+      const decimal =
+        new Intl.NumberFormat(locale)
+          .formatToParts(1.1)
+          .find((part) => part.type === 'decimal')?.value ?? '.';
+      setAmount(formatted.replace('.', decimal));
+    }
   }
 
   function applyErrors(next) {
@@ -111,16 +157,17 @@ export default function SendMoney() {
     if (!parsedAmount.ok) {
       next.amount = parsedAmount.error;
     } else if (
+      // Both values are canonical; do not apply the input locale again.
       wallet &&
       !isWithinBalance(parsedAmount.value, wallet.balance, {
         currency: from,
-        locale,
       })
     ) {
       next.amount = 'Amount exceeds your wallet balance.';
     }
-    if (from === to) {
-      next.to = 'Source and destination must differ.';
+    const corridor = validateCurrencyPair(from, to);
+    if (!corridor.ok) {
+      next.to = corridor.error;
     }
     applyErrors(next);
     return Object.keys(next).length === 0;
@@ -129,17 +176,57 @@ export default function SendMoney() {
   /**
    * Track connectivity transitions. When the browser comes back online we do
    * NOT blindly resubmit the form (that would duplicate the transfer) — we
-   * only clear the stale "offline" error state and inform the user.
+   * only clear the stale "offline" error state and inform the user. A pending
+   * confirmation quote is dropped: rates may have moved while offline.
    */
   useEffect(() => {
     const recovered = wasOffline.current && isOnline;
+    const dropped = !wasOffline.current && !isOnline;
     wasOffline.current = !isOnline;
+    if (dropped && phase === 'confirm') {
+      confirmationVersion.current += 1;
+      setPendingQuote(null);
+      setPhase(null);
+      setSubmitError(
+        "You're offline. The pending quote was cleared — reconnect and review again.",
+      );
+    }
     if (recovered) {
       setSubmitError(null);
       setJustReconnected(true);
       setTimeout(() => setJustReconnected(false), 4000);
     }
-  }, [isOnline]);
+  }, [isOnline, phase]);
+
+  function refreshPendingQuote() {
+    confirmationVersion.current += 1;
+    const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
+    if (!parsedAmount.ok) {
+      setSubmitError(parsedAmount.error);
+      setPendingQuote(null);
+      setPhase(null);
+      return;
+    }
+    const corridor = validateCurrencyPair(from, to);
+    if (!corridor.ok) {
+      setSubmitError(corridor.error);
+      setPendingQuote(null);
+      setPhase(null);
+      return;
+    }
+    const next = buildQuote(parsedAmount.value, from, to);
+    if (!next) {
+      setSubmitError(
+        'We could not refresh this quote. Check the amount and currencies.',
+      );
+      setPendingQuote(null);
+      setPhase(null);
+      return;
+    }
+    setPendingQuote(next);
+    setQuoteClock(Date.now());
+    setSubmitError(null);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -167,11 +254,25 @@ export default function SendMoney() {
     }
     const finalQuote = buildQuote(parsedAmount.value, from, to);
     if (!finalQuote) {
-      applyErrors({ amount: 'Enter an amount greater than zero.' });
+      setSubmitError(
+        'We could not price this transfer. Check the amount and currencies.',
+      );
       return;
     }
 
+    const signable = assertQuoteSignable(
+      finalQuote,
+      { amount: parsedAmount.value, from, to },
+      Date.now(),
+    );
+    if (!signable.ok) {
+      setSubmitError(signable.reason);
+      return;
+    }
+
+    confirmationVersion.current += 1;
     setPendingQuote(finalQuote);
+    setQuoteClock(Date.now());
     setPhase('confirm');
   }
 
@@ -186,39 +287,88 @@ export default function SendMoney() {
 
     submissionLock.current = true;
     setSubmitting(true);
+    const startedVersion = confirmationVersion.current;
     try {
-      if (!isConnected) {
-        await connect();
-      }
-
-      // Rebuild at confirmation time so the committed amounts match the note:
-      // rates are indicative and update at confirmation.
-      const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
-      if (!parsedAmount.ok) {
-        setSubmitError(parsedAmount.error);
-        return;
-      }
-      const finalQuote = pendingQuote ?? buildQuote(parsedAmount.value, from, to);
-      if (!finalQuote) {
+      const transferWallet = isConnected ? wallet : await connect();
+      // A cleared or refreshed quote must not resume from the pre-connect render.
+      if (startedVersion !== confirmationVersion.current) return;
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        confirmationVersion.current += 1;
+        setPendingQuote(null);
+        setPhase(null);
         setSubmitError(
-          'We could not price this transfer. Check the amount and the selected currencies.',
+          "You're offline. The pending quote was cleared — reconnect and review again.",
         );
         return;
       }
+      if (!transferWallet) {
+        setSubmitError(
+          'Wallet connection did not complete. Connect your wallet and try again.',
+        );
+        setPendingQuote(null);
+        setPhase(null);
+        return;
+      }
 
-      // Record the fee, rate and expiry alongside the amounts so the receipt
-      // can reproduce exactly what was quoted rather than re-deriving it from
-      // a rate that may since have moved.
-      const created = await addTransfer({
+      const parsedAmount = parseCurrencyInput(amount, {
+        currency: from,
+        locale,
+      });
+      if (!parsedAmount.ok) {
+        setSubmitError(parsedAmount.error);
+        setPendingQuote(null);
+        setPhase(null);
+        return;
+      }
+
+      const liveInputs = { amount: parsedAmount.value, from, to };
+      const finalQuote = pendingQuote;
+      const signable = assertQuoteSignable(finalQuote, liveInputs, Date.now());
+      if (!signable.ok) {
+        // Expired quotes get an explicit refresh path; other mismatches close
+        // the dialog so the user reviews a newly priced quote.
+        setSubmitError(signable.reason);
+        if (signable.code === 'expired' && finalQuote) {
+          setQuoteClock(Date.now());
+          return;
+        }
+        setPendingQuote(null);
+        setPhase(null);
+        return;
+      }
+
+      // A wallet connected here was unavailable during the form's balance check.
+      if (
+        !isWithinBalance(finalQuote.sendAmount, transferWallet.balance, {
+          currency: finalQuote.from,
+        })
+      ) {
+        setSubmitError('Amount exceeds your wallet balance.');
+        setPendingQuote(null);
+        setPhase(null);
+        return;
+      }
+
+      // Bind the quote id into the transfer so receipts can prove which price
+      // was confirmed. Amounts come from the bound quote, not a rebuild.
+      const transferPayload = {
         recipient,
-        from,
-        to,
+        from: finalQuote.from,
+        to: finalQuote.to,
         sendAmount: finalQuote.sendAmount,
         receiveAmount: finalQuote.receiveAmount,
         fee: finalQuote.fee,
         rate: finalQuote.rate,
         expiresAt: finalQuote.expiresAt,
-      });
+        quoteId: finalQuote.id,
+      };
+      if (!amountsReconcile(finalQuote, transferPayload)) {
+        setSubmitError('Displayed amounts do not match the transfer payload.');
+        setPendingQuote(null);
+        setPhase(null);
+        return;
+      }
+      const created = await addTransfer(transferPayload);
       setSubmittedTransfer(created ?? finalQuote);
       setPendingQuote(null);
       setSubmitError(null);
@@ -235,18 +385,19 @@ export default function SendMoney() {
         );
       } else {
         const normalized = normalizeError(err, { source: 'api' });
-      // A transfer can be interrupted mid-signature by a connection drop.
-      // The honest message here is "unknown", not "failed": the backend may
-      // have accepted the transfer even though the response never arrived.
-      // The transfers page reconciles real status on reconnect.
-      // Read the current connectivity directly (not from the render closure)
-      // so that a mid-flight disconnect produces the correct message.
-      const connectedNow = typeof navigator !== 'undefined' && navigator.onLine;
-      setSubmitError(
-        connectedNow
-          ? getUserErrorMessage(normalized)
-          : 'Connection lost while sending. Reconnect to check your transfer status.',
-      );
+        // A transfer can be interrupted mid-signature by a connection drop.
+        // The honest message here is "unknown", not "failed": the backend may
+        // have accepted the transfer even though the response never arrived.
+        // The transfers page reconciles real status on reconnect.
+        // Read the current connectivity directly (not from the render closure)
+        // so that a mid-flight disconnect produces the correct message.
+        const connectedNow =
+          typeof navigator !== 'undefined' && navigator.onLine;
+        setSubmitError(
+          connectedNow
+            ? getUserErrorMessage(normalized)
+            : 'Connection lost while sending. Reconnect to check your transfer status.',
+        );
       }
     } finally {
       submissionLock.current = false;
@@ -255,6 +406,10 @@ export default function SendMoney() {
   }
 
   const errorCount = Object.keys(errors).length;
+  const pendingExpired =
+    phase === 'confirm' && pendingQuote
+      ? isQuoteExpired(pendingQuote, quoteClock)
+      : false;
 
   return (
     <div className="send-money">
@@ -292,8 +447,8 @@ export default function SendMoney() {
               role="status"
               aria-live="polite"
             >
-              ✓ Back online. Your form was not submitted while you were
-              offline — review it and send when ready.
+              ✓ Back online. Your form was not submitted while you were offline
+              — review it and send when ready.
             </div>
           )}
 
@@ -360,7 +515,7 @@ export default function SendMoney() {
 
         <div className="send-quote">
           {quote ? (
-            <QuoteCard quote={quote} locale={locale} />
+            <QuoteCard quote={quote} locale={locale} now={quoteClock} />
           ) : (
             <p className="send-quote-hint">
               Enter an amount to see your quote.
@@ -377,9 +532,18 @@ export default function SendMoney() {
               <dd>{recipient}</dd>
             </div>
           </dl>
-          <QuoteCard quote={pendingQuote} locale={locale} />
+          <QuoteCard
+            quote={pendingQuote}
+            locale={locale}
+            now={quoteClock}
+            onRefresh={refreshPendingQuote}
+          />
           <p className="send-submit-status" role="status" aria-live="polite">
-            {submitting ? 'Submitting your transfer…' : ''}
+            {submitting
+              ? 'Submitting your transfer…'
+              : pendingExpired
+                ? 'Quote expired — refresh before confirming.'
+                : ''}
           </p>
           <div className="send-dialog-actions">
             <Button
@@ -389,7 +553,10 @@ export default function SendMoney() {
             >
               Back
             </Button>
-            <Button onClick={handleConfirmTransfer} disabled={submitting}>
+            <Button
+              onClick={handleConfirmTransfer}
+              disabled={submitting || pendingExpired}
+            >
               {submitting ? 'Sending…' : 'Confirm transfer'}
             </Button>
           </div>
@@ -427,6 +594,12 @@ export default function SendMoney() {
                 )}
               </dd>
             </div>
+            {submittedTransfer.quoteId && (
+              <div className="send-dialog-line">
+                <dt>Quote</dt>
+                <dd className="send-quote-id">{submittedTransfer.quoteId}</dd>
+              </div>
+            )}
             <div className="send-dialog-line">
               <dt>Status</dt>
               <dd>{submittedTransfer.status}</dd>

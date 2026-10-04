@@ -14,7 +14,9 @@ describe('useTransfers error retry policy', () => {
     const { result } = renderHook(() => useTransfers());
 
     await waitFor(() => {
-      expect(result.current.error).toBe('Something went wrong. Please try again.');
+      expect(result.current.error).toBe(
+        'Something went wrong. Please try again.',
+      );
     });
 
     expect(result.current.retryable).toBe(false);

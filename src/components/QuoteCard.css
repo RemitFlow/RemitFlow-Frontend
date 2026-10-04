@@ -48,3 +48,56 @@
     height: 2px;
   }
 }
+
+.quote-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.45);
+  font-size: 0.78rem;
+  color: var(--color-muted);
+}
+
+.quote-meta-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.quote-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.02em;
+}
+
+.quote-card--expired {
+  border-color: #b45309;
+}
+
+.quote-expired-banner {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  background: rgba(180, 83, 9, 0.18);
+  color: #fbbf24;
+  font-size: 0.85rem;
+}
+
+.quote-refresh {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: #fde68a;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.quote-refresh:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
