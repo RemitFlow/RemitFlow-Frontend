@@ -19,6 +19,11 @@ import { useTransfers } from '../hooks/useTransfers.js';
 import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
 import { useApp } from '../context/AppContext.jsx';
 import { DATE_RANGE_PRESETS, isWithinDateRange } from '../utils/dateRange.js';
+import {
+  DEFAULT_PAGE_SIZE,
+  encodeCursor,
+  resolveTransferPage,
+} from '../utils/transferSnapshot.js';
 import './Transfers.css';
 
 // Derived from the contract so a new lifecycle state cannot be filterable in
@@ -31,11 +36,13 @@ const STATUS_OPTIONS = [
   })),
 ];
 
-const PAGE_SIZE = 5;
-
 /**
  * Transfers page: lists all transfers with their status.
  * Filter state is synced to the URL query string.
+ *
+ * Pagination uses a frozen snapshot so concurrent inserts cannot duplicate or
+ * omit rows while the user pages. Filter changes reset the snapshot; expired
+ * cursors recover by rebuilding from the live filtered list.
  */
 export default function Transfers() {
   const { transfers, loading, error, reload } = useTransfers();
@@ -57,23 +64,24 @@ export default function Transfers() {
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [selectAllAcross, setSelectAllAcross] = useState(false);
 
-  // Pagination state
-  const [page, setPage] = useState(1);
-
-  // Reset page and selection when filters change
+  // Snapshot pagination state
+  const [snapshot, setSnapshot] = useState(null);
+  const [cursor, setCursor] = useState(null);
+  const [snapshotNotice, setSnapshotNotice] = useState(null);
+  // Reset cursor/selection when filters change; snapshot rebuilds below.
   useEffect(() => {
-    setPage(1);
+    setCursor(null);
+    setSnapshot(null);
     setSelectedIds(new Set());
     setSelectAllAcross(false);
+    setSnapshotNotice(null);
   }, [search, status, range]);
 
   // Normalise the query-string status so a legacy or provider spelling in a
   // shared/bookmarked URL (?status=settled) still selects the right rows.
   const canonicalStatus = normalizeStatus(status);
+
   // Track connectivity so that a reconnect triggers an automatic reload.
-  // The reload reconciles the true status of transfers that may have been
-  // created or settled while the connection was down — without resubmitting
-  // anything.
   useEffect(() => {
     if (isOnline && wasOffline && !loading) {
       setSyncingAfterReconnect(true);
@@ -94,11 +102,84 @@ export default function Transfers() {
     });
   }, [transfers, search, status, canonicalStatus, range]);
 
-  // Paginated data
-  const totalPages = Math.ceil(filteredTransfers.length / PAGE_SIZE) || 1;
-  const pageTransfers = useMemo(() => {
-    return filteredTransfers.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  }, [filteredTransfers, page]);
+  const filterState = useMemo(
+    () => ({ search, status: canonicalStatus || status, range }),
+    [search, status, canonicalStatus, range],
+  );
+
+  // Resolve the current page against a frozen snapshot. Membership stays
+  // deterministic even if `transfers` grows while the user is on page 2.
+  const resolved = useMemo(() => {
+    if (loading) {
+      return {
+        snapshot: null,
+        page: {
+          ok: true,
+          items: [],
+          page: 1,
+          totalPages: 1,
+          totalCount: 0,
+          cursor: null,
+          nextCursor: null,
+          prevCursor: null,
+          recovered: false,
+        },
+        recovered: false,
+      };
+    }
+    return resolveTransferPage(filteredTransfers, {
+      filters: filterState,
+      liveTransfers: transfers,
+      cursor,
+      snapshot,
+      pageSize: DEFAULT_PAGE_SIZE,
+    });
+  }, [filteredTransfers, filterState, transfers, cursor, snapshot, loading]);
+
+  const pageTransfers = resolved.page.items;
+  const totalPages = resolved.page.totalPages;
+  // Empty and selection states follow the same frozen membership as the rows.
+  const totalCount = resolved.page.totalCount;
+  const page = resolved.page.page;
+
+  // Persist a newly minted snapshot and surface recovery after an expired cursor.
+  useEffect(() => {
+    if (resolved.snapshot && resolved.snapshot.id !== snapshot?.id) {
+      if (snapshot) {
+        // Selection belongs to the previous frozen membership. Recovery must
+        // not select newcomers or keep counting rows that have disappeared.
+        setSelectedIds(new Set());
+        setSelectAllAcross(false);
+      }
+      setSnapshot(resolved.snapshot);
+    }
+    if (resolved.recovered && cursor) {
+      setCursor(null);
+      setSnapshotNotice(
+        'Transfer list was refreshed to keep paging consistent.',
+      );
+    }
+  }, [resolved, snapshot, cursor]);
+
+  const handlePageChange = useCallback(
+    (nextPage) => {
+      const active = resolved.snapshot;
+      if (!active) return;
+      const safePage = Math.min(Math.max(1, nextPage), totalPages);
+      const priorRef =
+        active.items[(safePage - 1) * active.pageSize - 1] ?? null;
+      setCursor(
+        encodeCursor({
+          snapshotId: active.id,
+          scope: active.scope,
+          page: safePage,
+          after: priorRef,
+        }),
+      );
+      setSnapshotNotice(null);
+    },
+    [resolved.snapshot, totalPages],
+  );
 
   // Selection state computations
   const allPageSelected =
@@ -107,9 +188,7 @@ export default function Transfers() {
   const somePageSelected = pageTransfers.some((t) =>
     selectAllAcross ? true : selectedIds.has(t.id),
   );
-  const selectedCount = selectAllAcross
-    ? filteredTransfers.length
-    : selectedIds.size;
+  const selectedCount = selectAllAcross ? totalCount : selectedIds.size;
   const hasMorePages = totalPages > 1;
 
   const handleSearchChange = useCallback(
@@ -151,20 +230,28 @@ export default function Transfers() {
   const hasActiveFilters = Boolean(search || status || range);
 
   // Selection handlers
-  const handleToggleSelect = useCallback((id) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-    setSelectAllAcross(false);
-  }, []);
+  const handleToggleSelect = useCallback(
+    (id) => {
+      setSelectedIds((prev) => {
+        // Across-page selection is implicit until the first deselection.
+        const next = new Set(
+          selectAllAcross ? resolved.snapshot.items.map((t) => t.id) : prev,
+        );
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
+      setSelectAllAcross(false);
+    },
+    [selectAllAcross, resolved.snapshot],
+  );
 
   const handleTogglePage = useCallback(() => {
     if (allPageSelected) {
       setSelectedIds((prev) => {
-        const next = new Set(prev);
+        const next = new Set(
+          selectAllAcross ? resolved.snapshot.items.map((t) => t.id) : prev,
+        );
         pageTransfers.forEach((t) => next.delete(t.id));
         return next;
       });
@@ -176,7 +263,7 @@ export default function Transfers() {
       });
     }
     setSelectAllAcross(false);
-  }, [allPageSelected, pageTransfers]);
+  }, [allPageSelected, pageTransfers, selectAllAcross, resolved.snapshot]);
 
   const handleSelectAllAcross = useCallback(() => {
     setSelectAllAcross(true);
@@ -201,7 +288,7 @@ export default function Transfers() {
       return <ErrorMessage message={error} onRetry={reload} />;
     }
 
-    if (filteredTransfers.length === 0) {
+    if (totalCount === 0) {
       return (
         <EmptyState
           icon={hasActiveFilters ? '🔍' : '💸'}
@@ -231,7 +318,7 @@ export default function Transfers() {
         <SelectionToolbar
           pageCount={pageTransfers.length}
           selectedCount={selectedCount}
-          totalCount={filteredTransfers.length}
+          totalCount={totalCount}
           allPageSelected={allPageSelected}
           somePageSelected={somePageSelected}
           allAcrossSelected={selectAllAcross}
@@ -265,7 +352,11 @@ export default function Transfers() {
             />
           ))}
         </div>
-        <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onChange={handlePageChange}
+        />
       </>
     );
   };
@@ -280,6 +371,17 @@ export default function Transfers() {
       {syncingAfterReconnect && (
         <div className="transfers-sync-notice" role="status" aria-live="polite">
           ✓ Back online — refreshing your transfers to show the latest status.
+        </div>
+      )}
+
+      {snapshotNotice && (
+        <div
+          className="transfers-snapshot-notice"
+          role="status"
+          aria-live="polite"
+          data-testid="snapshot-recovery"
+        >
+          {snapshotNotice}
         </div>
       )}
 

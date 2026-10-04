@@ -112,4 +112,49 @@ describe('Select all across pages', () => {
       screen.queryByRole('navigation', { name: /pagination/i }),
     ).not.toBeInTheDocument();
   });
+
+  it.each([
+    { target: 'row', remaining: 6 },
+    { target: 'page', remaining: 5 },
+  ])(
+    'deselecting a $target after selecting all keeps other pages selected',
+    async ({ target, remaining }) => {
+      const user = userEvent.setup();
+      seedTransfers(7);
+      await gotoTransfers();
+      await user.click(
+        screen.getByLabelText(/select all transfers on this page/i),
+      );
+      await user.click(
+        screen.getByRole('button', { name: /select all 7 transfers/i }),
+      );
+      await user.click(screen.getByRole('button', { name: /next/i }));
+
+      const pageRows = screen.getAllByRole('checkbox', {
+        name: /select transfer to/i,
+      });
+      expect(pageRows).toHaveLength(2);
+      await user.click(
+        target === 'row'
+          ? pageRows[0]
+          : screen.getByLabelText(/select all transfers on this page/i),
+      );
+      expect(pageRows[0]).not.toBeChecked();
+      if (target === 'row') expect(pageRows[1]).toBeChecked();
+      else expect(pageRows[1]).not.toBeChecked();
+      expect(
+        screen.getByText(`${remaining} transfers selected`),
+      ).toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: /previous/i }));
+      const otherPageRows = screen.getAllByRole('checkbox', {
+        name: /select transfer to/i,
+      });
+      expect(otherPageRows).toHaveLength(5);
+      otherPageRows.forEach((checkbox) => expect(checkbox).toBeChecked());
+      expect(
+        screen.getByText(`${remaining} transfers selected`),
+      ).toBeInTheDocument();
+    },
+  );
 });

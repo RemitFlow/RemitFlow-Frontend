@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from 'react';
 import { listTransfers, createTransfer } from '../services/api.js';
 import { ContractViolationError } from '../services/contracts/schema.js';

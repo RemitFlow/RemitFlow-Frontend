@@ -9,7 +9,11 @@ import Modal from '../components/Modal.jsx';
 import { buildQuote } from '../services/quote.js';
 import { ContractViolationError } from '../services/contracts/schema.js';
 import { getUserErrorMessage, normalizeError } from '../services/errors.js';
-import { formatAmount, formatCurrencyInput, parseCurrencyInput } from '../utils/format.js';
+import {
+  formatAmount,
+  formatCurrencyInput,
+  parseCurrencyInput,
+} from '../utils/format.js';
 import {
   isPositiveAmount,
   validateRecipient,
@@ -167,7 +171,9 @@ export default function SendMoney() {
     }
     const finalQuote = buildQuote(parsedAmount.value, from, to);
     if (!finalQuote) {
-      applyErrors({ amount: 'Enter an amount greater than zero.' });
+      setSubmitError(
+        'We could not price this transfer. Check the amount and currencies.',
+      );
       return;
     }
 
@@ -193,12 +199,16 @@ export default function SendMoney() {
 
       // Rebuild at confirmation time so the committed amounts match the note:
       // rates are indicative and update at confirmation.
-      const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
+      const parsedAmount = parseCurrencyInput(amount, {
+        currency: from,
+        locale,
+      });
       if (!parsedAmount.ok) {
         setSubmitError(parsedAmount.error);
         return;
       }
-      const finalQuote = pendingQuote ?? buildQuote(parsedAmount.value, from, to);
+      const finalQuote =
+        pendingQuote ?? buildQuote(parsedAmount.value, from, to);
       if (!finalQuote) {
         setSubmitError(
           'We could not price this transfer. Check the amount and the selected currencies.',
@@ -235,18 +245,19 @@ export default function SendMoney() {
         );
       } else {
         const normalized = normalizeError(err, { source: 'api' });
-      // A transfer can be interrupted mid-signature by a connection drop.
-      // The honest message here is "unknown", not "failed": the backend may
-      // have accepted the transfer even though the response never arrived.
-      // The transfers page reconciles real status on reconnect.
-      // Read the current connectivity directly (not from the render closure)
-      // so that a mid-flight disconnect produces the correct message.
-      const connectedNow = typeof navigator !== 'undefined' && navigator.onLine;
-      setSubmitError(
-        connectedNow
-          ? getUserErrorMessage(normalized)
-          : 'Connection lost while sending. Reconnect to check your transfer status.',
-      );
+        // A transfer can be interrupted mid-signature by a connection drop.
+        // The honest message here is "unknown", not "failed": the backend may
+        // have accepted the transfer even though the response never arrived.
+        // The transfers page reconciles real status on reconnect.
+        // Read the current connectivity directly (not from the render closure)
+        // so that a mid-flight disconnect produces the correct message.
+        const connectedNow =
+          typeof navigator !== 'undefined' && navigator.onLine;
+        setSubmitError(
+          connectedNow
+            ? getUserErrorMessage(normalized)
+            : 'Connection lost while sending. Reconnect to check your transfer status.',
+        );
       }
     } finally {
       submissionLock.current = false;
@@ -292,8 +303,8 @@ export default function SendMoney() {
               role="status"
               aria-live="polite"
             >
-              ✓ Back online. Your form was not submitted while you were
-              offline — review it and send when ready.
+              ✓ Back online. Your form was not submitted while you were offline
+              — review it and send when ready.
             </div>
           )}
 

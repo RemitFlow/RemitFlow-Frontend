@@ -25,9 +25,10 @@ export function getDateRangeDays(range) {
  * @param {Date} [now]
  * @returns {boolean}
  */
-export function isWithinDateRange(createdAt, range, now = new Date()) {
+export function isWithinDateRange(createdAt, range, now) {
   const days = getDateRangeDays(range);
   if (!days) return true;
+  if (now === undefined) now = new Date();
 
   const created = new Date(createdAt);
   if (Number.isNaN(created.getTime())) return false;

@@ -1,0 +1,282 @@
+{
+  "recorded_at_utc": "2026-10-04T11:58:18.730792+00:00",
+  "repository": "woahwhattheheck/RemitFlow-Frontend",
+  "upstream_pr": "https://github.com/RemitFlow/RemitFlow-Frontend/pull/297",
+  "issue": 278,
+  "original_branch": "goat/remitflow-278-transfer-pagination",
+  "parent_commit": "aa146d6c8280554cf95849f9912e8a9c1d21baf2",
+  "executed_source_commit": "157ff7bffe98c96ad48b39c844ff51a0a070679a",
+  "executed_source_tree": "a4af225ae83e3f688ef7fa7c0e73d00d6c998bff",
+  "tracked_files": 344,
+  "changed_files": [
+    {
+      "path": "src/context/AppContext.jsx",
+      "before": "336af1b39fb49c8121788391c76ef1aef0791619",
+      "after": "452bf9fdb731bedaf2fa1064596a6c7bfc5feea3",
+      "bytes": 4484
+    },
+    {
+      "path": "src/hooks/useTransfers.js",
+      "before": "dea1e619cc558f315daeb33e19ec5105e2270754",
+      "after": "80160bb5b91b87b3f42dbd56b2a95a1ad3d250a6",
+      "bytes": 2192
+    },
+    {
+      "path": "src/pages/SendMoney.jsx",
+      "before": "c1e03f0316f49bdb5f3c88578ba6794931238afe",
+      "after": "9c9a9066743dfc6700ca3fe917d6d794b861b8be",
+      "bytes": 15265
+    },
+    {
+      "path": "src/services/errors.js",
+      "before": "bab520ff3605f35b46173bc9cf9fdb2e7b9708b6",
+      "after": "4ecc020e8d880ba5139d6403607dbdaaf3199fdb",
+      "bytes": 2805
+    },
+    {
+      "path": "test/components/WalletButton.test.jsx",
+      "before": "46287e2d2a90a62307486aaefd632a7e75aaf246",
+      "after": "701fc6fe35087bc054b650a322e6228a3a620ada",
+      "bytes": 5274
+    },
+    {
+      "path": "test/integration/offline-reconnect.test.jsx",
+      "before": "10a876166e35b45e55280924fc155d5d5cb76729",
+      "after": "a6de5816f9644c998768461c010fcd91f5afae4d",
+      "bytes": 7059
+    },
+    {
+      "path": "test/integration/send-money-form.test.jsx",
+      "before": "43a73813b6bf47bcc06cae0958c8d39cb2acce86",
+      "after": "9ae992d9c2680a1fe133cfa01e9ce1e212fc3973",
+      "bytes": 7754
+    },
+    {
+      "path": "test/integration/send-money-precision.test.jsx",
+      "before": "f5cf076d246e83b9afa97d78ae2ab33fee7741ea",
+      "after": "136b66cc62ddf4cd2fa1b5b2a2891145434bdcb1",
+      "bytes": 9091
+    },
+    {
+      "path": "test/unit/AppContext.wallet.test.jsx",
+      "before": "20c04bf16087385efb0c78824fdadbb58614a849",
+      "after": "4436e1d658770334e2859957f06610f5f307b0e6",
+      "bytes": 6975
+    },
+    {
+      "path": "test/unit/quote.test.js",
+      "before": "0fcfe522ab545678df6418decdc3d2d9d6a6dab7",
+      "after": "94611389f9c1496e1d1abfd35cb4c608d9887f71",
+      "bytes": 1025
+    },
+    {
+      "path": "test/unit/transfer-snapshot.test.js",
+      "before": "d063bc0d9ba9a9670e0e8d75703e5376c2ef6e47",
+      "after": "da9ab4f799f994eeb7327613f41d434156b0b600",
+      "bytes": 10831
+    },
+    {
+      "path": "test/unit/useTransfers.errors.test.jsx",
+      "before": "071426f8b4b87b2f1606beca6b2d41927d13cbfc",
+      "after": "11741da257f62807c44e2f15bcfc6244ccd533cc",
+      "bytes": 1283
+    },
+    {
+      "path": "vite-plugin-security-headers.js",
+      "before": "af430cf049287c4ec656a7c852d9865da56d671b",
+      "after": "d3fb1d78206415e9580807b92b7a378350eeac16",
+      "bytes": 4616
+    }
+  ],
+  "test": {
+    "started_at_utc": "2026-10-04T11:54:56.918428+00:00",
+    "finished_at_utc": "2026-10-04T11:55:54.031767+00:00",
+    "elapsed_seconds": 57.11334453699965,
+    "exit_code": 0,
+    "command": [
+      "node",
+      "node_modules/vitest/vitest.mjs",
+      "run",
+      "test/integration",
+      "test/unit",
+      "test/components",
+      "test/services",
+      "test/lighthouse-config.test.js",
+      "test/security",
+      "--config",
+      "/dev/shm/relay17-rf297-acceptance-evidence/vitest.config.mjs",
+      "--maxWorkers=2",
+      "--reporter=default",
+      "--reporter=json",
+      "--outputFile.json=/dev/shm/relay17-rf297-acceptance-evidence/vitest-results.json"
+    ],
+    "tracked_source_files_verified_before_and_after": 344,
+    "parent": "aa146d6c8280554cf95849f9912e8a9c1d21baf2",
+    "counts": {
+      "numPassedTests": 477,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTests": 477,
+      "numPassedTestSuites": 138,
+      "numFailedTestSuites": 0,
+      "numTotalTestSuites": 138,
+      "success": true
+    },
+    "files": 49
+  },
+  "format": {
+    "prettier_version": "3.9.6",
+    "started_at_utc": "2026-10-04T11:54:03.472640+00:00",
+    "elapsed_seconds": 9.725404980999883,
+    "initial_exit_code": 1,
+    "flagged_files": [
+      "src/context/AppContext.jsx",
+      "src/hooks/useTransfers.js",
+      "src/pages/SendMoney.jsx",
+      "src/services/errors.js",
+      "test/components/WalletButton.test.jsx",
+      "test/unit/AppContext.wallet.test.jsx",
+      "test/unit/transfer-snapshot.test.js",
+      "test/unit/useTransfers.errors.test.jsx",
+      "vite-plugin-security-headers.js"
+    ],
+    "final_exit_code": 0
+  },
+  "build": {
+    "command": ["npm", "run", "build"],
+    "started_at_utc": "2026-10-04T11:56:29.250298+00:00",
+    "finished_at_utc": "2026-10-04T11:56:31.558839+00:00",
+    "elapsed_seconds": 2.3085307589935837,
+    "exit_code": 0,
+    "tracked_source_files_verified_before_and_after": 344
+  },
+  "audit": {
+    "reused": true,
+    "freshness": "Actual shared scan started2026-10-04T11:56:36.112260Z, completed11:56:56.026595Z; exact same dependency blobs verified in both source trees. No duplicate scan for PR297.",
+    "receipt": {
+      "gate": "audit",
+      "command": [
+        "npm",
+        "audit",
+        "--audit-level=critical",
+        "--json",
+        "--fetch-retries=0",
+        "--fetch-timeout=20000"
+      ],
+      "started_at": "2026-10-04T11:56:36.112260+00:00",
+      "finished_at": "2026-10-04T11:56:56.026595+00:00",
+      "elapsed_seconds": 19.914345624994894,
+      "exit_code": 0,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 2,
+        "moderate": 12,
+        "high": 20,
+        "critical": 0,
+        "total": 34
+      },
+      "dependency_file_blobs": {
+        "package.json": "625d0f3895fcc7afbfcfa131713249f5cd65dcd6",
+        "package-lock.json": "70d29c1865dac7ce76ba7d4e6ca5ee454be54aae"
+      },
+      "audit_results_sha256": "8b87a13f1e39c94f710de1e541d3ba88f8a47661af825c6004a41b2a812eb5a8",
+      "donor": "Relay-17 root PR298 validation; only the identical-dependency audit is reused here. Its application tests/build are not claimed for PR297.",
+      "donor_run_receipt_sha256": "33459b9b6a670e5c669892ca6ba3c091da8c5a18e31e8f76fe215163653a4912"
+    }
+  },
+  "hosted_ci": "Not executed by this local validation; no hosted CI or Lighthouse pass is asserted.",
+  "limits": [
+    "Real mounted App/jsdom and repository demo transfer/wallet services; no live transfer, signing or settlement.",
+    "Existing warning output retained; warning-free output is not claimed.",
+    "No full-scope baseline rerun. Reused four fixture postimages only after their original blobs matched.",
+    "No retries, omitted test paths, timeout changes, test deletions, snapshot changes or skipped tests in the full candidate run."
+  ],
+  "archive": {
+    "path": "evidence.zip",
+    "bytes": 60612,
+    "sha256": "838969807560e6854a77c084694bf730e13ecd792046d2ad9d82860a358ec450",
+    "members": [
+      {
+        "path": "vitest-results.json",
+        "bytes": 142433,
+        "sha256": "95ffc022b0702cae641dc1c5c612f50c5e7d0717aba0081ae6904aa45b2a6223"
+      },
+      {
+        "path": "vitest-output.log",
+        "bytes": 38834,
+        "sha256": "6e258ca806607671336760b14b0466a8133cc1de8056ef727d1f40c4cec1ea73"
+      },
+      {
+        "path": "test-receipt.json",
+        "bytes": 1027,
+        "sha256": "8caaf31caaf5eacfc632f1a6e86e4636e783f089665b8f610226479c3928fa21"
+      },
+      {
+        "path": "build.log",
+        "bytes": 477,
+        "sha256": "d95016ff9d6724cde00d29df509a6c8787021c8f45e73ad0686ee7042b92cf53"
+      },
+      {
+        "path": "build-receipt.json",
+        "bytes": 285,
+        "sha256": "28db2b959784083634ff81c95023eaa54d0da6a773cb6f1470aeec8de324884d"
+      },
+      {
+        "path": "prettier-before.log",
+        "bytes": 445,
+        "sha256": "ce9de8d8a0f050253fbc580d91017031383c98b944490c672264b15519895a94"
+      },
+      {
+        "path": "prettier-after.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      {
+        "path": "prettier-write.log",
+        "bytes": 325,
+        "sha256": "aefb3d273dc605d2e86d9602a19c26ff370b13a795bd2be58ba6dca1ab1ce11d"
+      },
+      {
+        "path": "prettier-receipt.json",
+        "bytes": 549,
+        "sha256": "cad1d322440ada327df185872fc87540eb75e276123f5a930a3fb34b64f0398d"
+      },
+      {
+        "path": "reused-audit-receipt.json",
+        "bytes": 966,
+        "sha256": "8e92a18bfabc6fcbf494d8077e4cb5bfc488c28c0d70254f407560c21c4d0f38"
+      },
+      {
+        "path": "reused-audit-results.json",
+        "bytes": 51078,
+        "sha256": "8b87a13f1e39c94f710de1e541d3ba88f8a47661af825c6004a41b2a812eb5a8"
+      },
+      {
+        "path": "composition-manifest.json",
+        "bytes": 49253,
+        "sha256": "513e38865f6c339b1513cc82929acd2605175a5583e09420e26616304c29a28f"
+      },
+      {
+        "path": "candidate-manifest.json",
+        "bytes": 50707,
+        "sha256": "28c6d888a6d0ced52d8fb3c03806fd7d37dbbfaac8d3826a1333fbbd749e2f27"
+      },
+      {
+        "path": "vitest.config.mjs",
+        "bytes": 168,
+        "sha256": "0fe9527c1843128db0977063b723df8f03af52e367fa62379add96bc45dc22cf"
+      },
+      {
+        "path": "run-gates.py",
+        "bytes": 1875,
+        "sha256": "87f7d6cacbad3360b6f992fd1e8b53b8dc43ad30b75cafe8419e66a20814d1ce"
+      },
+      {
+        "path": "audit-donor-run-receipt.json",
+        "bytes": 1653,
+        "sha256": "33459b9b6a670e5c669892ca6ba3c091da8c5a18e31e8f76fe215163653a4912"
+      }
+    ]
+  }
+}
