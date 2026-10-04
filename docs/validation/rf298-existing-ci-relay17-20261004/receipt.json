@@ -1,0 +1,303 @@
+{
+  "schema": "rf298-existing-ci/v1",
+  "recorded_at": "2026-10-04T12:12:51.298448+00:00",
+  "source_commit": "1e702e6437deee1bc1b0d75f5a3189abd178a226",
+  "parent": "71746fa5552f2dbb0ad3727637b52b9f64747410",
+  "tree": "50b2704afb930440c23d30f6ab1dd7bbbf7fbf85",
+  "source_files": 355,
+  "source_files_unchanged_after_execution": true,
+  "final_run": {
+    "repository": "woahwhattheheck/RemitFlow-Frontend",
+    "parent": "71746fa5552f2dbb0ad3727637b52b9f64747410",
+    "tested_tree": "50b2704afb930440c23d30f6ab1dd7bbbf7fbf85",
+    "source_files": 355,
+    "node": "v24.19.0",
+    "commands": [
+      {
+        "gate": "tests",
+        "command": [
+          "node",
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "test/integration",
+          "test/unit",
+          "test/components",
+          "test/services",
+          "test/lighthouse-config.test.js",
+          "test/security",
+          "--config",
+          "relay17.vitest.config.mjs",
+          "--maxWorkers=2",
+          "--reporter=default",
+          "--reporter=json",
+          "--outputFile.json=/dev/shm/relay17-rf298-evidence/vitest-results.json"
+        ],
+        "started_at": "2026-10-04T12:07:02.842160+00:00",
+        "finished_at": "2026-10-04T12:08:12.938097+00:00",
+        "elapsed_seconds": 70.09594242300227,
+        "exit_code": 0
+      },
+      {
+        "gate": "build",
+        "command": ["npm", "run", "build"],
+        "started_at": "2026-10-04T12:08:12.945742+00:00",
+        "finished_at": "2026-10-04T12:08:15.023921+00:00",
+        "elapsed_seconds": 2.078225809003925,
+        "exit_code": 0
+      }
+    ],
+    "source_unchanged_after": true
+  },
+  "tests": {
+    "passed": 504,
+    "failed": 0,
+    "skipped": 0,
+    "pending": 0,
+    "todo": 0,
+    "files_passed": 53,
+    "files_total": 53,
+    "vitest_seconds": 69.54
+  },
+  "audit": {
+    "gate": {
+      "gate": "audit",
+      "command": [
+        "npm",
+        "audit",
+        "--audit-level=critical",
+        "--json",
+        "--fetch-retries=0",
+        "--fetch-timeout=20000"
+      ],
+      "started_at": "2026-10-04T11:56:36.112260+00:00",
+      "finished_at": "2026-10-04T11:56:56.026595+00:00",
+      "elapsed_seconds": 19.914345624994894,
+      "exit_code": 0
+    },
+    "vulnerabilities": {
+      "info": 0,
+      "low": 2,
+      "moderate": 12,
+      "high": 20,
+      "critical": 0,
+      "total": 34
+    },
+    "reuse": "One audit on byte-identical package and lock in the first composition; not rerun after the selector-only concurrent source change.",
+    "package_blob": "625d0f3895fcc7afbfcfa131713249f5cd65dcd6",
+    "lock_blob": "70d29c1865dac7ce76ba7d4e6ca5ee454be54aae"
+  },
+  "format": {
+    "version": "3.9.6",
+    "result": "pass",
+    "initial_flagged_files": 14,
+    "additional_peer_report_files": 2,
+    "config_and_ignores_unchanged": true
+  },
+  "intermediate_run": {
+    "tested_tree": "a12311c454b4c6c1845437f651839212143c4971",
+    "passed": 502,
+    "failed": 0,
+    "files": 52,
+    "publication": "Not advanced after the non-force ref update returned422 for a concurrent source change; preserved only as intermediate evidence."
+  },
+  "hosted": [
+    {
+      "id": 37201143157,
+      "name": "CI",
+      "status": "completed",
+      "conclusion": "action_required",
+      "url": "https://github.com/RemitFlow/RemitFlow-Frontend/actions/runs/37201143157",
+      "head": "1e702e6437deee1bc1b0d75f5a3189abd178a226"
+    },
+    {
+      "id": 37201143084,
+      "name": "Lighthouse CI",
+      "status": "completed",
+      "conclusion": "action_required",
+      "url": "https://github.com/RemitFlow/RemitFlow-Frontend/actions/runs/37201143084",
+      "head": "1e702e6437deee1bc1b0d75f5a3189abd178a226"
+    }
+  ],
+  "archive": {
+    "path": "evidence.zip",
+    "bytes": 147628,
+    "sha256": "e853b730426ab43c783ec90a13f59210f62eb89ea62d18a27051e0f320800442",
+    "members": [
+      {
+        "path": "baseline-manifest.json",
+        "bytes": 56812,
+        "sha256": "b83aedae9147f858dfc208cdb2d4ddd4f7c7ec2170a6fa2fb9647ff61f8fc76e"
+      },
+      {
+        "path": "candidate-manifest.json",
+        "bytes": 56815,
+        "sha256": "14ddb3a4ac858a746ae8ca87d10d91c12f210c623243b183710c8fea89ca6fae"
+      },
+      {
+        "path": "changes.json",
+        "bytes": 3400,
+        "sha256": "1b78beab07c34a14c2bf9b7ea9557006cf1d37acf63669311c0fd23f558f4c5d"
+      },
+      {
+        "path": "candidate.patch",
+        "bytes": 46481,
+        "sha256": "9bdbb1666fa4ea58a4f2c0c92e7c745c2767c05726f3677dbf41306d7cb85767"
+      },
+      {
+        "path": "run-receipt.json",
+        "bytes": 1264,
+        "sha256": "55fe4e6f306e2de79c3e47c6fa3e12b6e8a61976a93ee7a222e24a64ec89efc8"
+      },
+      {
+        "path": "vitest-results.json",
+        "bytes": 152453,
+        "sha256": "26e84510765fb3958816674d2b80455813b70eca97eecfcc4aafa9bd7b0cfbd1"
+      },
+      {
+        "path": "vitest-output.log",
+        "bytes": 7382,
+        "sha256": "5f754c51ba442a5d808237d377160c94e12969cdceb77031a3de9036850da18b"
+      },
+      {
+        "path": "tests-stderr.log",
+        "bytes": 29742,
+        "sha256": "5f11c3a42cf601f1e9006f308a13354ba47b06265b74570e7dee4412047c83cc"
+      },
+      {
+        "path": "audit-results.json",
+        "bytes": 51078,
+        "sha256": "8b87a13f1e39c94f710de1e541d3ba88f8a47661af825c6004a41b2a812eb5a8"
+      },
+      {
+        "path": "audit-stderr.log",
+        "bytes": 307,
+        "sha256": "7d61cb2e2deb776dfec4d6f54693f9edeed0af5c4da52f091c53c995d862fb65"
+      },
+      {
+        "path": "build-output.log",
+        "bytes": 378,
+        "sha256": "a6a66c90918c89197a621a39ee35e68aba57a7291fe2b9a044213efe96900bae"
+      },
+      {
+        "path": "build-stderr.log",
+        "bytes": 99,
+        "sha256": "7125f194612fcff2f454c05d848e7cb71facc1967b4d5017e25b34fdee3ba74f"
+      },
+      {
+        "path": "format-before.log",
+        "bytes": 714,
+        "sha256": "2229fe8e82e708d83c8733a186f8ddc75984b53ec73f71356ab7214b5f0cd1e8"
+      },
+      {
+        "path": "format-write.log",
+        "bytes": 584,
+        "sha256": "0a4a70c0a7fc4fdcff48a70a198ba40f68857e2839b23754e23d9928f7e0b0fe"
+      },
+      {
+        "path": "format-after.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      {
+        "path": "final-format-before.log",
+        "bytes": 245,
+        "sha256": "31d8413491152aadf64d0be0232aad49eeb24c429c9f89591c1ad86cbab88fa7"
+      },
+      {
+        "path": "final-format-write.log",
+        "bytes": 142,
+        "sha256": "b89b060de24f16590e81f75fb6fa43bad31c2d4ad0345a447d8c58d5da17a3cd"
+      },
+      {
+        "path": "final-format-after.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      {
+        "path": "run-final.py",
+        "bytes": 3650,
+        "sha256": "b3bf2da62415507d43b02a0f95ff81fef4562e1e04ebf0bcb4ac5588add35fcf"
+      },
+      {
+        "path": "relay17.vitest.config.mjs",
+        "bytes": 107,
+        "sha256": "13a91081d6818081c932e1fcaba7c9e5fbfaa4f474de6abe2fe5f7680abfcdc1"
+      },
+      {
+        "path": "peer-integration-review.json",
+        "bytes": 2606,
+        "sha256": "97837abce4ce4b0af68b03930d265e8ad25c5cdd42ce0b821e444797ef4afa11"
+      },
+      {
+        "path": "initial-composition/baseline-manifest.json",
+        "bytes": 41306,
+        "sha256": "e57c83389ed09d29f80451177aec8506992ff431cbd8ee0c607aa15b03b89c2b"
+      },
+      {
+        "path": "initial-composition/candidate-manifest.json",
+        "bytes": 56071,
+        "sha256": "6ac9a037cc49f52a709cf965a263ff11db9aa75889e2660ba1622e956dccfa54"
+      },
+      {
+        "path": "initial-composition/changes.json",
+        "bytes": 3159,
+        "sha256": "49032fe72e060eb578b4a91b067516d353848fe00caa8aaba0f4adbcca7a361a"
+      },
+      {
+        "path": "initial-composition/candidate.patch",
+        "bytes": 33220,
+        "sha256": "cfcf0f271ac303e69b1e93c118a4034f33466ca6abc99388bfc87523f824aa40"
+      },
+      {
+        "path": "initial-composition/run-receipt.json",
+        "bytes": 1653,
+        "sha256": "33459b9b6a670e5c669892ca6ba3c091da8c5a18e31e8f76fe215163653a4912"
+      },
+      {
+        "path": "initial-composition/vitest-results.json",
+        "bytes": 151620,
+        "sha256": "e807f1c5466358dc55111d61f65624f0c3789cad9ae51d508b0a6fc46d5e76fb"
+      },
+      {
+        "path": "initial-composition/vitest-output.log",
+        "bytes": 7455,
+        "sha256": "5ebba564b9214b09c877e8d3d805d9614d116efdd8a294dd535fdc11ccdbaf24"
+      },
+      {
+        "path": "initial-composition/tests-stderr.log",
+        "bytes": 32477,
+        "sha256": "07b47e4028072e0f21fbf071ab4cab2ffb1c109d16587358efb6e9e191411288"
+      },
+      {
+        "path": "initial-composition/build-output.log",
+        "bytes": 378,
+        "sha256": "42fa9432279dbe2378736c21c5a1ae37f2e66873c498d73e53b862b01b2e7db1"
+      },
+      {
+        "path": "initial-composition/build-stderr.log",
+        "bytes": 99,
+        "sha256": "7125f194612fcff2f454c05d848e7cb71facc1967b4d5017e25b34fdee3ba74f"
+      },
+      {
+        "path": "initial-composition/run.py",
+        "bytes": 3593,
+        "sha256": "a7fdcb0db8477d15230848c7362a5fc4addf7d2edb82fed8ac130a43c9339c6b"
+      },
+      {
+        "path": "initial-composition/relay17.vitest.config.mjs",
+        "bytes": 107,
+        "sha256": "13a91081d6818081c932e1fcaba7c9e5fbfaa4f474de6abe2fe5f7680abfcdc1"
+      },
+      {
+        "path": "initial-composition/source-review.json",
+        "bytes": 1650,
+        "sha256": "6043c540de79c5f02383a3be5741b652e24d7451f331244b495ca69b3255427d"
+      },
+      {
+        "path": "initial-composition/SOURCE_REVIEW.md",
+        "bytes": 2412,
+        "sha256": "c69a2b239b635ed6712ab4a275c9a28fc73cdadfe5d8d6380a79fcd79c9ba5e7"
+      }
+    ]
+  }
+}

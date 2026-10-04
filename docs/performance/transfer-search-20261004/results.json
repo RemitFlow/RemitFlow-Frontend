@@ -1,0 +1,178 @@
+{
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "sources": {
+    "baselineBlob": "be8db651d5c2457323d6f8373a170a41d8b99b87",
+    "candidateBlob": "a75e2e4fe88e16cb0b03ed97aa0a1c18dbba1274"
+  },
+  "method": {
+    "rounds": 5,
+    "warmupsPerVersion": 1,
+    "order": "alternating before/after",
+    "gcBeforeEachSample": true,
+    "timingIncludes": "actual applyTransferSearch only; fixtures/assertions outside timing",
+    "operationCounts": "separate untimed production calls",
+    "providerRequests": 0
+  },
+  "scenarios": [
+    {
+      "count": 5000,
+      "order": "shuffled",
+      "limit": 100,
+      "samples": [
+        {
+          "before": 33.71209999999999,
+          "after": 2.137278000000009
+        },
+        {
+          "after": 2.483734999999996,
+          "before": 27.878434999999996
+        },
+        {
+          "before": 20.951795000000004,
+          "after": 3.445317999999986
+        },
+        {
+          "after": 2.557780999999977,
+          "before": 22.238653
+        },
+        {
+          "before": 22.827020000000005,
+          "after": 1.8687130000000138
+        }
+      ],
+      "baselineMedianMs": 22.827020000000005,
+      "candidateMedianMs": 2.483734999999996,
+      "speedup": 9.190602056982748,
+      "baselineOperations": {
+        "dateParseCalls": 110108,
+        "sortedLengths": [5000]
+      },
+      "candidateOperations": {
+        "dateParseCalls": 5000,
+        "sortedLengths": [100]
+      },
+      "identicalResults": true
+    },
+    {
+      "count": 100000,
+      "order": "shuffled",
+      "limit": 100,
+      "samples": [
+        {
+          "before": 768.0208469999998,
+          "after": 26.91173000000026
+        },
+        {
+          "after": 29.546558000000005,
+          "before": 922.863077
+        },
+        {
+          "before": 776.0745080000002,
+          "after": 25.353613999999652
+        },
+        {
+          "after": 27.637462000000596,
+          "before": 679.0042330000006
+        },
+        {
+          "before": 855.1001800000004,
+          "after": 23.976690999999846
+        }
+      ],
+      "baselineMedianMs": 776.0745080000002,
+      "candidateMedianMs": 26.91173000000026,
+      "speedup": 28.837778470577426,
+      "baselineOperations": {
+        "dateParseCalls": 3031310,
+        "sortedLengths": [100000]
+      },
+      "candidateOperations": {
+        "dateParseCalls": 100000,
+        "sortedLengths": [100]
+      },
+      "identicalResults": true
+    },
+    {
+      "count": 100000,
+      "order": "ascending",
+      "limit": 500,
+      "samples": [
+        {
+          "before": 44.33002699999997,
+          "after": 33.507582000000184
+        },
+        {
+          "after": 31.485877000000073,
+          "before": 44.50824499999999
+        },
+        {
+          "before": 46.68953899999997,
+          "after": 31.618967999999768
+        },
+        {
+          "after": 32.851283999999396,
+          "before": 44.630928999999924
+        },
+        {
+          "before": 45.76722100000006,
+          "after": 31.98176499999954
+        }
+      ],
+      "baselineMedianMs": 44.630928999999924,
+      "candidateMedianMs": 31.98176499999954,
+      "speedup": 1.3955117549015998,
+      "baselineOperations": {
+        "dateParseCalls": 199998,
+        "sortedLengths": [100000]
+      },
+      "candidateOperations": {
+        "dateParseCalls": 100000,
+        "sortedLengths": [500]
+      },
+      "identicalResults": true
+    },
+    {
+      "count": 100000,
+      "order": "descending",
+      "limit": 500,
+      "samples": [
+        {
+          "before": 51.15443300000061,
+          "after": 26.590165999999954
+        },
+        {
+          "after": 25.439112999999452,
+          "before": 46.29600699999992
+        },
+        {
+          "before": 65.55661699999928,
+          "after": 36.23268499999995
+        },
+        {
+          "after": 24.899862000000212,
+          "before": 44.26636099999996
+        },
+        {
+          "before": 43.51811400000042,
+          "after": 22.59087400000044
+        }
+      ],
+      "baselineMedianMs": 46.29600699999992,
+      "candidateMedianMs": 25.439112999999452,
+      "speedup": 1.8198750483163826,
+      "baselineOperations": {
+        "dateParseCalls": 199998,
+        "sortedLengths": [100000]
+      },
+      "candidateOperations": {
+        "dateParseCalls": 100000,
+        "sortedLengths": [500]
+      },
+      "identicalResults": true
+    }
+  ]
+}

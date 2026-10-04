@@ -1,0 +1,383 @@
+{
+  "schema": "transfer-filter-preparation-benchmark/v1",
+  "executed_at": "2026-10-04T11:56:10.496Z",
+  "node": "v22.23.3",
+  "platform": "linux/x64",
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "source": {
+    "baseline_blob": "a75e2e4fe88e16cb0b03ed97aa0a1c18dbba1274",
+    "candidate_blob": "f072d7879d4bceb74d3635f6bfda0797e7f549a0"
+  },
+  "method": "3 warmups; 9 paired samples, alternating order; synthetic fixed records; setup/assertions/GC/counting outside timed calls",
+  "scope": "Complete production applyTransferSearch and its actual dependency modules, not storage/API/React/browser/provider latency.",
+  "compatibility_checks": 10368,
+  "observations": [
+    {
+      "name": "5k all time",
+      "rows": 5000,
+      "query": {
+        "actorId": "demo"
+      },
+      "total_matched": 4288,
+      "returned": 100,
+      "baseline_median_ms": 3.7526440000000036,
+      "candidate_median_ms": 3.0997669999999857,
+      "reduction_percent": 17.397786733833996,
+      "operation_counts": {
+        "baseline": {
+          "date_constructions": 0,
+          "lowercase_calls": 4288,
+          "string_match_calls": 4288
+        },
+        "candidate": {
+          "date_constructions": 0,
+          "lowercase_calls": 1,
+          "string_match_calls": 1
+        }
+      },
+      "result_sha256": "af8fc4354239ad98cc6421adcdd67840ffcfd6f57d63e1397062a3115b9113b6",
+      "pairs": [
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 3.7526440000000036,
+          "candidate": 5.348464000000007
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 3.5111739999999827,
+          "baseline": 3.810030999999981
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 3.834937000000025,
+          "candidate": 3.110306000000037
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 3.0997669999999857,
+          "baseline": 3.839615999999978
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 2.1969440000000304,
+          "candidate": 1.7528870000000438
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 2.3584249999999543,
+          "baseline": 3.0319599999999696
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 2.705592000000024,
+          "candidate": 3.094547000000034
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 3.2347990000000095,
+          "baseline": 3.7058159999999702
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 3.8358690000000024,
+          "candidate": 3.0322309999999675
+        }
+      ]
+    },
+    {
+      "name": "100k all time",
+      "rows": 100000,
+      "query": {
+        "actorId": "demo"
+      },
+      "total_matched": 85714,
+      "returned": 100,
+      "baseline_median_ms": 38.88385699999981,
+      "candidate_median_ms": 30.024726999999984,
+      "reduction_percent": 22.783567998410923,
+      "operation_counts": {
+        "baseline": {
+          "date_constructions": 0,
+          "lowercase_calls": 85714,
+          "string_match_calls": 85714
+        },
+        "candidate": {
+          "date_constructions": 0,
+          "lowercase_calls": 1,
+          "string_match_calls": 1
+        }
+      },
+      "result_sha256": "e70cbd4515bd5b7a648f095dde799467c191ef6591ba8d60c8b88b342409cb90",
+      "pairs": [
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 41.91509599999995,
+          "candidate": 33.09540900000002
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 31.61123299999997,
+          "baseline": 43.19093299999997
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 36.904979000000026,
+          "candidate": 29.873694999999998
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 29.382939999999962,
+          "baseline": 37.878693999999996
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 37.82792900000004,
+          "candidate": 29.612397999999985
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 32.902851000000055,
+          "baseline": 41.05498299999999
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 36.653589999999895,
+          "candidate": 29.378081000000066
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 30.024726999999984,
+          "baseline": 38.88385699999981
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 40.884575999999925,
+          "candidate": 32.89763100000005
+        }
+      ]
+    },
+    {
+      "name": "100k date window",
+      "rows": 100000,
+      "query": {
+        "actorId": "demo",
+        "range": "30d"
+      },
+      "total_matched": 21445,
+      "returned": 100,
+      "baseline_median_ms": 77.67733499999986,
+      "candidate_median_ms": 41.512255000000096,
+      "reduction_percent": 46.55808544410004,
+      "operation_counts": {
+        "baseline": {
+          "date_constructions": 171428,
+          "lowercase_calls": 85714,
+          "string_match_calls": 85714
+        },
+        "candidate": {
+          "date_constructions": 85715,
+          "lowercase_calls": 1,
+          "string_match_calls": 1
+        }
+      },
+      "result_sha256": "74024fb5b745a035677c5a899ffca5d562db9816715203d1d2aacd66db985ad0",
+      "pairs": [
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 77.11932500000012,
+          "candidate": 42.58652699999993
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 39.15601400000014,
+          "baseline": 76.42492099999981
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 80.41769300000033,
+          "candidate": 43.91076500000008
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 38.1670610000001,
+          "baseline": 74.1527659999997
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 80.388508,
+          "candidate": 41.512255000000096
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 41.521818999999596,
+          "baseline": 77.67733499999986
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 78.02949099999978,
+          "candidate": 39.358372000000145
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 42.156524999999874,
+          "baseline": 74.95974699999988
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 77.83227399999987,
+          "candidate": 39.81588000000011
+        }
+      ]
+    },
+    {
+      "name": "100k status and search",
+      "rows": 100000,
+      "query": {
+        "actorId": "demo",
+        "status": "submitted",
+        "search": " ALICE "
+      },
+      "total_matched": 22857,
+      "returned": 100,
+      "baseline_median_ms": 23.599294999999984,
+      "candidate_median_ms": 20.46779400000014,
+      "reduction_percent": 13.269468431153753,
+      "operation_counts": {
+        "baseline": {
+          "date_constructions": 0,
+          "lowercase_calls": 68570,
+          "string_match_calls": 22857
+        },
+        "candidate": {
+          "date_constructions": 0,
+          "lowercase_calls": 34286,
+          "string_match_calls": 1
+        }
+      },
+      "result_sha256": "274de23d2629ae95bc92c3234c680e046caff8acb836956fe2f17e30c96736a7",
+      "pairs": [
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 29.14542900000015,
+          "candidate": 22.70290299999988
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 19.512673000000177,
+          "baseline": 29.16711899999973
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 22.40157100000033,
+          "candidate": 19.63978999999972
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 20.533166000000165,
+          "baseline": 23.599294999999984
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 22.065374000000247,
+          "candidate": 20.46779400000014
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 19.539984000000004,
+          "baseline": 21.87729300000001
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 28.005221999999776,
+          "candidate": 20.249667000000045
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 23.231468999999834,
+          "baseline": 24.938012000000526
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 21.595057000000452,
+          "candidate": 21.847137000000657
+        }
+      ]
+    },
+    {
+      "name": "100k combined filters",
+      "rows": 100000,
+      "query": {
+        "actorId": "demo",
+        "status": "settled",
+        "search": " ALICE ",
+        "range": "90d",
+        "limit": 500
+      },
+      "total_matched": 17145,
+      "returned": 500,
+      "baseline_median_ms": 37.81098099999963,
+      "candidate_median_ms": 26.264164999999593,
+      "reduction_percent": 30.53826082957263,
+      "operation_counts": {
+        "baseline": {
+          "date_constructions": 45714,
+          "lowercase_calls": 68572,
+          "string_match_calls": 22857
+        },
+        "candidate": {
+          "date_constructions": 22858,
+          "lowercase_calls": 34287,
+          "string_match_calls": 1
+        }
+      },
+      "result_sha256": "c18859b9b94bbbef72690fbdd332764c4fb3c1ace6e617a2c15e4e60118cce45",
+      "pairs": [
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 36.961607000000186,
+          "candidate": 25.90255100000013
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 25.181555000000117,
+          "baseline": 37.81098099999963
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 40.81570499999998,
+          "candidate": 30.698475999999573
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 26.264164999999593,
+          "baseline": 40.82644600000003
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 43.52538200000072,
+          "candidate": 28.478516000000127
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 24.604769999999917,
+          "baseline": 37.18445199999951
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 36.857842999999775,
+          "candidate": 25.36314500000026
+        },
+        {
+          "order": ["candidate", "baseline"],
+          "candidate": 35.77864199999931,
+          "baseline": 37.269722
+        },
+        {
+          "order": ["baseline", "candidate"],
+          "baseline": 43.32392400000026,
+          "candidate": 28.913426000000072
+        }
+      ]
+    }
+  ]
+}

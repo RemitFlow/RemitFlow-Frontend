@@ -1,4 +1,3 @@
-
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { AppProvider, useApp } from '../../src/context/AppContext.jsx';

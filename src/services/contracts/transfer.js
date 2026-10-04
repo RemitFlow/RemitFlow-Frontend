@@ -68,6 +68,8 @@ export const transferContract = defineContract({
     rate: { type: 'decimal', required: false, min: 0 },
     expiresAt: { type: 'timestamp', required: false },
     failureReason: { type: 'string', required: false, nullable: true },
+    // Sender scope. Absent on legacy records; list queries always supply actorId.
+    actorId: { type: 'string', required: false, minLength: 1 },
   },
 });
 

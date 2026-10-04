@@ -5,7 +5,7 @@
 const STORAGE_KEY = 'remitflow.wallet';
 
 // A deterministic fake Stellar public key for demo purposes.
-const DEMO_PUBLIC_KEY =
+export const DEMO_PUBLIC_KEY =
   'GBQAZ7Z3X7DEMOPUBLICKEY4REMITFLOWWALLET123456789ABCDEF';
 
 /**

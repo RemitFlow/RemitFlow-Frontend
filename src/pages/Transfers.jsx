@@ -1,11 +1,20 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  Link,
+  useLocation,
+  useNavigationType,
+  useSearchParams,
+} from 'react-router-dom';
 import Chart from '../components/Chart.jsx';
 import { formatMoney, parseDecimal } from '../utils/money.js';
-import {
-  TRANSFER_STATUSES,
-  normalizeStatus,
-} from '../services/contracts/transfer.js';
+import { TRANSFER_STATUSES } from '../services/contracts/transfer.js';
 import TransferRow from '../components/TransferRow.jsx';
 import { TRANSFER_STATUS_LABELS } from '../components/StatusBadge.jsx';
 import Skeleton from '../components/Skeleton.jsx';
@@ -18,7 +27,12 @@ import SelectionToolbar from '../components/SelectionToolbar.jsx';
 import { useTransfers } from '../hooks/useTransfers.js';
 import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
 import { useApp } from '../context/AppContext.jsx';
-import { DATE_RANGE_PRESETS, isWithinDateRange } from '../utils/dateRange.js';
+import { DATE_RANGE_PRESETS } from '../utils/dateRange.js';
+import { DEMO_PUBLIC_KEY } from '../services/wallet.js';
+import {
+  DEFAULT_RESULT_CAP,
+  SEARCH_DEBOUNCE_MS,
+} from '../utils/transferSearch.js';
 import './Transfers.css';
 
 // Derived from the contract so a new lifecycle state cannot be filterable in
@@ -35,13 +49,17 @@ const PAGE_SIZE = 5;
 
 /**
  * Transfers page: lists all transfers with their status.
- * Filter state is synced to the URL query string.
+ * Filter state is synced to the URL query string. Free-text search is
+ * debounced before it drives the actor-scoped list query so keystrokes do
+ * not fan out requests; obsolete in-flight queries are aborted by the hook.
  */
 export default function Transfers() {
-  const { transfers, loading, error, reload } = useTransfers();
-  const { locale } = useApp();
+  const { locale, wallet } = useApp();
+  const actorId = wallet?.publicKey || DEMO_PUBLIC_KEY;
   const isOnline = useOnlineStatus();
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigationType = useNavigationType();
 
   // Becomes true while the browser is offline, then flips back to false the
   // moment connectivity returns so we can reconcile transfers against the
@@ -49,9 +67,68 @@ export default function Transfers() {
   const [wasOffline, setWasOffline] = useState(false);
   const [syncingAfterReconnect, setSyncingAfterReconnect] = useState(false);
 
-  const search = searchParams.get('search') || '';
   const status = searchParams.get('status') || '';
   const range = searchParams.get('range') || '';
+  const urlSearch = searchParams.get('search') || '';
+
+  // Only a user edit may schedule a URL write. Navigation is authoritative.
+  const [searchDraft, setSearchDraft] = useState(urlSearch);
+  const pendingSearch = useRef(null);
+
+  useLayoutEffect(() => {
+    const pending = pendingSearch.current;
+    // POP also retires a draft when history changes only status/range.
+    // Local filter controls use PUSH and may preserve an unfinished edit.
+    if (
+      navigationType === 'POP' ||
+      !pending ||
+      pending.baseSearch !== urlSearch
+    ) {
+      pendingSearch.current = null;
+      setSearchDraft(urlSearch);
+    }
+  }, [urlSearch, location.key, location.search, navigationType]);
+
+  useEffect(() => {
+    const pending = pendingSearch.current;
+    if (
+      !pending ||
+      pending.value !== searchDraft ||
+      pending.baseSearch !== urlSearch
+    ) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      if (pendingSearch.current !== pending) return;
+      pendingSearch.current = null;
+      setSearchParams(
+        (prev) => {
+          if ((prev.get('search') || '') !== pending.baseSearch) return prev;
+          const next = new URLSearchParams(prev);
+          if (pending.value) next.set('search', pending.value);
+          else next.delete('search');
+          return next;
+        },
+        { replace: true },
+      );
+    }, SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [searchDraft, urlSearch, setSearchParams]);
+
+  const queryFilters = useMemo(
+    () => ({
+      search: urlSearch,
+      status,
+      range,
+    }),
+    [urlSearch, status, range],
+  );
+
+  const { transfers, loading, error, reload } = useTransfers({
+    actorId,
+    filters: queryFilters,
+    limit: DEFAULT_RESULT_CAP,
+  });
 
   // Selection state
   const [selectedIds, setSelectedIds] = useState(() => new Set());
@@ -60,39 +137,29 @@ export default function Transfers() {
   // Pagination state
   const [page, setPage] = useState(1);
 
-  // Reset page and selection when filters change
+  // Reset page and selection when the actor or committed filters change.
   useEffect(() => {
     setPage(1);
     setSelectedIds(new Set());
     setSelectAllAcross(false);
-  }, [search, status, range]);
+  }, [actorId, urlSearch, status, range]);
 
-  // Normalise the query-string status so a legacy or provider spelling in a
-  // shared/bookmarked URL (?status=settled) still selects the right rows.
-  const canonicalStatus = normalizeStatus(status);
   // Track connectivity so that a reconnect triggers an automatic reload.
   // The reload reconciles the true status of transfers that may have been
   // created or settled while the connection was down — without resubmitting
   // anything.
   useEffect(() => {
-    if (isOnline && wasOffline && !loading) {
+    if (isOnline && wasOffline && !loading && reload) {
       setSyncingAfterReconnect(true);
-      reload().finally(() => {
+      Promise.resolve(reload()).finally(() => {
         setSyncingAfterReconnect(false);
       });
     }
     setWasOffline(!isOnline);
   }, [isOnline, wasOffline, loading, reload]);
 
-  const filteredTransfers = useMemo(() => {
-    return transfers.filter((t) => {
-      if (status && normalizeStatus(t.status) !== canonicalStatus) return false;
-      if (search && !t.recipient.toLowerCase().includes(search.toLowerCase()))
-        return false;
-      if (!isWithinDateRange(t.createdAt, range)) return false;
-      return true;
-    });
-  }, [transfers, search, status, canonicalStatus, range]);
+  // API already applies actor scope, filters, stable sort, and the result cap.
+  const filteredTransfers = transfers;
 
   // Paginated data
   const totalPages = Math.ceil(filteredTransfers.length / PAGE_SIZE) || 1;
@@ -115,13 +182,11 @@ export default function Transfers() {
   const handleSearchChange = useCallback(
     (e) => {
       const value = e.target.value;
-      setSearchParams((prev) => {
-        if (value) prev.set('search', value);
-        else prev.delete('search');
-        return prev;
-      });
+      pendingSearch.current =
+        value === urlSearch ? null : { value, baseSearch: urlSearch };
+      setSearchDraft(value);
     },
-    [setSearchParams],
+    [urlSearch],
   );
 
   const handleStatusChange = useCallback(
@@ -148,7 +213,7 @@ export default function Transfers() {
     [setSearchParams],
   );
 
-  const hasActiveFilters = Boolean(search || status || range);
+  const hasActiveFilters = Boolean(urlSearch || status || range);
 
   // Selection handlers
   const handleToggleSelect = useCallback((id) => {
@@ -188,6 +253,12 @@ export default function Transfers() {
     setSelectAllAcross(false);
   }, []);
 
+  const handleClearFilters = useCallback(() => {
+    pendingSearch.current = null;
+    setSearchDraft('');
+    setSearchParams({});
+  }, [setSearchParams]);
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -215,7 +286,7 @@ export default function Transfers() {
           }
           action={
             hasActiveFilters ? (
-              <Button onClick={() => setSearchParams({})}>Clear filters</Button>
+              <Button onClick={handleClearFilters}>Clear filters</Button>
             ) : (
               <Link to="/send">
                 <Button>Send your first transfer</Button>
@@ -288,7 +359,7 @@ export default function Transfers() {
           type="search"
           className="transfers-filters-search"
           placeholder="Search by recipient…"
-          value={search}
+          value={searchDraft}
           onChange={handleSearchChange}
           aria-label="Search transfers by recipient"
         />
