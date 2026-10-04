@@ -66,8 +66,8 @@ export function buildCsp(apiOrig = apiOrigin()) {
   const directives = [
     "default-src 'self'",
     "script-src 'self'",
-    "style-src 'self' 'unsafe-inline'",   // CSS-in-JS / Vite inlines a tiny style tag
-    "img-src 'self' data:",               // data: URIs used by chart canvas toDataURL
+    "style-src 'self' 'unsafe-inline'", // CSS-in-JS / Vite inlines a tiny style tag
+    "img-src 'self' data:", // data: URIs used by chart canvas toDataURL
     `connect-src ${connectSrc.join(' ')}`,
     "font-src 'self'",
     "object-src 'none'",
@@ -90,8 +90,7 @@ export const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   'X-Frame-Options': 'DENY',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Permissions-Policy':
-    'camera=(), microphone=(), geolocation=(), payment=()',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
   'Cross-Origin-Opener-Policy': 'same-origin',
   'Cross-Origin-Resource-Policy': 'same-origin',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',

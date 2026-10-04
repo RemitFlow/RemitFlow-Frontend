@@ -68,6 +68,8 @@ export const transferContract = defineContract({
     rate: { type: 'decimal', required: false, min: 0 },
     expiresAt: { type: 'timestamp', required: false },
     failureReason: { type: 'string', required: false, nullable: true },
+    // Client-bound idempotency key; optional for legacy records.
+    idempotencyKey: { type: 'string', required: false, nullable: true },
   },
 });
 

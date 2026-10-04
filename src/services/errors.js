@@ -86,7 +86,9 @@ export function normalizeError(error, { source = 'api' } = {}) {
 }
 
 export function getUserErrorMessage(normalizedError) {
-  return SAFE_MESSAGES[normalizedError?.code] ?? SAFE_MESSAGES[ERROR_CODES.UNKNOWN];
+  return (
+    SAFE_MESSAGES[normalizedError?.code] ?? SAFE_MESSAGES[ERROR_CODES.UNKNOWN]
+  );
 }
 
 export function canRetry(normalizedError) {

@@ -22,10 +22,37 @@ async function fillForm(user, { amount, to = 'NGN' } = {}) {
   return amountField;
 }
 
+async function reviewAndConfirm(user) {
+  await user.click(screen.getByRole('button', { name: /review & send/i }));
+  const dialog = await screen.findByRole('dialog', {
+    name: /confirm your transfer/i,
+  });
+  await user.click(
+    within(dialog).getByRole('button', { name: /confirm transfer/i }),
+  );
+}
+
+async function viewSubmittedTransfer(user) {
+  const dialog = await screen.findByRole(
+    'dialog',
+    { name: /transfer submitted/i },
+    { timeout: 5000 },
+  );
+  await user.click(
+    within(dialog).getByRole('button', { name: /view transfers/i }),
+  );
+  await screen.findByRole(
+    'heading',
+    { name: /your transfers/i },
+    { timeout: 5000 },
+  );
+}
+
 describe('Send flow — amount parsing regressions', () => {
   beforeEach(() => {
     window.history.pushState({}, '', '/send');
     localStorage.clear();
+    sessionStorage.clear();
     // The mock wallet service rejects 10% of connections at random. Pin it so
     // the send flow is deterministic without standing up a live provider.
     vi.spyOn(Math, 'random').mockReturnValue(0.5);
@@ -44,17 +71,22 @@ describe('Send flow — amount parsing regressions', () => {
   });
 
   it('keeps a negative amount negative so validation can reject it', async () => {
+    const createTransfer = vi.spyOn(api, 'createTransfer');
     const user = userEvent.setup();
     render(<App />);
 
     // "-5" used to be silently rewritten to "5.00" and sent as a real transfer.
     await fillForm(user, { amount: '-5' });
-    expect(screen.getByLabelText(/^amount$/i)).toHaveValue(-5);
+    expect(screen.getByLabelText(/^amount$/i)).toHaveValue('-5.00');
 
     await user.click(screen.getByRole('button', { name: /review & send/i }));
     expect(
-      await screen.findByText(/enter an amount greater than zero/i),
+      await screen.findByText(/amount cannot be negative/i),
     ).toBeInTheDocument();
+    expect(createTransfer).not.toHaveBeenCalled();
+    expect(
+      screen.queryByRole('dialog', { name: /confirm your transfer/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('submits the exponent amount that the field actually held', async () => {
@@ -63,13 +95,8 @@ describe('Send flow — amount parsing regressions', () => {
     render(<App />);
 
     await fillForm(user, { amount: '1e3' });
-    await user.click(screen.getByRole('button', { name: /review & send/i }));
-
-    await screen.findByRole(
-      'heading',
-      { name: /your transfers/i },
-      { timeout: 5000 },
-    );
+    await reviewAndConfirm(user);
+    await viewSubmittedTransfer(user);
     expect(createTransfer).toHaveBeenCalledTimes(1);
     expect(createTransfer.mock.calls[0][0]).toMatchObject({
       sendAmount: '1000',
@@ -81,6 +108,7 @@ describe('Send flow — the receipt matches the quote', () => {
   beforeEach(() => {
     window.history.pushState({}, '', '/send');
     localStorage.clear();
+    sessionStorage.clear();
     // The mock wallet service rejects 10% of connections at random. Pin it so
     // the send flow is deterministic without standing up a live provider.
     vi.spyOn(Math, 'random').mockReturnValue(0.5);
@@ -96,13 +124,8 @@ describe('Send flow — the receipt matches the quote', () => {
     render(<App />);
 
     await fillForm(user, { amount: '200' });
-    await user.click(screen.getByRole('button', { name: /review & send/i }));
-
-    await screen.findByRole(
-      'heading',
-      { name: /your transfers/i },
-      { timeout: 5000 },
-    );
+    await reviewAndConfirm(user);
+    await viewSubmittedTransfer(user);
 
     // 200.00 - 1.10 fee = 198.90, at 1480.5 NGN/USD = 294471.45 exactly.
     const payload = createTransfer.mock.calls[0][0];
@@ -141,12 +164,8 @@ describe('Send flow — the receipt matches the quote', () => {
       ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByRole('button', { name: /review & send/i }));
-    await screen.findByRole(
-      'heading',
-      { name: /your transfers/i },
-      { timeout: 5000 },
-    );
+    await reviewAndConfirm(user);
+    await viewSubmittedTransfer(user);
 
     // The number on the receipt is the number that was quoted, to the cent.
     // The seeded demo transfer shares this recipient, so find the row by the
@@ -171,6 +190,7 @@ describe('Send flow — contract failures do not submit', () => {
   beforeEach(() => {
     window.history.pushState({}, '', '/send');
     localStorage.clear();
+    sessionStorage.clear();
     // The mock wallet service rejects 10% of connections at random. Pin it so
     // the send flow is deterministic without standing up a live provider.
     vi.spyOn(Math, 'random').mockReturnValue(0.5);
@@ -205,7 +225,7 @@ describe('Send flow — contract failures do not submit', () => {
     render(<App />);
 
     await fillForm(user, { amount: '200' });
-    await user.click(screen.getByRole('button', { name: /review & send/i }));
+    await reviewAndConfirm(user);
 
     expect(
       await screen.findByText(/rejected before it was sent/i, undefined, {

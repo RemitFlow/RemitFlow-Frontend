@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useState } from 'react';
 import { listTransfers, createTransfer } from '../services/api.js';
 import { ContractViolationError } from '../services/contracts/schema.js';
@@ -47,9 +46,17 @@ export function useTransfers() {
 
   const addTransfer = useCallback(async (payload) => {
     const created = await createTransfer(payload);
-    setTransfers((prev) => [created, ...prev]);
+    setTransfers((prev) => {
+      if (prev.some((t) => t.id === created.id)) return prev;
+      return [created, ...prev];
+    });
     return created;
   }, []);
+
+  const getTransferById = useCallback(
+    (id) => transfers.find((t) => t.id === id) ?? null,
+    [transfers],
+  );
 
   // Existing consumers use reload for both pull-to-refresh and the error-state
   // retry action. Withhold it only while a non-retryable error is displayed.
@@ -62,5 +69,6 @@ export function useTransfers() {
     retryable,
     reload: safeReload,
     addTransfer,
+    getTransferById,
   };
 }

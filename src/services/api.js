@@ -6,6 +6,7 @@
 // guess whether a field is present or whether an amount is really a number.
 
 import { ContractViolationError } from './contracts/schema.js';
+import { fingerprintTransferPayload } from '../utils/transferIntent.js';
 import {
   parseTransfer,
   parseTransferList,
@@ -38,21 +39,41 @@ const SEED_TRANSFERS = [
   },
 ];
 
-function read() {
+function transferStorageUnavailable(cause) {
+  const error = new Error(
+    'Transfer storage is unavailable. Retry the same operation after storage is restored.',
+  );
+  error.name = 'TransferStorageError';
+  error.cause = cause;
+  // Use the existing retryable-unavailable UI path and retain the intent key.
+  error.status = 503;
+  return error;
+}
+
+function read({ strict = false } = {}) {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    // ignore parse/storage errors
+    if (raw !== null) {
+      const transfers = JSON.parse(raw);
+      if (strict && !Array.isArray(transfers)) {
+        throw new TypeError('Stored transfers must be an array.');
+      }
+      return transfers;
+    }
+  } catch (error) {
+    // Creation must establish whether an idempotency key already exists.
+    if (strict) throw transferStorageUnavailable(error);
+    // Keep the existing tolerant behavior for listing the demo seed data.
   }
-  return SEED_TRANSFERS;
+  return SEED_TRANSFERS.map((transfer) => ({ ...transfer }));
 }
 
 function write(transfers) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(transfers));
-  } catch {
-    // ignore
+  } catch (error) {
+    // Never acknowledge a new transfer whose idempotency record was not saved.
+    throw transferStorageUnavailable(error);
   }
 }
 
@@ -106,6 +127,26 @@ export function listTransfers() {
   });
 }
 
+// In-flight create promises keyed by idempotency key so concurrent retries
+// (double-click, timeout replay) share one insert instead of racing two writes.
+const pendingCreates = new Map();
+let transferSequence = 0;
+
+function conflictingIdempotencyKey() {
+  return new ContractViolationError(
+    transferContract,
+    [
+      {
+        path: 'idempotencyKey',
+        code: 'conflicting_payload',
+        expected: 'the original transfer details for this key',
+        received: 'different transfer details',
+      },
+    ],
+    { source: 'createTransfer' },
+  );
+}
+
 /**
  * Create a new transfer record.
  *
@@ -113,24 +154,60 @@ export function listTransfers() {
  * payload fails at submission with an actionable diff instead of writing a
  * record that later renders as a plausible-looking wrong number.
  *
+ * When `idempotencyKey` is present, a repeated or concurrent create with the
+ * same key returns the prior transfer instead of inserting a duplicate.
+ *
  * @param {object} payload - transfer details
  * @returns {Promise<object>} the created transfer
  */
 export function createTransfer(payload) {
-  return new Promise((resolve, reject) => {
+  const { idempotencyKey, ...fields } = payload ?? {};
+  const fingerprint = idempotencyKey
+    ? fingerprintTransferPayload(fields)
+    : null;
+
+  if (idempotencyKey && pendingCreates.has(idempotencyKey)) {
+    const pending = pendingCreates.get(idempotencyKey);
+    return pending.fingerprint === fingerprint
+      ? pending.promise
+      : Promise.reject(conflictingIdempotencyKey());
+  }
+
+  const createPromise = new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
+        const transfers = read({ strict: true });
+
+        // Same idempotency key + same logical intent → return the prior record
+        // instead of inserting a duplicate transfer.
+        if (idempotencyKey) {
+          const prior = transfers.find(
+            (t) => t.idempotencyKey === idempotencyKey,
+          );
+          if (prior) {
+            const parsedPrior = parseTransfer(prior, {
+              source: 'createTransfer.idempotent',
+            });
+            if (fingerprintTransferPayload(parsedPrior) !== fingerprint) {
+              throw conflictingIdempotencyKey();
+            }
+            resolve(parsedPrior);
+            return;
+          }
+        }
+
         const transfer = parseTransfer(
           {
-            id: 'tx_' + Date.now(),
+            ...fields,
+            // Receipt identity and lifecycle metadata belong to creation,
+            // not to caller fields outside the transfer-intent fingerprint.
+            id: `tx_${Date.now()}_${++transferSequence}`,
             status: 'pending',
             createdAt: new Date().toISOString(),
-            ...payload,
+            ...(idempotencyKey ? { idempotencyKey } : {}),
           },
           { source: 'createTransfer' },
         );
-        const existing = read();
-        const transfers = Array.isArray(existing) ? existing : [];
         transfers.push(transfer);
         write(transfers);
         resolve(transfer);
@@ -138,5 +215,11 @@ export function createTransfer(payload) {
         reject(error);
       }
     }, 700);
+  }).finally(() => {
+    if (idempotencyKey) pendingCreates.delete(idempotencyKey);
   });
+
+  if (idempotencyKey)
+    pendingCreates.set(idempotencyKey, { fingerprint, promise: createPromise });
+  return createPromise;
 }

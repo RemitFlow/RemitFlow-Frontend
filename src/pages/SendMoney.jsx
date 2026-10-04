@@ -9,7 +9,11 @@ import Modal from '../components/Modal.jsx';
 import { buildQuote } from '../services/quote.js';
 import { ContractViolationError } from '../services/contracts/schema.js';
 import { getUserErrorMessage, normalizeError } from '../services/errors.js';
-import { formatAmount, formatCurrencyInput, parseCurrencyInput } from '../utils/format.js';
+import {
+  formatAmount,
+  formatCurrencyInput,
+  parseCurrencyInput,
+} from '../utils/format.js';
 import {
   isPositiveAmount,
   validateRecipient,
@@ -17,6 +21,15 @@ import {
 } from '../utils/validate.js';
 import { useWallet } from '../hooks/useWallet.js';
 import { useTransfers } from '../hooks/useTransfers.js';
+import {
+  fingerprintTransferPayload,
+  idempotencyKeyFor,
+  newTransferIntentNonce,
+  saveTransferOperation,
+  getLatestRecoverableOperation,
+  TransferOperationStorageError,
+  LegacyTransferOperationError,
+} from '../utils/transferIntent.js';
 import { useOnlineStatus } from '../hooks/useOnlineStatus.js';
 import { useApp } from '../context/AppContext.jsx';
 import { useDebouncedValue } from '../hooks/useDebouncedValue.js';
@@ -36,7 +49,7 @@ import './SendMoney.css';
 export default function SendMoney() {
   const navigate = useNavigate();
   const { wallet, isConnected, connect } = useWallet();
-  const { addTransfer } = useTransfers();
+  const { addTransfer, getTransferById, transfers } = useTransfers();
   const { locale } = useApp();
   const isOnline = useOnlineStatus();
 
@@ -48,6 +61,8 @@ export default function SendMoney() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const submissionLock = useRef(false);
+  const intentKeyRef = useRef(null);
+  const intentFingerprintRef = useRef(null);
   const wasOffline = useRef(false);
 
   // True when the form just recovered from a disconnected state. Used to
@@ -59,6 +74,44 @@ export default function SendMoney() {
   const [phase, setPhase] = useState(null);
   const [pendingQuote, setPendingQuote] = useState(null);
   const [submittedTransfer, setSubmittedTransfer] = useState(null);
+
+  // Restore a recoverable transfer intent after navigation/refresh so a retry
+  // cannot mint a second transfer for the same payload. Succeeded intents show
+  // status once; dismissing the dialog marks them acknowledged.
+  useEffect(() => {
+    const recoverable = getLatestRecoverableOperation();
+    if (!recoverable) return;
+    intentKeyRef.current = recoverable.idempotencyKey;
+    intentFingerprintRef.current = recoverable.fingerprint;
+    const existing =
+      (recoverable.transferId && getTransferById(recoverable.transferId)) ||
+      transfers.find(
+        (transfer) => transfer.idempotencyKey === recoverable.idempotencyKey,
+      );
+    if (existing) {
+      if (
+        recoverable.status !== 'succeeded' ||
+        recoverable.transferId !== existing.id
+      ) {
+        saveTransferOperation({
+          ...recoverable,
+          transferId: existing.id,
+          status: 'succeeded',
+        });
+      }
+      setSubmitError(null);
+      setSubmittedTransfer(existing);
+      setPhase('success');
+    } else if (
+      recoverable.status === 'unknown' ||
+      recoverable.status === 'submitting'
+    ) {
+      setSubmitError(
+        'Transfer status is unknown. Check Transfers, or re-enter the same details to retry safely.',
+      );
+    }
+  }, [getTransferById, transfers]);
+
   const submitButtonRef = useRef(null);
 
   // Debounce the amount so the quote isn't rebuilt on every keystroke.
@@ -167,7 +220,9 @@ export default function SendMoney() {
     }
     const finalQuote = buildQuote(parsedAmount.value, from, to);
     if (!finalQuote) {
-      applyErrors({ amount: 'Enter an amount greater than zero.' });
+      setSubmitError(
+        'We could not price this transfer. Check the amount and the selected currencies.',
+      );
       return;
     }
 
@@ -187,18 +242,28 @@ export default function SendMoney() {
     submissionLock.current = true;
     setSubmitting(true);
     try {
-      if (!isConnected) {
-        await connect();
+      const transferWallet = isConnected ? wallet : await connect();
+      if (!transferWallet) {
+        setSubmitError(
+          'Wallet connection did not complete. Connect your wallet and try again.',
+        );
+        setPendingQuote(null);
+        setPhase(null);
+        return;
       }
 
       // Rebuild at confirmation time so the committed amounts match the note:
       // rates are indicative and update at confirmation.
-      const parsedAmount = parseCurrencyInput(amount, { currency: from, locale });
+      const parsedAmount = parseCurrencyInput(amount, {
+        currency: from,
+        locale,
+      });
       if (!parsedAmount.ok) {
         setSubmitError(parsedAmount.error);
         return;
       }
-      const finalQuote = pendingQuote ?? buildQuote(parsedAmount.value, from, to);
+      const finalQuote =
+        pendingQuote ?? buildQuote(parsedAmount.value, from, to);
       if (!finalQuote) {
         setSubmitError(
           'We could not price this transfer. Check the amount and the selected currencies.',
@@ -206,10 +271,22 @@ export default function SendMoney() {
         return;
       }
 
+      // A wallet connected here was unavailable during the form's balance check.
+      if (
+        !isWithinBalance(finalQuote.sendAmount, transferWallet.balance, {
+          currency: finalQuote.from,
+        })
+      ) {
+        setSubmitError('Amount exceeds your wallet balance.');
+        setPendingQuote(null);
+        setPhase(null);
+        return;
+      }
+
       // Record the fee, rate and expiry alongside the amounts so the receipt
       // can reproduce exactly what was quoted rather than re-deriving it from
       // a rate that may since have moved.
-      const created = await addTransfer({
+      const payload = {
         recipient,
         from,
         to,
@@ -218,6 +295,38 @@ export default function SendMoney() {
         fee: finalQuote.fee,
         rate: finalQuote.rate,
         expiresAt: finalQuote.expiresAt,
+      };
+      // Persist only an opaque fingerprint, never recipient or quote details.
+      const fingerprint = await idempotencyKeyFor(
+        fingerprintTransferPayload(payload),
+      );
+      if (
+        intentFingerprintRef.current !== fingerprint ||
+        !intentKeyRef.current
+      ) {
+        const recoverable = getLatestRecoverableOperation(fingerprint, {
+          strict: true,
+        });
+        intentKeyRef.current =
+          recoverable?.idempotencyKey ??
+          (await idempotencyKeyFor(fingerprint, newTransferIntentNonce()));
+        intentFingerprintRef.current = fingerprint;
+      }
+      const idempotencyKey = intentKeyRef.current;
+      saveTransferOperation(
+        {
+          idempotencyKey,
+          fingerprint,
+          status: 'submitting',
+        },
+        { strict: true },
+      );
+      const created = await addTransfer({ ...payload, idempotencyKey });
+      saveTransferOperation({
+        idempotencyKey,
+        fingerprint,
+        transferId: created?.id,
+        status: 'succeeded',
       });
       setSubmittedTransfer(created ?? finalQuote);
       setPendingQuote(null);
@@ -226,32 +335,75 @@ export default function SendMoney() {
     } catch (err) {
       setPendingQuote(null);
       setPhase(null);
-      if (err instanceof ContractViolationError) {
+      if (err instanceof LegacyTransferOperationError) {
+        // Preserve the old operation and its key until its outcome is known.
+        // Neither addTransfer nor a replacement journal write has occurred.
+        setSubmitError(err.message);
+      } else if (err instanceof TransferOperationStorageError) {
+        // addTransfer was not called. Keep the in-memory intent for a safe
+        // retry, and do not attempt another write to unavailable storage.
+        setSubmitError(
+          'This attempt was not submitted because your browser could not preserve its recovery information. Check browser storage and try again.',
+        );
+      } else if (err instanceof ContractViolationError) {
         // The full field-by-field diff goes to the console; the user gets a
         // message that distinguishes "we rejected this" from "try again".
         console.error(err.message);
+        // Nothing was submitted — drop the intent so a corrected payload can
+        // start a fresh one, and a retry of the same payload gets a new key
+        // only if the user edits (same fingerprint reuses the key below).
+        if (intentKeyRef.current) {
+          saveTransferOperation({
+            idempotencyKey: intentKeyRef.current,
+            fingerprint: intentFingerprintRef.current,
+            status: 'failed',
+          });
+        }
         setSubmitError(
           'This transfer was rejected before it was sent because the details did not match the expected format. Nothing was submitted.',
         );
       } else {
         const normalized = normalizeError(err, { source: 'api' });
-      // A transfer can be interrupted mid-signature by a connection drop.
-      // The honest message here is "unknown", not "failed": the backend may
-      // have accepted the transfer even though the response never arrived.
-      // The transfers page reconciles real status on reconnect.
-      // Read the current connectivity directly (not from the render closure)
-      // so that a mid-flight disconnect produces the correct message.
-      const connectedNow = typeof navigator !== 'undefined' && navigator.onLine;
-      setSubmitError(
-        connectedNow
-          ? getUserErrorMessage(normalized)
-          : 'Connection lost while sending. Reconnect to check your transfer status.',
-      );
+        // A transfer can be interrupted mid-signature by a connection drop or
+        // timeout. The honest message here is "unknown", not "failed": the
+        // backend may have accepted the transfer even though the response never
+        // arrived. Keep the intent as `unknown` so refresh/retry reuses the same
+        // idempotency key instead of minting a duplicate.
+        // Read the current connectivity directly (not from the render closure)
+        // so that a mid-flight disconnect produces the correct message.
+        const connectedNow =
+          typeof navigator !== 'undefined' && navigator.onLine;
+        if (intentKeyRef.current) {
+          saveTransferOperation({
+            idempotencyKey: intentKeyRef.current,
+            fingerprint: intentFingerprintRef.current,
+            status: 'unknown',
+          });
+        }
+        setSubmitError(
+          connectedNow
+            ? getUserErrorMessage(normalized)
+            : 'Connection lost while sending. Reconnect to check your transfer status.',
+        );
       }
     } finally {
       submissionLock.current = false;
       setSubmitting(false);
     }
+  }
+
+  function dismissSuccess() {
+    if (intentKeyRef.current) {
+      saveTransferOperation({
+        idempotencyKey: intentKeyRef.current,
+        fingerprint: intentFingerprintRef.current,
+        transferId: submittedTransfer?.id,
+        status: 'dismissed',
+      });
+    }
+    intentKeyRef.current = null;
+    intentFingerprintRef.current = null;
+    setPhase(null);
   }
 
   const errorCount = Object.keys(errors).length;
@@ -292,8 +444,8 @@ export default function SendMoney() {
               role="status"
               aria-live="polite"
             >
-              ✓ Back online. Your form was not submitted while you were
-              offline — review it and send when ready.
+              ✓ Back online. Your form was not submitted while you were offline
+              — review it and send when ready.
             </div>
           )}
 
@@ -397,7 +549,7 @@ export default function SendMoney() {
       )}
 
       {phase === 'success' && submittedTransfer && (
-        <Modal open onClose={() => setPhase(null)} title="Transfer submitted">
+        <Modal open onClose={dismissSuccess} title="Transfer submitted">
           <p className="send-result-status" role="status" aria-live="polite">
             Your transfer was submitted successfully. Track its progress under
             Transfers.
@@ -433,7 +585,7 @@ export default function SendMoney() {
             </div>
           </dl>
           <div className="send-dialog-actions">
-            <Button variant="secondary" onClick={() => setPhase(null)}>
+            <Button variant="secondary" onClick={dismissSuccess}>
               Close
             </Button>
             <Button onClick={() => navigate('/transfers')}>

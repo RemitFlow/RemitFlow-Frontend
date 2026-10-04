@@ -112,6 +112,32 @@ pending button behavior, duplicate-submission prevention, Transfers page
 filter sync (search, status, and date-range presets such as last 7/30/90 days),
 and landscape tablet layout integration.
 
+### Transfer recovery storage
+
+Before submitting, Send Money must read the session operation journal and save
+the safe recovery reference successfully. Unavailable storage, malformed JSON
+or a journal that is not an object map prevents that attempt from reaching the
+transfer API; existing stored bytes are left untouched. The form reports that
+the attempt was not submitted and permits a retry after storage recovers.
+
+Only the opaque fingerprint, idempotency key, status and transfer reference are
+stored. The same in-memory intent is retained after a failed pre-submit save.
+Status updates after submission and mount-time recovery remain best-effort, so
+a late journal failure cannot hide an accepted transfer. The existing demo API
+still requires its separate localStorage record to be saved before reporting
+creation. Session recovery does not replace a production backend idempotency
+store or provide cross-tab or live-provider guarantees.
+
+The following captures show the built local-demo app under a controlled journal
+write failure (2026-10-03). The earlier version accepted the transfer without a
+recovery reference; the repaired version explains that this attempt was not
+submitted. Restoring storage permits one successful retry and receipt recovery.
+
+| Viewport width | Earlier accepted state                                                  | Repaired refusal                                                         |
+| -------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 1280           | [Desktop before](docs/screenshots/transfer-recovery-parent-desktop.png) | [Desktop after](docs/screenshots/transfer-recovery-repaired-desktop.png) |
+| 390            | [Phone before](docs/screenshots/transfer-recovery-parent-phone.png)     | [Phone after](docs/screenshots/transfer-recovery-repaired-phone.png)     |
+
 ## Accessibility
 
 All interactive elements (buttons, links, inputs, selects, icon buttons, and
