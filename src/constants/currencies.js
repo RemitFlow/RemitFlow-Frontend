@@ -30,6 +30,10 @@ export const CURRENCIES = [
 export const DEFAULT_SOURCE = 'USD';
 export const DEFAULT_DEST = 'NGN';
 
+// Flat list of supported ISO currency codes, derived from CURRENCIES.
+// Used for currency-matrix validation in the send flow.
+export const SUPPORTED_CURRENCY_CODES = CURRENCIES.map((c) => c.code);
+
 // Popular remittance corridors highlighted on the landing page.
 export const POPULAR_CORRIDORS = [
   { from: 'USD', to: 'NGN' },
@@ -51,4 +55,21 @@ export function getCurrency(code) {
 
 export function getCurrencyMinorUnits(code) {
   return getCurrency(code)?.minorUnits ?? 2;
+}
+
+/**
+ * Return display metadata for a currency, suitable for rendering in the
+ * quote card and amount entry fields.
+ * @param {string} code - ISO currency code, e.g. "USD"
+ * @returns {{code: string, name: string, symbol: string, minorUnits: number}|undefined}
+ */
+export function getCurrencyMetadata(code) {
+  const currency = getCurrency(code);
+  if (!currency) return undefined;
+  return {
+    code: currency.code,
+    name: currency.name,
+    symbol: currency.symbol,
+    minorUnits: currency.minorUnits,
+  };
 }

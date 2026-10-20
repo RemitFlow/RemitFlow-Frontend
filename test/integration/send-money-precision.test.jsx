@@ -115,6 +115,11 @@ describe('Send flow — the receipt matches the quote', () => {
       receiveAmount: '294471.45',
     });
     expect(payload.expiresAt).toEqual(expect.any(String));
+    // The quote that was displayed is the quote that gets signed: the payload
+    // carries the quote's id so the backend can reject a stale or mismatched
+    // price instead of trusting the client's numbers.
+    expect(payload.quoteId).toEqual(expect.any(String));
+    expect(payload.quoteId.length).toBeGreaterThan(0);
     // The stored record satisfies the contract it will later be read back with.
     expect(() =>
       parseTransfer({
@@ -140,6 +145,22 @@ describe('Send flow — the receipt matches the quote', () => {
         within(quoteCard).getByText(money('NGN 294,471.45')),
       ).toBeInTheDocument();
     });
+
+    // The card must surface the quote's provenance and lifetime so the user
+    // can tell whether the price they are about to sign is still current.
+    expect(within(quoteCard).getByText(/source/i)).toBeInTheDocument();
+    expect(within(quoteCard).getByText(/expires/i)).toBeInTheDocument();
+    // The canonical amount is the exact decimal the payload will carry.
+    expect(
+      within(quoteCard).getByText(money('USD 200.00')),
+    ).toBeInTheDocument();
+    // A timestamp is rendered in a machine-readable <time> element.
+    const timestamp = quoteCard.querySelector('time');
+    expect(timestamp).not.toBeNull();
+    expect(timestamp.getAttribute('dateTime')).toEqual(expect.any(String));
+    expect(Number.isNaN(Date.parse(timestamp.getAttribute('dateTime')))).toBe(
+      false,
+    );
 
     await user.click(screen.getByRole('button', { name: /review & send/i }));
     await screen.findByRole(
@@ -219,6 +240,35 @@ describe('Send flow — contract failures do not submit', () => {
     expect(console.error).toHaveBeenCalledWith(
       expect.stringContaining('sendAmount'),
     );
+  });
+
+  it('blocks confirmation when the form amount drifts from the quote', async () => {
+    const createTransfer = vi.spyOn(api, 'createTransfer');
+    const user = userEvent.setup();
+    render(<App />);
+
+    await fillForm(user, { amount: '200' });
+    await user.click(screen.getByRole('button', { name: /review & send/i }));
+
+    // Simulate a precision mismatch: the quote the user is confirming no
+    // longer matches the canonical amount derived from the form. The send
+    // must be refused rather than signing a payload the backend will reject.
+    const quote = await import('../../src/services/quote.js');
+    const original = quote.buildQuote;
+    vi.spyOn(quote, 'buildQuote').mockImplementation((...args) => {
+      const built = original(...args);
+      if (!built) return built;
+      return { ...built, canonicalAmount: '200.01' };
+    });
+
+    await user.click(screen.getByRole('button', { name: /review & send/i }));
+
+    expect(
+      await screen.findByText(/quote.*(changed|mismatch|refresh)/i, undefined, {
+        timeout: 5000,
+      }),
+    ).toBeInTheDocument();
+    expect(createTransfer).not.toHaveBeenCalled();
   });
 
   it('explains an unquotable transfer instead of doing nothing', async () => {

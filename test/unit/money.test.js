@@ -162,6 +162,81 @@ describe('rate application', () => {
   });
 });
 
+describe('canonical amount reconciliation', () => {
+  // Quote validation compares the amount the user typed against the amount the
+  // backend echoed back. Both sides are canonicalised through quantize(), so
+  // the comparison must be exact for every currency precision the app supports.
+  it.each([
+    ['USD', '2', '10.005', '10.01'],
+    ['USD', '2', '10.004', '10.00'],
+    ['EUR', '2', '0.1', '0.10'],
+    ['NGN', '2', '1480.5', '1480.50'],
+    ['JPY', '0', '1234.5', '1235'],
+    ['JPY', '0', '1234.4', '1234'],
+    ['KWD', '3', '1.2345', '1.235'],
+    ['KWD', '3', '1.2344', '1.234'],
+    ['BHD', '3', '0.0005', '0.001'],
+  ])(
+    'quantizes %s (%s dp) %s to %s',
+    (currency, exponent, input, expected) => {
+      expect(currencyExponent(currency)).toBe(Number(exponent));
+      expect(quantize(input, currency)).toBe(expected);
+    },
+  );
+
+  it('treats a value already at the currency precision as unchanged', () => {
+    expect(quantize('200.00', 'USD')).toBe('200.00');
+    expect(quantize('200', 'USD')).toBe('200.00');
+    expect(quantize('15525', 'JPY')).toBe('15525');
+    expect(quantize('1.234', 'KWD')).toBe('1.234');
+  });
+
+  it('reconciles equal amounts written at different precisions', () => {
+    const cases = [
+      ['USD', '200', '200.00'],
+      ['USD', '200.0', '200.00'],
+      ['USD', '200.000', '200.00'],
+      ['JPY', '1235', '1235'],
+      ['JPY', '1235.0', '1235'],
+      ['KWD', '1.2', '1.200'],
+    ];
+    for (const [currency, left, right] of cases) {
+      const a = quantize(left, currency);
+      const b = quantize(right, currency);
+      expect(a).toBe(b);
+      expect(compareDecimal(a, b)).toBe(0);
+    }
+  });
+
+  it('detects a precision mismatch that survives quantization', () => {
+    // 10.004 and 10.005 both look like "10.00" to a naive 2dp truncation, but
+    // only one of them rounds to the canonical amount the backend will accept.
+    expect(quantize('10.004', 'USD')).not.toBe(quantize('10.005', 'USD'));
+    expect(compareDecimal(quantize('10.004', 'USD'), '10.01')).toBe(-1);
+    expect(compareDecimal(quantize('10.005', 'USD'), '10.01')).toBe(0);
+  });
+
+  it('compares exactly at the canonical-amount boundary', () => {
+    // A one-minor-unit difference must never compare as equal.
+    expect(compareDecimal(quantize('10.00', 'USD'), '10.01')).toBe(-1);
+    expect(compareDecimal(quantize('10.01', 'USD'), '10.00')).toBe(1);
+    expect(compareDecimal(quantize('1234', 'JPY'), '1235')).toBe(-1);
+    expect(compareDecimal(quantize('1.234', 'KWD'), '1.235')).toBe(-1);
+    // And the same amount at different textual precision must compare equal.
+    expect(compareDecimal(quantize('10.01', 'USD'), '10.010')).toBe(0);
+    expect(compareDecimal(quantize('1235', 'JPY'), '1235.00')).toBe(0);
+  });
+
+  it('keeps canonical amounts exact beyond float precision', () => {
+    const huge = '123456789012345678.99';
+    expect(quantize(huge, 'USD')).toBe(huge);
+    expect(compareDecimal(quantize(huge, 'USD'), huge)).toBe(0);
+    expect(compareDecimal(quantize(huge, 'USD'), '123456789012345678.98')).toBe(
+      1,
+    );
+  });
+});
+
 describe('formatMoney', () => {
   it('formats parseable values with the currency minor unit', () => {
     expect(formatMoney('294471.45', 'NGN', 'en-US')).toBe(

@@ -6,7 +6,7 @@ import QuoteCard from '../components/QuoteCard.jsx';
 import Button from '../components/Button.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import Modal from '../components/Modal.jsx';
-import { buildQuote } from '../services/quote.js';
+import { buildQuote, validateQuoteForTransfer } from '../services/quote.js';
 import { ContractViolationError } from '../services/contracts/schema.js';
 import { getUserErrorMessage, normalizeError } from '../services/errors.js';
 import { formatAmount, formatCurrencyInput, parseCurrencyInput } from '../utils/format.js';
@@ -64,6 +64,14 @@ export default function SendMoney() {
   // Debounce the amount so the quote isn't rebuilt on every keystroke.
   const debouncedAmount = useDebouncedValue(amount, 250);
 
+  // A ticking clock so expiry is evaluated against real time, not just when
+  // the inputs happen to change.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Recompute the quote whenever the (debounced) inputs change.
   const quote = useMemo(() => {
     const parsed = parseCurrencyInput(debouncedAmount, {
@@ -73,6 +81,41 @@ export default function SendMoney() {
     if (!parsed.ok) return null;
     return buildQuote(parsed.value, from, to);
   }, [debouncedAmount, from, locale, to]);
+
+  // The inputs (and connectivity) that produced the active pending quote.
+  // Any divergence means the quote is stale and must not be signed.
+  const pendingQuoteInputs = useRef(null);
+
+  // Invalidate the active quote whenever the inputs or network state change.
+  useEffect(() => {
+    if (!pendingQuote) return;
+    const snapshot = pendingQuoteInputs.current;
+    const changed =
+      !snapshot ||
+      snapshot.amount !== amount ||
+      snapshot.from !== from ||
+      snapshot.to !== to ||
+      snapshot.recipient !== recipient ||
+      snapshot.isOnline !== isOnline;
+    if (changed) {
+      setPendingQuote(null);
+      pendingQuoteInputs.current = null;
+      setPhase((current) => (current === 'confirm' ? null : current));
+    }
+  }, [amount, from, to, recipient, isOnline, pendingQuote]);
+
+  // Validate the pending quote against the current inputs and clock.
+  const pendingQuoteCheck = useMemo(() => {
+    if (!pendingQuote) return { valid: false, reasons: [] };
+    return validateQuoteForTransfer(pendingQuote, {
+      amount,
+      from,
+      to,
+      recipient,
+      now,
+      locale,
+    });
+  }, [pendingQuote, amount, from, to, recipient, now, locale]);
 
   // Surface submission failures predictably: announce them and put keyboard
   // focus back on the submit control so a retry is one Enter away.
@@ -171,6 +214,26 @@ export default function SendMoney() {
       return;
     }
 
+    // Refuse to open the confirmation dialog for an expired or mismatched
+    // quote: the user must never be able to sign a stale rate.
+    const check = validateQuoteForTransfer(finalQuote, {
+      amount,
+      from,
+      to,
+      recipient,
+      now: Date.now(),
+      locale,
+    });
+    if (!check.valid) {
+      setSubmitError(
+        check.reasons.length > 0
+          ? check.reasons.join(' ')
+          : 'This quote is no longer valid. Please review the amount and currencies.',
+      );
+      return;
+    }
+
+    pendingQuoteInputs.current = { amount, from, to, recipient, isOnline };
     setPendingQuote(finalQuote);
     setPhase('confirm');
   }
@@ -179,6 +242,7 @@ export default function SendMoney() {
     if (submitting) return;
     setPhase(null);
     setPendingQuote(null);
+    pendingQuoteInputs.current = null;
   }
 
   async function handleConfirmTransfer() {
@@ -206,10 +270,34 @@ export default function SendMoney() {
         return;
       }
 
+      // Re-validate against the current inputs and clock right before
+      // submitting: the quote may have expired while the dialog was open.
+      const check = validateQuoteForTransfer(finalQuote, {
+        amount,
+        from,
+        to,
+        recipient,
+        now: Date.now(),
+        locale,
+      });
+      if (!check.valid) {
+        setPendingQuote(null);
+        pendingQuoteInputs.current = null;
+        setPhase(null);
+        setSubmitError(
+          check.reasons.length > 0
+            ? check.reasons.join(' ')
+            : 'This quote is no longer valid. Please review the amount and currencies.',
+        );
+        return;
+      }
+
       // Record the fee, rate and expiry alongside the amounts so the receipt
       // can reproduce exactly what was quoted rather than re-deriving it from
-      // a rate that may since have moved.
+      // a rate that may since have moved. The quote ID binds the payload to
+      // the exact quote the user reviewed.
       const created = await addTransfer({
+        quoteId: finalQuote.quoteId,
         recipient,
         from,
         to,
@@ -221,10 +309,12 @@ export default function SendMoney() {
       });
       setSubmittedTransfer(created ?? finalQuote);
       setPendingQuote(null);
+      pendingQuoteInputs.current = null;
       setSubmitError(null);
       setPhase('success');
     } catch (err) {
       setPendingQuote(null);
+      pendingQuoteInputs.current = null;
       setPhase(null);
       if (err instanceof ContractViolationError) {
         // The full field-by-field diff goes to the console; the user gets a
@@ -360,7 +450,7 @@ export default function SendMoney() {
 
         <div className="send-quote">
           {quote ? (
-            <QuoteCard quote={quote} locale={locale} />
+            <QuoteCard quote={quote} locale={locale} now={now} />
           ) : (
             <p className="send-quote-hint">
               Enter an amount to see your quote.
@@ -377,7 +467,13 @@ export default function SendMoney() {
               <dd>{recipient}</dd>
             </div>
           </dl>
-          <QuoteCard quote={pendingQuote} locale={locale} />
+          <QuoteCard
+            quote={pendingQuote}
+            locale={locale}
+            now={now}
+            invalid={!pendingQuoteCheck.valid}
+            reasons={pendingQuoteCheck.reasons}
+          />
           <p className="send-submit-status" role="status" aria-live="polite">
             {submitting ? 'Submitting your transfer…' : ''}
           </p>
@@ -389,7 +485,10 @@ export default function SendMoney() {
             >
               Back
             </Button>
-            <Button onClick={handleConfirmTransfer} disabled={submitting}>
+            <Button
+              onClick={handleConfirmTransfer}
+              disabled={submitting || !pendingQuoteCheck.valid}
+            >
               {submitting ? 'Sending…' : 'Confirm transfer'}
             </Button>
           </div>

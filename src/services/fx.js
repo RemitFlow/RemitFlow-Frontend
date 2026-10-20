@@ -6,7 +6,11 @@
 // point yields 1609.2391304347825, which is already wrong in the last place;
 // at NGN scale that error is visible on a receipt.
 
-import { divideDecimal, parseDecimal } from '../utils/money.js';
+import { divideDecimal, parseDecimal, currencyExponent } from '../utils/money.js';
+
+// Identifies the feed a quote's rate came from. The mock service is the only
+// source today; a backend or DEX path-payment feed would report its own id.
+export const FX_SOURCE = 'mock-fx';
 
 // Rates expressed relative to 1 USD.
 const USD_RATES = {
@@ -77,4 +81,26 @@ export function getInverseRate(from, to) {
  */
 export function listRatedCurrencies() {
   return Object.keys(USD_RATES);
+}
+
+/**
+ * Metadata describing the rate used for a currency pair, so a quote can show
+ * where its rate came from and the precision each side is quoted at.
+ * @param {string} from - source currency code
+ * @param {string} to - destination currency code
+ * @returns {{source: string, from: string, to: string, rate: string,
+ *   fromMinorUnits: number, toMinorUnits: number}|null} null when the pair is
+ *   unsupported
+ */
+export function getRateMetadata(from, to) {
+  const rate = getRateDecimal(from, to);
+  if (rate == null) return null;
+  return {
+    source: FX_SOURCE,
+    from,
+    to,
+    rate,
+    fromMinorUnits: currencyExponent(from),
+    toMinorUnits: currencyExponent(to),
+  };
 }

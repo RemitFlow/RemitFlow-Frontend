@@ -39,6 +39,82 @@
   color: var(--color-muted);
 }
 
+.quote-meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #1f2a3a;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.quote-meta dt {
+  margin: 0;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+.quote-meta dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+
+.quote-meta-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.quote-expired {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #b45309;
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: #3a2a12;
+  color: #fde68a;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.quote-expired-icon {
+  flex: 0 0 auto;
+  font-weight: 700;
+}
+
+.quote-expired-text {
+  flex: 1 1 auto;
+}
+
+[data-theme='light'] .quote-expired {
+  border-color: #b45309;
+  background: #fef3c7;
+  color: #7c2d12;
+}
+
+.quote-invalid-reasons {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #fca5a5;
+}
+
+.quote-invalid-reasons li {
+  margin: 0.15rem 0;
+}
+
+[data-theme='light'] .quote-invalid-reasons {
+  color: #991b1b;
+}
+
 @media (prefers-contrast: more) {
   .quote-card {
     border-width: 2px;
@@ -46,5 +122,18 @@
 
   .quote-divider {
     height: 2px;
+  }
+
+  .quote-meta {
+    border-width: 2px;
+  }
+
+  .quote-expired {
+    border-width: 2px;
+    border-left-width: 6px;
+  }
+
+  .quote-invalid-reasons {
+    font-weight: 600;
   }
 }

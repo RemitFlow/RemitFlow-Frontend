@@ -45,10 +45,30 @@ export function useTransfers() {
     reload();
   }, [reload]);
 
+  // The payload is forwarded verbatim so the quote ID that priced this
+  // transfer reaches the backend and binds the transfer to that quote.
   const addTransfer = useCallback(async (payload) => {
-    const created = await createTransfer(payload);
-    setTransfers((prev) => [created, ...prev]);
-    return created;
+    try {
+      const created = await createTransfer(payload);
+      setTransfers((prev) => [created, ...prev]);
+      return created;
+    } catch (err) {
+      if (err instanceof ContractViolationError) {
+        // A missing or mismatched quote ID is a contract violation, not a
+        // transient failure; surface it through the same non-retryable path
+        // used when loading transfers.
+        console.error(err.message);
+        setError(
+          `Your transfer could not be created: the quote could not be verified (${err.contract}). Nothing has been sent — please refresh the quote and try again.`,
+        );
+        setRetryable(false);
+      } else {
+        const normalized = normalizeError(err, { source: 'api' });
+        setError(getUserErrorMessage(normalized));
+        setRetryable(normalized.retryable);
+      }
+      throw err;
+    }
   }, []);
 
   // Existing consumers use reload for both pull-to-refresh and the error-state

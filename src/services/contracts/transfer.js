@@ -63,6 +63,10 @@ export const transferContract = defineContract({
       aliases: TRANSFER_STATUS_ALIASES,
     },
     createdAt: { type: 'timestamp', required: true },
+    // The quote that priced this transfer. New transfers always carry it so the
+    // signed payload can be bound to the exact quote; legacy records predate
+    // quotes, so it stays optional to keep them parseable.
+    quoteId: { type: 'string', required: false, minLength: 1 },
     // Optional enrichment. Absent on legacy records, so never required.
     fee: { type: 'decimal', required: false, min: 0 },
     rate: { type: 'decimal', required: false, min: 0 },

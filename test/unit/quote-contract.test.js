@@ -9,6 +9,7 @@ import {
   QUOTE_TTL_MS,
   isQuoteExpired,
   parseQuote,
+  validateQuoteForTransfer,
 } from '../../src/services/contracts/quote.js';
 import { ContractViolationError } from '../../src/services/contracts/schema.js';
 import { buildQuote, calculateFee } from '../../src/services/quote.js';
@@ -28,9 +29,37 @@ describe('parseQuote — v1 fixtures', () => {
     expect(quote.version).toBe(QUOTE_CONTRACT_VERSION);
   });
 
+  it.each(fixtures.map(({ name }) => name))(
+    '%s carries the required freshness and currency metadata',
+    (name) => {
+      const quote = parseQuote(loadFixture(QUOTE_CONTRACT_VERSION, name));
+      expect(typeof quote.quoteId).toBe('string');
+      expect(quote.quoteId.length).toBeGreaterThan(0);
+      expect(typeof quote.source).toBe('string');
+      expect(quote.source.length).toBeGreaterThan(0);
+      expect(typeof quote.canonicalAmount).toBe('string');
+      expect(quote.canonicalAmount).toMatch(/^\d+(\.\d+)?$/);
+      expect(quote.fromCurrency).toMatchObject({
+        code: expect.any(String),
+        decimals: expect.any(Number),
+      });
+      expect(quote.toCurrency).toMatchObject({
+        code: expect.any(String),
+        decimals: expect.any(Number),
+      });
+      expect(quote.fromCurrency.code).toBe(quote.from);
+      expect(quote.toCurrency.code).toBe(quote.to);
+    },
+  );
+
   const EXPECTED_BREAKING = {
     'quote.missing-expiry': { path: 'expiresAt', code: 'missing_field' },
     'quote.formatted-rate': { path: 'rate', code: 'wrong_type' },
+    'quote.missing-quote-id': { path: 'quoteId', code: 'missing_field' },
+    'quote.formatted-canonical-amount': {
+      path: 'canonicalAmount',
+      code: 'wrong_type',
+    },
   };
 
   it('has an expectation recorded for every breaking quote fixture', () => {
@@ -74,6 +103,15 @@ describe('parseQuote — v1 fixtures', () => {
     expect(() => parseQuote(payload)).toThrow(/rate/);
     expect(Number.parseFloat(payload.rate)).toBe(1);
   });
+
+  it('rejects a display-formatted canonical amount', () => {
+    const payload = loadFixture(
+      QUOTE_CONTRACT_VERSION,
+      'quote.formatted-canonical-amount',
+      { kind: 'breaking' },
+    );
+    expect(() => parseQuote(payload)).toThrow(/canonicalAmount/);
+  });
 });
 
 describe('isQuoteExpired', () => {
@@ -100,6 +138,87 @@ describe('isQuoteExpired', () => {
 
   it('treats an unreadable expiry as expired rather than valid', () => {
     expect(isQuoteExpired({ expiresAt: 'not-a-date' }, NOW)).toBe(true);
+  });
+});
+
+describe('validateQuoteForTransfer', () => {
+  const quote = parseQuote(loadFixture(QUOTE_CONTRACT_VERSION, 'quote'));
+
+  it('accepts a fresh quote whose payload matches', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: quote.quoteId,
+      from: quote.from,
+      to: quote.to,
+      sendAmount: quote.sendAmount,
+      now: Date.parse('2026-08-01T10:00:30Z'),
+    });
+    expect(result).toEqual({ ok: true });
+  });
+
+  it('rejects an expired quote', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: quote.quoteId,
+      from: quote.from,
+      to: quote.to,
+      sendAmount: quote.sendAmount,
+      now: Date.parse('2026-08-01T10:01:00Z'),
+    });
+    expect(result).toMatchObject({ ok: false, reason: 'expired' });
+  });
+
+  it('rejects a quote whose id does not match the payload', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: 'quote_other',
+      from: quote.from,
+      to: quote.to,
+      sendAmount: quote.sendAmount,
+      now: NOW,
+    });
+    expect(result).toMatchObject({ ok: false, reason: 'quote_id_mismatch' });
+  });
+
+  it('rejects a currency mismatch', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: quote.quoteId,
+      from: 'EUR',
+      to: quote.to,
+      sendAmount: quote.sendAmount,
+      now: NOW,
+    });
+    expect(result).toMatchObject({ ok: false, reason: 'currency_mismatch' });
+  });
+
+  it('rejects an amount that does not reconcile with the canonical amount', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: quote.quoteId,
+      from: quote.from,
+      to: quote.to,
+      sendAmount: '200.001',
+      now: NOW,
+    });
+    expect(result).toMatchObject({ ok: false, reason: 'amount_mismatch' });
+  });
+
+  it('rejects an amount with more precision than the source currency allows', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: quote.quoteId,
+      from: quote.from,
+      to: quote.to,
+      sendAmount: '200.123',
+      now: NOW,
+    });
+    expect(result).toMatchObject({ ok: false, reason: 'precision' });
+  });
+
+  it('rejects an unparseable amount', () => {
+    const result = validateQuoteForTransfer(quote, {
+      quoteId: quote.quoteId,
+      from: quote.from,
+      to: quote.to,
+      sendAmount: 'abc',
+      now: NOW,
+    });
+    expect(result).toMatchObject({ ok: false, reason: 'precision' });
   });
 });
 

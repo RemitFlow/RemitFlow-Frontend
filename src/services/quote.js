@@ -10,6 +10,7 @@ import { getRateDecimal } from './fx.js';
 import { FEE_PERCENT, FLAT_FEE, MIN_FEE } from '../constants/fees.js';
 import {
   QUOTE_CONTRACT_VERSION,
+  QUOTE_SOURCE,
   QUOTE_TTL_MS,
   parseQuote,
 } from './contracts/quote.js';
@@ -48,8 +49,9 @@ export function calculateFee(amount, currency = 'USD') {
  * @param {number|string} amount - amount to send in the source currency
  * @param {string} from - source currency code
  * @param {string} to - destination currency code
- * @param {{now?: number|Date, ttlMs?: number}} [options] - injectable clock so
- *   quote expiry is deterministic under test
+ * @param {{now?: number|Date, ttlMs?: number, quoteId?: string,
+ *   source?: string}} [options] - injectable clock so quote expiry is
+ *   deterministic under test; optional explicit quote id and FX feed source
  * @returns {object|null} a Quote v1 payload, or null when the pair is
  *   unsupported or the amount is not a parseable decimal
  */
@@ -79,21 +81,68 @@ export function buildQuote(amount, from, to, options = {}) {
       : (options.now ?? Date.now());
   const ttlMs = options.ttlMs ?? QUOTE_TTL_MS;
 
+  const sendAmount = fromMinorUnits(sendMinor, fromExponent);
+  const createdAt = new Date(nowMs).toISOString();
+
   // Round-trip through the contract so a quote is validated at the point it is
   // produced, not only at the point it is consumed.
   return parseQuote(
     {
       version: QUOTE_CONTRACT_VERSION,
+      quoteId: buildQuoteId({
+        from,
+        to,
+        rate,
+        sendAmount,
+        createdAt,
+        quoteId: options.quoteId,
+      }),
+      source: options.source ?? QUOTE_SOURCE,
       from,
       to,
       rate,
-      sendAmount: fromMinorUnits(sendMinor, fromExponent),
+      sendAmount,
       fee: fromMinorUnits(feeMinor, fromExponent),
       amountAfterFee: fromMinorUnits(afterFeeMinor, fromExponent),
       receiveAmount: fromMinorUnits(receiveMinor, toExponent),
-      createdAt: new Date(nowMs).toISOString(),
+      canonicalAmount: sendAmount,
+      fromMinorUnits: fromExponent,
+      toMinorUnits: toExponent,
+      createdAt,
       expiresAt: new Date(nowMs + ttlMs).toISOString(),
     },
     { source: 'buildQuote' },
   );
+}
+
+/**
+ * Derive a stable quote identifier from the inputs that define a quote.
+ * Callers may supply an explicit id (e.g. a server-issued one); otherwise a
+ * deterministic id is derived from the quote inputs and creation timestamp so
+ * the same inputs at the same instant always yield the same id. This keeps
+ * quote binding reproducible under test without depending on randomness.
+ * @param {{from: string, to: string, rate: string, sendAmount: string,
+ *   createdAt: string, quoteId?: string}} parts
+ * @returns {string} quote identifier
+ */
+export function buildQuoteId(parts) {
+  if (typeof parts.quoteId === 'string' && parts.quoteId.length > 0) {
+    return parts.quoteId;
+  }
+  const seed = [
+    parts.from,
+    parts.to,
+    parts.rate,
+    parts.sendAmount,
+    parts.createdAt,
+  ].join('|');
+  // FNV-1a 32-bit hash: deterministic, dependency-free, and stable across
+  // runtimes. Collisions are acceptable here because the id is only used to
+  // bind a quote to a payload, not as a security token.
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash ^= seed.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return `q_${hash.toString(16).padStart(8, '0')}`;
 }
