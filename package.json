@@ -5,9 +5,9 @@
   "type": "module",
   "description": "RemitFlow - Stellar-powered cross-border remittance frontend",
   "scripts": {
-    "build": "vite build",
-    "build-storybook": "storybook build",
-    "dev": "vite",
+    "build": "node init && vite build",
+    "build-storybook": "node init && storybook build",
+    "dev": "node init && vite",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lighthouse": "lhci autorun",

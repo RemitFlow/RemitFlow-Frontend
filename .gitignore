@@ -7,8 +7,6 @@ dist-ssr
 storybook-static
 
 # Local env files
-.env
-.env.local
 .env.*.local
 
 # Logs
@@ -19,6 +17,6 @@ npm-debug.log*
 .lighthouseci
 
 # Editor
-.vscode/*
 .idea
 .DS_Store
+config.bat
